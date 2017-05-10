@@ -115,10 +115,7 @@ class MainWP_Settings {
 						'mwp-setting-contentbox-' . $i++, '<i class="fa fa-cog"></i> ' . __('Network footprint', 'mainwp'), array('MainWP_Footprint', 'renderSettings'), 'mainwp_postboxes_global_settings', 'normal', 'core'
 					);
 				}
-			} else if ('DashboardOptions' == $_GET['page']) {
-                                add_meta_box(
-					'mwp-setting-contentbox-' . $i++, '<i class="fa fa-area-chart" aria-hidden="true"></i> ' . __('Freemius Opt-In settings', 'mainwp'), array('MainWP_Settings', 'renderTrackingMetabox'), 'mainwp_postboxes_dashboard_options', 'normal', 'core'
-				);                            
+			} else if ('DashboardOptions' == $_GET['page']) {                                        
 				add_meta_box(
 					'mwp-setting-contentbox-' . $i++, '<i class="fa fa-cog"></i> ' . __('Dashboard options', 'mainwp'), array('MainWP_Settings', 'renderDashboardOptionsMetabox'), 'mainwp_postboxes_dashboard_options', 'normal', 'core'
 				);
@@ -638,49 +635,7 @@ class MainWP_Settings {
 		<?php
 	}
 
-        public static function renderTrackingMetabox() {
-            ?>
-            <table class="form-table">
-                <tbody>
-                    <tr>
-                        <th scope="row">
-                            <?php _e( 'Allow MainWP to collect data', 'mainwp' ); ?>
-                        </th>
-                        <td>
-                                <div class="mainwp-checkbox mainwp_tracking_checks">
-                                    <input type="checkbox" name="mainwp_tracking_dashboard" id="mainwp_tracking_dashboard" <?php echo( ( get_option('mainwp_enabled_tracking_dashboard', 0) == 1 ) ? 'checked="true"' : '' ); ?> value="1"/>
-                                    <label for="mainwp_tracking_dashboard"></label>
-                                </div>&nbsp;<span id="mwp_settings_save_tracking_loading">
-                                    <i class="fa fa-spinner fa-pulse" style="display: none;"></i>
-                                    <span class="status"></span>
-                                </span>
-                                <br/><br/>
-                                <em><?php echo sprintf( __( 'Please help us improve MainWP Dashboard! If you opt-in, some data about your usage of MainWP Dashboard will be sent to %sfreemius.com%s If you skip this, that\'s okay! Your MainWP Dashboard will still work just fine.', 'mainwp' ), '<a href="https://freemius.com" target="_blank">', '</a>' ); ?></em><br/>
-                                <h3><?php echo __( 'What permissions are being granted?', 'mainwp' ); ?></h3>
-                                <ul>
-                                        <li><strong><?php _e( 'Your profile overview', 'mainwp' ); ?></strong><br/><em><?php _e( 'Name, Email Address', 'mainwp' ); ?></em></li>
-                                        <li><strong><?php _e( 'Your MainWP Dashboard site overview', 'mainwp' ); ?></strong><br/><em><?php _e( 'Site URL, WP version, PHP info, Plugins, Themes', 'mainwp' ); ?></em></li>
-                                        <li><strong><?php _e( 'Admin notices', 'mainwp' ); ?></strong><br/><em><?php _e( 'Updates, Announcements, Marketing, No spam', 'mainwp' ); ?></em></li>
-                                        <li><strong><?php _e( 'Newsletter', 'mainwp' ); ?></strong><br/><em><?php _e( 'Updates, Announcements, Marketing, No spam', 'mainwp' ); ?></em></li>
-                                        <li><strong><?php _e( 'Current plugin events', 'mainwp' ); ?></strong><br/><em><?php _e( 'Activation, Deactivation, Uninstall', 'mainwp' ); ?></em></li>
-                                </ul>
-                                <h3><?php echo __( 'What will be tracked in future?', 'mainwp' ); ?></h3>
-                                <ul>
-                                	<li><strong><?php _e( 'Dashboard site server information', 'mainwp'); ?></strong><br/><em><?php _e( 'PHP Memory Limit, PHP Execution Time, cURL Version, cURL SSL Version, Server Software, Server OS, MySQL Version', 'mainwp' ); ?></em></li>
-                                	<li><strong><?php _e( 'Dashboard data', 'mainwp'); ?></strong><br/><em><?php _e( 'Number of child sites, Number of extensions in use', 'mainwp' ); ?></em></li>
-                                	<li><strong><?php _e( 'Dashboard options', 'mainwp'); ?></strong><br/><em><?php _e( 'Hide MainWP Child plugin from search engines, Optimize for shared hosting or big networks, Use WP-Cron, Enable legacy backup feature, Default Backup System, Auto Plugin Updates, Auto Themes Updates, Auto WP Core Updates, Maximum simultaneous requests, Minimum delay between requests , Maximum simultaneous requests per ip, Minimum delay between requests to the same ip, Maximum simultaneous sync requests, Minimum simultaneous install/update requests', 'mainwp' ); ?></em></li>
-                                	<li><strong><?php _e( 'Advanced tracking', 'mainwp'); ?></strong><br/><em><?php _e( 'Average sync speed, Average update speed', 'mainwp' ); ?></em></li>
-                                </ul>
-
-                                <div><a href="https://freemius.com/privacy/" target="_blank">Privacy Policy</a>  -  <a href="https://freemius.com/terms/" target="_blank">Terms of Service</a></div>
-                        </td>
-                    </tr>                   
-                </tbody>
-            </table>
-            <?php 
-        }                
-
-        public static function renderMainWPTools() {
+    public static function renderMainWPTools() {
 		if (!mainwp_current_user_can('dashboard', 'manage_dashboard_settings')) {
 			mainwp_do_not_have_permissions(__('manage dashboard settings', 'mainwp'));
 

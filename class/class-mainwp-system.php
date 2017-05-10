@@ -300,7 +300,7 @@ class MainWP_System {
                 
 		do_action( 'mainwp-activated' );
                 
-        MainWP_Tracking::init();
+        
 		MainWP_Updates::init();
 		MainWP_Post::init();
 		MainWP_Settings::init();
@@ -2121,19 +2121,7 @@ class MainWP_System {
         if ( ! empty( $_GET['page'] ) && in_array( $_GET['page'], array( 'mainwp-setup' ) ) ) {
 			return;
 		}
-        
-        // before is_connecting_tracking
-        $reconnect_tracking = get_option('mainwp_open_reconnect_tracking', false);        
-		if ($reconnect_tracking == 'yes') {
-            delete_option('mainwp_open_reconnect_tracking');
-			wp_redirect( MainWP_Tracking::get_reconnect_url() );
-			exit;
-		}
-        
-        if ( MainWP_Tracking::is_connecting_tracking() ) {                        
-            return; // to directo to fs page first
-        }
-                   
+                           
 //       if ( ! get_transient( '_mainwp_activation_redirect' ) || is_network_admin() ) {
 //			return;
 //		}
