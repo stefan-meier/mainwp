@@ -53,7 +53,6 @@ class MainWP_About {
 		global $mainWP;
 		?>
 		<br/>
-		<h3>MainWP 3.4 a Usability Update</h3>
 		<div class="mainwp-notice mainwp-notice-blue">
 			<strong class="mainwp-large">Important note</strong>
 			<p>This version introduces CSS and Javascript updates. To ensure you see the latest versions of scripts you need to clear your browser cache memory. This is done by doing a force refresh.</p>
@@ -64,7 +63,6 @@ class MainWP_About {
 				<li>Linux: F5</li>
 			</ul>
 		</div>
-		<p>You can read our <a href="https://mainwp.com/mainwp-3-2-usuability-update/?utm_source=dashboard&utm_campaign=welcome-page&utm_medium=plugin" target="_blank">Blog Article</a> to see the full list of updates.</p>
 		<hr/>
 		<?php
 	}
