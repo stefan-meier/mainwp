@@ -1335,6 +1335,23 @@ class MainWP_Setup_Wizard {
         
 		<h1><?php _e( 'Your MainWP Dashboard is Ready!', 'mainwp' ); ?></h1>
 		<p><?php  _e( 'Congratulations! Now you are ready to start managing your WordPress sites.', 'mainwp' ); ?></p>                	
+        <div class="mwp-setup-next-steps">                        
+			<div class="mwp-setup-next-steps-first">
+				<h2><?php _e( 'Next Step', 'mainwp' ); ?></h2>
+				<ul>
+					<li class="setup-product"><a class="button button-primary button-large" href="<?php echo esc_url( admin_url( 'admin.php?page=managesites&do=new' ) ); ?>"><?php _e( 'Add New Site', 'mainwp' ); ?></a></li>
+				</ul>
+			</div>
+			<div class="mwp-setup-next-steps-last">
+				<h2><?php _e( 'Helpful Links', 'mainwp' ); ?></h2>
+				<ul>
+					<li><a href="https://mainwp.com/mainwp-extensions/" target="_blank"><i class="fa fa-plug"></i> <?php _e( 'MainWP Extensions', 'mainwp' ); ?></a></li>
+					<li><a href="https://mainwp.com/help/" target="_blank"><i class="fa fa-book"></i> <?php _e( 'MainWP Documentation', 'mainwp' ); ?></a></li>
+					<li><a href="https://mainwp.com/support/" target="_blank"><i class="fa fa-life-ring"></i> <?php _e( 'MainWP Support', 'mainwp' ); ?></a></li>
+				</ul>
+			</div>
+            
+		</div>
         <script type="text/javascript">
                 jQuery(document).ready(function () {
                         jQuery('#mwp_setup_active_extension').fadeIn(500);
