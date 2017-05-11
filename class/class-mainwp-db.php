@@ -515,20 +515,20 @@ class MainWP_DB {
 	public function getLastSyncStatus( $userId = null ) {
 		$sql = MainWP_DB::Instance()->getSQLWebsitesForCurrentUser();
 		$websites = MainWP_DB::Instance()->query( $sql );
-                
-                $return = array(
-                    'sync_status' => false,
-                    'last_sync'  => 0
-                );
-                
+
+        $return = array(
+            'sync_status' => false,
+            'last_sync'  => 0
+        );
+
 		if ( ! $websites ) {
-                        $return['sync_status'] = 'all_synced';
+            $return['sync_status'] = 'all_synced';
 			return $return;
 		}
-                
+
 		$total_sites = 0;
 		$synced_sites = 0;
-                $last_sync = 0;
+        $last_sync = 0;
 		@MainWP_DB::data_seek( $websites, 0 );
 		while ( $websites && ( $website = @MainWP_DB::fetch_object( $websites ) ) ) {
 			if ( empty($website) || $website->sync_errors != '' ) {
@@ -538,17 +538,17 @@ class MainWP_DB {
 			if ( time() - $website->dtsSync  < 60 * 60 * 24 )  {
 				$synced_sites++;
 			}
-                        if ($last_sync < $website->dtsSync) {
-                            $last_sync = $website->dtsSync;
-                        }
+            if ( $last_sync < $website->dtsSync ) {
+                $last_sync = $website->dtsSync;
+            }
 		}
 
 		if ($total_sites == $synced_sites) {
-                    $return['sync_status'] = 'all_synced';			
+            $return['sync_status'] = 'all_synced';
 		} else if ($synced_sites == 0) {
-                    $return['sync_status'] = 'not_synced';
+            $return['sync_status'] = 'not_synced';
 		}
-                $return['last_sync'] = $last_sync;
+        $return['last_sync'] = $last_sync;
 		return $return;
 	}
 
@@ -952,8 +952,9 @@ class MainWP_DB {
 	}
 
 	public function getWebsitesByGroupIds( $ids, $userId = null ) {
-        if (empty($ids))
-            return array();
+        if ( empty( $ids ) ) {
+	        return array();
+        }
 		if ( ( $userId == null ) && MainWP_System::Instance()->isMultiUser() ) {
 			global $current_user;
 			$userId = $current_user->ID;

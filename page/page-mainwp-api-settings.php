@@ -34,37 +34,38 @@ class MainWP_API_Settings {
 
             if ( empty( $check_exts ) ) return false;
 
-                        $i = 0;
-                        $count = 0;
-                        $max_check = 6;
-                        $total_check = count($check_exts);
-                        $bulk_checks = array();
+            $i = 0;
+            $count = 0;
+            $max_check = 6;
+            $total_check = count($check_exts);
+            $bulk_checks = array();
 
-                        foreach($check_exts as $ext_name => $ext) {
-                            $bulk_checks[$ext_name] = $ext;
-                            $i++;
-                            $count++;
-                            if ($count == $max_check || $i == $total_check) {                                
-                                $results = MainWP_Api_Manager_Plugin_Update::instance()->bulk_update_check( $bulk_checks );                                
-			if ( is_array($results) && count($results) > 0 ) {
-				foreach ( $results as $slug => $response ) {
-					$rslt                 = new stdClass();
-					$rslt->slug           = $slug;
-					$rslt->latest_version = $response->new_version;
-					$rslt->download_url   = $response->package;
-					$rslt->key_status     = '';
-					$rslt->apiManager     = 1;
-					if ( isset( $response->errors ) ) {
-						$rslt->error = $response->errors;
+            foreach($check_exts as $ext_name => $ext) {
+                $bulk_checks[$ext_name] = $ext;
+                $i++;
+                $count++;
+                if ($count == $max_check || $i == $total_check) {
+                    $results = MainWP_Api_Manager_Plugin_Update::instance()->bulk_update_check( $bulk_checks );
+					if ( is_array($results) && count($results) > 0 ) {
+						foreach ( $results as $slug => $response ) {
+							$rslt                 = new stdClass();
+							$rslt->slug           = $slug;
+							$rslt->latest_version = $response->new_version;
+							$rslt->download_url   = $response->package;
+							$rslt->key_status     = '';
+							$rslt->apiManager     = 1;
+
+							if ( isset( $response->errors ) ) {
+								$rslt->error = $response->errors;
+							}
+							$output[ $slug ] = $rslt;
+						}
 					}
-					$output[ $slug ] = $rslt;
+                    $count = 0;
+                    $bulk_checks = array();
+                    sleep(3);
 				}
-			}
-                                $count = 0;
-                                $bulk_checks = array();
-                                sleep(3);
-		}
-                        }
+	        }
 		}
 		return $output;
 	}

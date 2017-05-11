@@ -26,7 +26,7 @@ class MainWP_Setup_Wizard {
 		add_action('wp_ajax_mainwp_setup_extension_getextension', array('MainWP_Setup_Wizard', 'ajax_get_backup_extension'));
 		add_action('wp_ajax_mainwp_setup_extension_downloadandinstall', array('MainWP_Setup_Wizard', 'ajax_download_and_install'));
 		add_action('wp_ajax_mainwp_setup_extension_grabapikey', array('MainWP_Setup_Wizard', 'ajax_grab_api_key'));
-		add_action('wp_ajax_mainwp_setup_extension_activate_plugin', array('MainWP_Setup_Wizard', 'ajax_activate_plugin'));        
+		add_action('wp_ajax_mainwp_setup_extension_activate_plugin', array('MainWP_Setup_Wizard', 'ajax_activate_plugin'));
 	}
 
 	public function admin_menus() {
@@ -128,7 +128,7 @@ class MainWP_Setup_Wizard {
 
 		$this->step = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) );
 		$this->check_redirect();
-        wp_enqueue_script( 'mainwp-setup', MAINWP_PLUGIN_URL . 'js/mainwp-setup.js', array( 'jquery', 'jquery-ui-tooltip' ), MAINWP_VERSION );		
+        wp_enqueue_script( 'mainwp-setup', MAINWP_PLUGIN_URL . 'js/mainwp-setup.js', array( 'jquery', 'jquery-ui-tooltip' ), MAINWP_VERSION );
 		wp_enqueue_script( 'mainwp-setup-select2', MAINWP_PLUGIN_URL . 'js/select2/select2.js', array( 'jquery' ), MAINWP_VERSION );			
 		wp_enqueue_script( 'mainwp-setup-admin', MAINWP_PLUGIN_URL . 'js/mainwp-admin.js', array(), MAINWP_VERSION );		
 		
@@ -241,9 +241,9 @@ class MainWP_Setup_Wizard {
 		echo '</div>';
 	}
 
-	public function mwp_setup_introduction() {             
+	public function mwp_setup_introduction() {
         $this->mwp_setup_ready_actions();
-        
+
 		?>
 		<h1><?php _e( 'Welcome to MainWP Dashboard', 'mainwp' ); ?></h1>
 		<p><?php _e( 'Thank you for choosing MainWP for managing your WordPress sites. This quick setup wizard will help you configure the basic settings. It\'s completely optional and shouldn\'t take longer than five minutes.' ); ?></p>
@@ -921,7 +921,7 @@ class MainWP_Setup_Wizard {
 		}
 		die( 'FAILED' );
 	}
-    
+
 	public static function ajax_grab_api_key( ) {
 		$enscrypt_u = get_option('mainwp_extensions_api_username');
 		$enscrypt_p = get_option('mainwp_extensions_api_password');
@@ -1047,8 +1047,8 @@ class MainWP_Setup_Wizard {
 		$hide_menus = get_option('mwp_setup_hide_wp_menus', array());
 		if (!is_array($hide_menus))
 			$hide_menus = array();
-                
-                $disable_wp_main_menu = get_option( 'mainwp_disable_wp_main_menu', true );                
+
+        $disable_wp_main_menu = get_option( 'mainwp_disable_wp_main_menu', true );
 		?>
 		<h1><?php _e( 'Cleanup your Dashboard', 'mainwp' ); ?></h1>
 		<p>
@@ -1090,7 +1090,7 @@ class MainWP_Setup_Wizard {
                         <em><?php _e( 'If enabled, the MainWP Dashboard plguin will add custom sidebar navigation and collapse the WordPress Admin Menu. Custom navigation can be disabled/enabled at anytime on the MainWP > Settings > Dashboard Options page.', 'mainwp' ); ?></em>
                     </td>
                 </tr>
-                            
+
 			</table>
 			<p class="mwp-setup-actions step">
 				<input type="submit" class="button-primary button button-large" value="<?php esc_attr_e( 'Continue', 'mainwp' ); ?>" name="save_step" />
@@ -1111,8 +1111,8 @@ class MainWP_Setup_Wizard {
 			}
 		}
 		MainWP_Utility::update_option('mwp_setup_hide_wp_menus', $hide_menus);
-                $disable_wp_main_menu = (isset($_POST['mwp_setup_options_use_custom_sidebar']) ? 1 : 0);
-                update_option( 'mainwp_disable_wp_main_menu', $disable_wp_main_menu );
+        $disable_wp_main_menu = (isset($_POST['mwp_setup_options_use_custom_sidebar']) ? 1 : 0);
+        update_option( 'mainwp_disable_wp_main_menu', $disable_wp_main_menu );
 		wp_redirect( $this->get_next_step_link() );
 		exit;
 	}
@@ -1330,12 +1330,12 @@ class MainWP_Setup_Wizard {
 		delete_site_option('mainwp_run_quick_setup');
 	}
 
-	public function mwp_setup_ready() {		  
+	public function mwp_setup_ready() {
 		?>
-        
+
 		<h1><?php _e( 'Your MainWP Dashboard is Ready!', 'mainwp' ); ?></h1>
-		<p><?php  _e( 'Congratulations! Now you are ready to start managing your WordPress sites.', 'mainwp' ); ?></p>                	
-        <div class="mwp-setup-next-steps">                        
+		<p><?php  _e( 'Congratulations! Now you are ready to start managing your WordPress sites.', 'mainwp' ); ?></p>
+        <div class="mwp-setup-next-steps">
 			<div class="mwp-setup-next-steps-first">
 				<h2><?php _e( 'Next Step', 'mainwp' ); ?></h2>
 				<ul>
@@ -1350,7 +1350,7 @@ class MainWP_Setup_Wizard {
 					<li><a href="https://mainwp.com/support/" target="_blank"><i class="fa fa-life-ring"></i> <?php _e( 'MainWP Support', 'mainwp' ); ?></a></li>
 				</ul>
 			</div>
-            
+
 		</div>
         <script type="text/javascript">
                 jQuery(document).ready(function () {

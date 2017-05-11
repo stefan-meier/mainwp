@@ -3,8 +3,8 @@ class MainWP_Server_Information {
 
 	const WARNING = 1;
 	const ERROR = 2;
-        public static $subPages;
-        
+    public static $subPages;
+
 	public static function getClassName() {
 		return __CLASS__;
 	}
@@ -38,27 +38,26 @@ class MainWP_Server_Information {
 			MainWP_Server_Information::getClassName(),
 			'renderActionLogs',
 		) );
-                self::$subPages = apply_filters('mainwp-getsubpages-server', array());
+        self::$subPages = apply_filters('mainwp-getsubpages-server', array());
 		if (isset(self::$subPages) && is_array(self::$subPages)) {
 			foreach (self::$subPages as $subPage) {
 				add_submenu_page('mainwp_tab', $subPage['title'], '<div class="mainwp-hidden">' . $subPage['title'] . '</div>', 'read', 'Server' . $subPage['slug'], $subPage['callback']);
 			}
 		}
-                MainWP_Server_Information::init_sub_sub_left_menu(self::$subPages);
+        MainWP_Server_Information::init_sub_sub_left_menu(self::$subPages);
 	}
 
-        
 	public static function initMenuSubPages() {
 		?>
                 <div id="menu-mainwp-ServerInformation" class="mainwp-submenu-wrapper">
 			<div class="wp-submenu sub-open" style="">
 				<div class="mainwp_boxout">
-					<div class="mainwp_boxoutin"></div>					
+					<div class="mainwp_boxoutin"></div>
                                         <a href="<?php echo admin_url( 'admin.php?page=ServerInformation' ); ?>" class="mainwp-submenu"><?php _e( 'Server','mainwp' ); ?></a>
                                         <a href="<?php echo admin_url( 'admin.php?page=ServerInformationCron' ); ?>" class="mainwp-submenu"><?php _e( 'Cron Schedules','mainwp' ); ?></a>
                                         <a href="<?php echo admin_url( 'admin.php?page=ErrorLog' ); ?>" class="mainwp-submenu"><?php _e( 'Error Log','mainwp' ); ?></a>
                                         <a href="<?php echo admin_url( 'admin.php?page=WPConfig' ); ?>" class="mainwp-submenu"><?php _e( 'WP-Config File','mainwp' ); ?></a>
-                                        <a href="<?php echo admin_url( 'admin.php?page=.htaccess' ); ?>" class="mainwp-submenu"><?php _e( '.htaccess File','mainwp' ); ?></a><?php                                        
+                                        <a href="<?php echo admin_url( 'admin.php?page=.htaccess' ); ?>" class="mainwp-submenu"><?php _e( '.htaccess File','mainwp' ); ?></a><?php
 					if ( isset( self::$subPages ) && is_array( self::$subPages ) ) {
 						foreach ( self::$subPages as $subPage ) {
 							if ( ! isset( $subPage['menu_hidden'] ) || (isset( $subPage['menu_hidden'] ) && $subPage['menu_hidden'] != true) ) {
@@ -75,59 +74,59 @@ class MainWP_Server_Information {
 		</div>
 		<?php
 	}
-        
-        static function init_sub_sub_left_menu($subPages = array()) {            
-                MainWP_System::add_sub_left_menu(__('Server Information', 'mainwp'), 'mainwp_tab', 'ServerInformation', 'admin.php?page=ServerInformation', '<i class="fa fa-server"></i>', '' );                            
+
+        static function init_sub_sub_left_menu($subPages = array()) {
+                MainWP_System::add_sub_left_menu(__('Server Information', 'mainwp'), 'mainwp_tab', 'ServerInformation', 'admin.php?page=ServerInformation', '<i class="fa fa-server"></i>', '' );
                 global $mainwp_menu_active_slugs;
                 $mainwp_menu_active_slugs['ActionLogs'] = 'ServerInformation'; // hidden page
-                
-                $init_sub_subleftmenu = array(                
-                        array(  'title' => __('Server', 'mainwp'), 
-                                'parent_key' => 'ServerInformation', 
+
+                $init_sub_subleftmenu = array(
+                        array(  'title' => __('Server', 'mainwp'),
+                                'parent_key' => 'ServerInformation',
                                 'href' => 'admin.php?page=ServerInformation',
                                 'slug' => 'ServerInformation',
                                 'right' => ''
                             ),
-                        array(  'title' => __('Cron Schedules', 'mainwp'), 
-                                'parent_key' => 'ServerInformation', 
+                        array(  'title' => __('Cron Schedules', 'mainwp'),
+                                'parent_key' => 'ServerInformation',
                                 'href' => 'admin.php?page=ServerInformationCron',
                                 'slug' => 'ServerInformationCron',
                                 'right' => ''
                             ),
-                        array(  'title' => __('Error Log', 'mainwp'), 
-                                'parent_key' => 'ServerInformation', 
+                        array(  'title' => __('Error Log', 'mainwp'),
+                                'parent_key' => 'ServerInformation',
                                 'href' => 'admin.php?page=ErrorLog',
                                 'slug' => 'ErrorLog',
                                 'right' => ''
                             ),
-                        array(  'title' => __('WP-Config File', 'mainwp'), 
-                                'parent_key' => 'ServerInformation', 
+                        array(  'title' => __('WP-Config File', 'mainwp'),
+                                'parent_key' => 'ServerInformation',
                                 'href' => 'admin.php?page=WPConfig',
                                 'slug' => 'WPConfig',
                                 'right' => ''
                             ),
-                        array(  'title' => __('.htaccess File', 'mainwp'), 
-                                'parent_key' => 'ServerInformation', 
+                        array(  'title' => __('.htaccess File', 'mainwp'),
+                                'parent_key' => 'ServerInformation',
                                 'href' => 'admin.php?page=.htaccess',
                                 'slug' => '.htaccess',
                                 'right' => ''
                             ),
-                        array(  'title' => __('Child Site Information', 'mainwp'), 
-                                'parent_key' => 'ServerInformation', 
+                        array(  'title' => __('Child Site Information', 'mainwp'),
+                                'parent_key' => 'ServerInformation',
                                 'href' => 'admin.php?page=ServerInformationChild',
                                 'slug' => 'ServerInformationChild',
                                 'right' => ''
-                            )                    
-                );           
-                MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'ServerInformation', 'Settings');                
+                            )
+                );
+                MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'ServerInformation', 'Settings');
                 foreach($init_sub_subleftmenu as $item) {
                     MainWP_System::add_sub_sub_left_menu($item['title'], $item['parent_key'], $item['slug'], $item['href'], $item['right']);
-                } 
-                
+                }
+
         }
-        
+
 	public static function renderHeader( $shownPage ) {
-                MainWP_UI::render_left_menu();
+        MainWP_UI::render_left_menu();
 		?>
 		<div class="mainwp-wrap">
 
@@ -504,14 +503,14 @@ public static function renderFooter( $shownPage ) {
 		<?php
 
 	}
-        
-        public static function is_localhost() {
-            $whitelist = array('127.0.0.1', "::1");
-            if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
-                return true;
-            }
-            return false;
+
+    public static function is_localhost() {
+        $whitelist = array('127.0.0.1', "::1");
+        if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+            return true;
         }
+        return false;
+    }
 
 	public static function getCurrentVersion() {
 		$currentVersion = get_option( 'mainwp_plugin_version' );
@@ -937,10 +936,10 @@ public static function renderFooter( $shownPage ) {
 	}
 
 	public static function getOS($return = false) {
-            if ($return)
-                return PHP_OS;
-            else
-		echo PHP_OS;
+        if ($return)
+            return PHP_OS;
+        else
+			echo PHP_OS;
 	}
 
 	public static function getArchitecture() {
@@ -1033,17 +1032,17 @@ public static function renderFooter( $shownPage ) {
 	}
 
 	public static function getServerName($return = false) {
-            if ($return)
-                return $_SERVER['SERVER_NAME'];
-            else
-		echo $_SERVER['SERVER_NAME'];
+        if ($return)
+            return $_SERVER['SERVER_NAME'];
+        else
+			echo $_SERVER['SERVER_NAME'];
 	}
 
 	public static function getServerSoftware($return = false) {
-                if ($return)
-                    return $_SERVER['SERVER_SOFTWARE'];
-                else
-                    echo $_SERVER['SERVER_SOFTWARE'];
+        if ($return)
+            return $_SERVER['SERVER_SOFTWARE'];
+        else
+            echo $_SERVER['SERVER_SOFTWARE'];
 	}
 
 	public static function getServerProtocol() {
@@ -1229,9 +1228,9 @@ public static function renderFooter( $shownPage ) {
 	public static function renderErrorLog() {
 		$log_errors = ini_get( 'log_errors' );
 		if ( ! $log_errors ) {
-			echo '<tr><td colspan="2">' . __( 'Error logging disabled.', 'mainwp' );            
+			echo '<tr><td colspan="2">' . __( 'Error logging disabled.', 'mainwp' );
             echo '<br/>' . sprintf(__('To enable error logging, please check this %shelp document%s.', 'mainwp'), '<a href="https://codex.wordpress.org/Debugging_in_WordPress" target="_blank">', '</a>');
-            echo '</td></tr>';            
+            echo '</td></tr>';
 		}
 
 		$error_log = ini_get( 'error_log' );

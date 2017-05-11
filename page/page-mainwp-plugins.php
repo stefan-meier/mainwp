@@ -71,8 +71,7 @@ class MainWP_Plugins {
 				add_submenu_page( 'mainwp_tab', $subPage['title'], '<div class="mainwp-hidden">' . $subPage['title'] . '</div>', 'read', 'Plugins' . $subPage['slug'], $subPage['callback'] );
 			}
 		}
-                
-                MainWP_Plugins::init_sub_sub_left_menu(self::$subPages);
+        MainWP_Plugins::init_sub_sub_left_menu(self::$subPages);
 	}
 
 	public static function on_load_page() {
@@ -134,58 +133,58 @@ class MainWP_Plugins {
 		<?php
 	}
 
-        static function init_sub_sub_left_menu( $subPages = array() ) {            
-                MainWP_System::add_sub_left_menu(__('Plugins', 'mainwp'), 'mainwp_tab', 'PluginsManage', 'admin.php?page=PluginsManage', '<i class="fa fa-plug"></i>', '' );			
-                
-                $init_sub_subleftmenu = array(                
-                        array(  'title' => __('Manage Plugins', 'mainwp'), 
-                                'parent_key' => 'PluginsManage', 
-                                'href' => 'admin.php?page=PluginsManage',
-                                'slug' => 'PluginsManage',
-                                'right' => ''
-                            ), 
-                        array(  'title' => __('Install', 'mainwp'), 
-                                'parent_key' => 'PluginsManage', 
-                                'href' => 'admin.php?page=PluginsInstall',
-                                'slug' => 'PluginsInstall',
-                                'right' => 'install_plugins'
-                            ),
-                    array(  'title' => __('Auto Updates', 'mainwp'), 
-                                'parent_key' => 'PluginsManage', 
-                                'href' => 'admin.php?page=PluginsAutoUpdate',
-                                'slug' => 'PluginsAutoUpdate',
-                                'right' => ''
-                            ),
-                    array(  'title' => __('Ignored Updates', 'mainwp'), 
-                                'parent_key' => 'PluginsManage', 
-                                'href' => 'admin.php?page=PluginsIgnore',
-                                'slug' => 'PluginsIgnore',
-                                'right' => ''
-                            ),
-                    array(  'title' => __('Ignored Abandoned', 'mainwp'), 
-                                'parent_key' => 'PluginsManage', 
-                                'href' => 'admin.php?page=PluginsIgnoredAbandoned',
-                                'slug' => 'PluginsIgnoredAbandoned',
-                                'right' => ''
-                            )                   
-                );
-                MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'PluginsManage', 'Plugins');
-                
-                foreach($init_sub_subleftmenu as $item) {
-                    MainWP_System::add_sub_sub_left_menu($item['title'], $item['parent_key'], $item['slug'], $item['href'], $item['right']);
-                }
+    static function init_sub_sub_left_menu( $subPages = array() ) {
+        MainWP_System::add_sub_left_menu(__('Plugins', 'mainwp'), 'mainwp_tab', 'PluginsManage', 'admin.php?page=PluginsManage', '<i class="fa fa-plug"></i>', '' );
+
+        $init_sub_subleftmenu = array(
+                array(  'title' => __('Manage Plugins', 'mainwp'),
+                        'parent_key' => 'PluginsManage',
+                        'href' => 'admin.php?page=PluginsManage',
+                        'slug' => 'PluginsManage',
+                        'right' => ''
+                    ),
+                array(  'title' => __('Install', 'mainwp'),
+                        'parent_key' => 'PluginsManage',
+                        'href' => 'admin.php?page=PluginsInstall',
+                        'slug' => 'PluginsInstall',
+                        'right' => 'install_plugins'
+                    ),
+            array(  'title' => __('Auto Updates', 'mainwp'),
+                        'parent_key' => 'PluginsManage',
+                        'href' => 'admin.php?page=PluginsAutoUpdate',
+                        'slug' => 'PluginsAutoUpdate',
+                        'right' => ''
+                    ),
+            array(  'title' => __('Ignored Updates', 'mainwp'),
+                        'parent_key' => 'PluginsManage',
+                        'href' => 'admin.php?page=PluginsIgnore',
+                        'slug' => 'PluginsIgnore',
+                        'right' => ''
+                    ),
+            array(  'title' => __('Ignored Abandoned', 'mainwp'),
+                        'parent_key' => 'PluginsManage',
+                        'href' => 'admin.php?page=PluginsIgnoredAbandoned',
+                        'slug' => 'PluginsIgnoredAbandoned',
+                        'right' => ''
+                    )
+        );
+        MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'PluginsManage', 'Plugins');
+
+        foreach($init_sub_subleftmenu as $item) {
+            MainWP_System::add_sub_sub_left_menu($item['title'], $item['parent_key'], $item['slug'], $item['href'], $item['right']);
         }
-        
+    }
+
 	/**
 	 * @param string $shownPage The page slug shown at this moment
 	 */
-public static function renderHeader( $shownPage ) {
+	public static function renderHeader( $shownPage ) {
         MainWP_UI::render_left_menu();
 	?>
 	<div class="mainwp-wrap">
-		
+
 		<h1 class="mainwp-margin-top-0"><i class="fa fa-plug"></i> <?php _e( 'Plugins', 'mainwp' ); ?></h1>
-		
+
 		<div id="mainwp-tip-zone">
 			<?php if ( $shownPage == 'Manage' ) { ?>
 				<?php if ( MainWP_Utility::showUserTip( 'mainwp-manageplugins-tips' ) ) { ?>
@@ -1005,7 +1004,7 @@ public static function renderHeader( $shownPage ) {
 
 		?>
 		<div class="mainwp-subnav-tabs">
-			<a href="#" id="MainWPInstallBulkNavSearch" class="mainwp_action left <?php echo $tab !== 'upload' ? 'mainwp_action_down' : ''; ?>" ><i class="fa fa-wordpress fa-lg" aria-hidden="true"></i> <?php _e('Install from WordPress.org','mainwp'); ?></a> 
+			<a href="#" id="MainWPInstallBulkNavSearch" class="mainwp_action left <?php echo $tab !== 'upload' ? 'mainwp_action_down' : ''; ?>" ><i class="fa fa-wordpress fa-lg" aria-hidden="true"></i> <?php _e('Install from WordPress.org','mainwp'); ?></a>
 			<a href="#" id="MainWPInstallBulkNavUpload" class="mainwp_action <?php echo $tab === 'upload' ? 'mainwp_action_down' : ''; ?> right upload" ><i class="fa fa-upload fa-lg" aria-hidden="true"></i> <?php _e('Upload .zip file','mainwp'); ?></a>
 			<div style="clear: both;"></div>
 		</div>

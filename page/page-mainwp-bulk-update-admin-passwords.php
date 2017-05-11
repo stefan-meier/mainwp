@@ -15,7 +15,7 @@ class MainWP_Bulk_Update_Admin_Passwords {
 		) );
 		add_action( 'load-' . $_page, array('MainWP_Bulk_Update_Admin_Passwords', 'on_load_page'));	
 	}
-        
+
 	public static function renderFooter( $shownPage ) {
 		?>
 		</div>

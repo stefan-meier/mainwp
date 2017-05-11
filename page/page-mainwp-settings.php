@@ -74,8 +74,8 @@ class MainWP_Settings {
 				add_submenu_page('mainwp_tab', $subPage['title'], '<div class="mainwp-hidden">' . $subPage['title'] . '</div>', 'read', 'Settings' . $subPage['slug'], $subPage['callback']);
 			}
 		}
-                
-                MainWP_Settings::init_sub_sub_left_menu(self::$subPages);
+
+        MainWP_Settings::init_sub_sub_left_menu(self::$subPages);
 	}
 
 	public static function on_load_page() {
@@ -115,7 +115,7 @@ class MainWP_Settings {
 						'mwp-setting-contentbox-' . $i++, '<i class="fa fa-cog"></i> ' . __('Network footprint', 'mainwp'), array('MainWP_Footprint', 'renderSettings'), 'mainwp_postboxes_global_settings', 'normal', 'core'
 					);
 				}
-			} else if ('DashboardOptions' == $_GET['page']) {                                        
+			} else if ('DashboardOptions' == $_GET['page']) {
 				add_meta_box(
 					'mwp-setting-contentbox-' . $i++, '<i class="fa fa-cog"></i> ' . __('Dashboard options', 'mainwp'), array('MainWP_Settings', 'renderDashboardOptionsMetabox'), 'mainwp_postboxes_dashboard_options', 'normal', 'core'
 				);
@@ -146,7 +146,7 @@ class MainWP_Settings {
 		}
 	}
 
-	public static function initMenuSubPages() {		
+	public static function initMenuSubPages() {
             ?>
             <div id="menu-mainwp-Settings" class="mainwp-submenu-wrapper">
                     <div class="wp-submenu sub-open" style="">
@@ -166,65 +166,65 @@ class MainWP_Settings {
                                                 <?php
                                         }
                                     }
-                                    ?>                                    
+                                    ?>
                             </div>
                     </div>
             </div>
             <?php
 	}
 
-        static function init_sub_sub_left_menu( $subPages = array() ) {            
-                MainWP_System::add_sub_left_menu(__('Settings', 'mainwp'), 'mainwp_tab', 'Settings', 'admin.php?page=Settings', '<i class="fa fa-cogs"></i>', '' );			                
-                
-                $init_sub_subleftmenu = array(                
-                        array(  'title' => __('Global Options', 'mainwp'), 
-                                'parent_key' => 'Settings', 
-                                'href' => 'admin.php?page=Settings',
-                                'slug' => 'Settings',
-                                'right' => ''
-                            ), 
-                        array(  'title' => __('Dashboard Options', 'mainwp'), 
-                                'parent_key' => 'Settings', 
-                                'href' => 'admin.php?page=DashboardOptions',
-                                'slug' => 'DashboardOptions',
-                                'right' => ''
-                            ),
-                        array(  'title' => __('Advanced Options', 'mainwp'), 
-                                'parent_key' => 'Settings', 
-                                'href' => 'admin.php?page=SettingsAdvanced',
-                                'slug' => 'SettingsAdvanced',
-                                'right' => ''
-                            ),
-                        array(  'title' => __('MainWP Tools', 'mainwp'), 
-                                'parent_key' => 'Settings', 
-                                'href' => 'admin.php?page=MainWPTools',
-                                'slug' => 'MainWPTools',
-                                'right' => ''
-                            ),
-                        array(  'title' => __('Managed Client Reports Responder', 'mainwp'), 
-                                'parent_key' => 'Settings', 
-                                'href' => 'admin.php?page=SettingsClientReportsResponder',
-                                'slug' => 'SettingsClientReportsResponder',
-                                'right' => ''
-                            )
-                );
-            
-                MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'Settings', 'Settings');                
-                foreach($init_sub_subleftmenu as $item) {
-                    MainWP_System::add_sub_sub_left_menu($item['title'], $item['parent_key'], $item['slug'], $item['href'], $item['right']);
-                }  
-        }        
-        
+    static function init_sub_sub_left_menu( $subPages = array() ) {
+        MainWP_System::add_sub_left_menu(__('Settings', 'mainwp'), 'mainwp_tab', 'Settings', 'admin.php?page=Settings', '<i class="fa fa-cogs"></i>', '' );
+
+        $init_sub_subleftmenu = array(
+                array(  'title' => __('Global Options', 'mainwp'),
+                        'parent_key' => 'Settings',
+                        'href' => 'admin.php?page=Settings',
+                        'slug' => 'Settings',
+                        'right' => ''
+                    ),
+                array(  'title' => __('Dashboard Options', 'mainwp'),
+                        'parent_key' => 'Settings',
+                        'href' => 'admin.php?page=DashboardOptions',
+                        'slug' => 'DashboardOptions',
+                        'right' => ''
+                    ),
+                array(  'title' => __('Advanced Options', 'mainwp'),
+                        'parent_key' => 'Settings',
+                        'href' => 'admin.php?page=SettingsAdvanced',
+                        'slug' => 'SettingsAdvanced',
+                        'right' => ''
+                    ),
+                array(  'title' => __('MainWP Tools', 'mainwp'),
+                        'parent_key' => 'Settings',
+                        'href' => 'admin.php?page=MainWPTools',
+                        'slug' => 'MainWPTools',
+                        'right' => ''
+                    ),
+                array(  'title' => __('Managed Client Reports Responder', 'mainwp'),
+                        'parent_key' => 'Settings',
+                        'href' => 'admin.php?page=SettingsClientReportsResponder',
+                        'slug' => 'SettingsClientReportsResponder',
+                        'right' => ''
+                    )
+        );
+
+        MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'Settings', 'Settings');
+        foreach($init_sub_subleftmenu as $item) {
+            MainWP_System::add_sub_sub_left_menu($item['title'], $item['parent_key'], $item['slug'], $item['href'], $item['right']);
+        }
+    }
+
 	/**
 	 * @param string $shownPage The page slug shown at this moment
 	 */
 	public static function renderHeader($shownPage) {
-                MainWP_UI::render_left_menu();
+        MainWP_UI::render_left_menu();
 		?>
 		<div class="mainwp-wrap">
-		
+
 		<h1 class="mainwp-margin-top-0"><i class="fa fa-cogs"></i> <?php _e('MainWP Settings', 'mainwp'); ?></h1>
-		
+
 		<div id="mainwp-tip-zone">
 			<?php if ($shownPage == '') { ?>
 				<?php if (MainWP_Utility::showUserTip('mainwp-settings-tips')) { ?>

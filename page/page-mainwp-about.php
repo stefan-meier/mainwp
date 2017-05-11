@@ -8,14 +8,14 @@ class MainWP_About {
 	public static function init() {
 
 	}
-    
+
 	public static function initMenu() {
 		add_submenu_page( 'mainwp_tab', __( 'About MainWP', 'mainwp' ), ' <div class="mainwp-hidden">' . __( 'About MainWP', 'mainwp' ) . '</div>', 'read', 'mainwp_about', array(
 			MainWP_About::getClassName(),
 			'render',
 		) );
 	}
-        
+
 	public static function render() {
 		global $mainWP;
 
@@ -78,7 +78,7 @@ class MainWP_About {
 			<li>Fixed: an issue with abandoned Themes and Plugins checks</li>
 			<li>Fixed: an issue with detecting Extension updates</li>
 			<li>Fixed: a database query issue while performing updates</li>
-			<li>Fixed: various PHP Warnings and Errors</li>
+			<li>Fixed: warious PHP Warnings and Errors</li>
 			<li>Fixed: redirect issue for users that don't have permission to access MainWP Dashboard</li>
 			<li>Fixed: an issue with sorting Posts and Pages by Date</li>
 			<li>Fixed: multiple layout issues</li>

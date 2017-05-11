@@ -36,17 +36,17 @@ class MainWP_Manage_Backups {
 	}
 
 	public static function initMenu() {
-                $enable_legacy_backup = get_option('mainwp_enableLegacyBackupFeature');
-                $mainwp_primaryBackup = get_option('mainwp_primaryBackup');
-                                
-                $customPage = apply_filters( 'mainwp-getcustompage-backups', false );                
-                if ( is_array( $customPage ) && isset( $customPage['slug'] ) && !empty($mainwp_primaryBackup)) {
+        $enable_legacy_backup = get_option('mainwp_enableLegacyBackupFeature');
+        $mainwp_primaryBackup = get_option('mainwp_primaryBackup');
+
+        $customPage = apply_filters( 'mainwp-getcustompage-backups', false );
+        if ( is_array( $customPage ) && isset( $customPage['slug'] ) && !empty($mainwp_primaryBackup)) {
 			self::$hideSubmenuBackups = true;
 			$_page = add_submenu_page( 'mainwp_tab', $customPage['title'], '<span id="mainwp-Backups">' . $customPage['title'] . '</span>', 'read', 'ManageBackups' . $customPage['slug'], $customPage['callback'] );
-                        MainWP_System::add_sub_left_menu($customPage['title'], 'mainwp_tab', 'ManageBackups' . $customPage, 'admin.php?page=ManageBackups' .  $customPage['slug'], '<i class="fa fa-hdd-o"></i>', '' );
-                        if ($enable_legacy_backup) {
-                            add_action( 'load-' . $_page, array( MainWP_Manage_Backups::getClassName(), 'on_load_page' ) );
-                        }
+            MainWP_System::add_sub_left_menu($customPage['title'], 'mainwp_tab', 'ManageBackups' . $customPage, 'admin.php?page=ManageBackups' .  $customPage['slug'], '<i class="fa fa-hdd-o"></i>', '' );
+            if ($enable_legacy_backup) {
+                add_action( 'load-' . $_page, array( MainWP_Manage_Backups::getClassName(), 'on_load_page' ) );
+            }
 		} else {
                     if ($enable_legacy_backup) {
 			$page = add_submenu_page( 'mainwp_tab', __( 'Schedule Backup', 'mainwp' ), '<span id="mainwp-Backups">' . __( 'Schedule Backup', 'mainwp' ) . '</span>', 'read', 'ManageBackups', array(
@@ -76,10 +76,9 @@ class MainWP_Manage_Backups {
 				add_submenu_page( 'mainwp_tab', $subPage['title'], '<div class="mainwp-hidden">' . $subPage['title'] . '</div>', 'read', 'ManageBackups' . $subPage['slug'], $subPage['callback'] );
 			}
 		}
-                
-                MainWP_Manage_Backups::init_sub_sub_left_menu(self::$subPages, $enable_legacy_backup );
+        MainWP_Manage_Backups::init_sub_sub_left_menu(self::$subPages, $enable_legacy_backup );
 	}
-	 
+	
 	public static function on_load_page() {			
 		if ('ManageBackups' == $_GET['page'] && !isset( $_GET['id'])) {
 			self::$sitesTable = new MainWP_Manage_Backups_List_Table();	
@@ -133,34 +132,32 @@ class MainWP_Manage_Backups {
 		<?php
 	}
 
-        
-        static function init_sub_sub_left_menu( $subPages = array(), $enableLegacyBackup = true ) {
-                if (!self::$hideSubmenuBackups && $enableLegacyBackup) {
-                    MainWP_System::add_sub_left_menu(__('Schedule Backup', 'mainwp'), 'mainwp_tab', 'ManageBackups', 'admin.php?page=ManageBackups', '<i class="fa fa-hdd-o"></i>', '' );
-                    $init_sub_subleftmenu = array(                
-                            array(  'title' => __('Manage Backups', 'mainwp'), 
-                                    'parent_key' => 'ManageBackups', 
-                                    'href' => 'admin.php?page=ManageBackups',
-                                    'slug' => 'ManageBackups',
-                                    'right' => ''
-                                ), 
-                            array(  'title' => __('Add New', 'mainwp'), 
-                                    'parent_key' => 'ManageBackups', 
-                                    'href' => 'admin.php?page=ManageBackupsAddNew',
-                                    'slug' => 'ManageBackupsAddNew',
-                                    'right' => 'add_backup_tasks'
-                                )
-                    );
-                    
-                    MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'ManageBackups', 'ManageBackups');
-                    
-                    foreach($init_sub_subleftmenu as $item) {
-                        MainWP_System::add_sub_sub_left_menu($item['title'], $item['parent_key'], $item['slug'], $item['href'], $item['right']);
-                    }
-                }
-        }       
-       
-        
+    static function init_sub_sub_left_menu( $subPages = array(), $enableLegacyBackup = true ) {
+        if (!self::$hideSubmenuBackups && $enableLegacyBackup) {
+            MainWP_System::add_sub_left_menu(__('Schedule Backup', 'mainwp'), 'mainwp_tab', 'ManageBackups', 'admin.php?page=ManageBackups', '<i class="fa fa-hdd-o"></i>', '' );
+            $init_sub_subleftmenu = array(
+                    array(  'title' => __('Manage Backups', 'mainwp'),
+                            'parent_key' => 'ManageBackups',
+                            'href' => 'admin.php?page=ManageBackups',
+                            'slug' => 'ManageBackups',
+                            'right' => ''
+                        ),
+                    array(  'title' => __('Add New', 'mainwp'),
+                            'parent_key' => 'ManageBackups',
+                            'href' => 'admin.php?page=ManageBackupsAddNew',
+                            'slug' => 'ManageBackupsAddNew',
+                            'right' => 'add_backup_tasks'
+                        )
+            );
+
+            MainWP_System::init_subpages_left_menu($subPages, $init_sub_subleftmenu, 'ManageBackups', 'ManageBackups');
+
+            foreach($init_sub_subleftmenu as $item) {
+                MainWP_System::add_sub_sub_left_menu($item['title'], $item['parent_key'], $item['slug'], $item['href'], $item['right']);
+            }
+        }
+    }
+
 	/**
 	 * @param string $shownPage The page slug shown at this moment
 	 */
@@ -200,7 +197,7 @@ public static function renderHeader( $shownPage ) {
 			}
 			?>
 			<div class="clear"></div>
-		</div>                
+		</div>
 		<div id="mainwp_wrap-inside">
 			<?php
 			}

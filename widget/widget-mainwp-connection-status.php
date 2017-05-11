@@ -119,8 +119,8 @@ class MainWP_Connection_Status {
                                 if ( $j == $UP ) {
                                     $top_up_row = false;
                                     $html_online_sites .= $output;
-                                } else if (!in_array($website->id, $disconnect_site_ids)) {  
-                                    $disconnect_site_ids[] = $website->id;                                    
+                                } else if (!in_array($website->id, $disconnect_site_ids)) {
+                                    $disconnect_site_ids[] = $website->id;
                                     $top_row = false;
                                     $html_other_sites .= $output;
                                 }
@@ -131,7 +131,7 @@ class MainWP_Connection_Status {
                         $opts           = get_option( 'mainwp_opts_showhide_sections', false );
                         $hide_sites = ( is_array( $opts ) && isset( $opts['synced_sites'] ) && $opts['synced_sites'] == 'hide' ) ? true : false;
                     ?>
-                    <div class="mainwp-postbox-actions-top mainwp-padding-10">                              
+                    <div class="mainwp-postbox-actions-top mainwp-padding-10">
                         <span class="mainwp-right">
                                 <a id="mainwp-link-showhide-synced-sites" status="<?php echo( $hide_sites ? 'hide' : 'show' ); ?>" href="#">
                                     <i class="fa fa-eye-slash" aria-hidden="true"></i> <?php echo( $hide_sites ? __( 'Show online sites', 'mainwp' ) : __( 'Hide online sites', 'mainwp' ) ); ?>

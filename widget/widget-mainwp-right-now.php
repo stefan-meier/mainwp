@@ -3053,8 +3053,8 @@ class MainWP_Right_Now {
 			while ( $websites && ( $website = @MainWP_DB::fetch_object( $websites ) ) ) {
 				$site_ids[] = $website->id;
 			}
-		
-		 do_action( 'mainwp_rightnow_widget_bottom', $site_ids, $globalView ); 
+
+		 do_action( 'mainwp_rightnow_widget_bottom', $site_ids, $globalView );
 
 		 ?>
 

@@ -2,19 +2,19 @@
 
 class MainWP_Extensions_View {
 	public static function initMenu() {
-                $page =  add_submenu_page( 'mainwp_tab', __( 'Extensions', 'mainwp' ), ' <span id="mainwp-Extensions">' . __( 'Extensions', 'mainwp' ) . '</span>', 'read', 'Extensions', array(
+        $page =  add_submenu_page( 'mainwp_tab', __( 'Extensions', 'mainwp' ), ' <span id="mainwp-Extensions">' . __( 'Extensions', 'mainwp' ) . '</span>', 'read', 'Extensions', array(
 			MainWP_Extensions::getClassName(),
 			'render'
-		) );    
-                MainWP_System::add_sub_left_menu(__('Add Extensions', 'mainwp'), 'Extensions', 'Extensions', 'admin.php?page=Extensions&leftmenu=1', '<i class="fa fa-plug"></i>', '' );			
-                MainWP_System::add_sub_left_menu(__('Extensions', 'mainwp'), 'mainwp_tab', 'Extensions', 'admin.php?page=Extensions', '<i class="fa fa-plug"></i>', '' );
-                return $page;
+		) );
+        MainWP_System::add_sub_left_menu(__('Add Extensions', 'mainwp'), 'Extensions', 'Extensions', 'admin.php?page=Extensions&leftmenu=1', '<i class="fa fa-plug"></i>', '' );
+        MainWP_System::add_sub_left_menu(__('Extensions', 'mainwp'), 'mainwp_tab', 'Extensions', 'admin.php?page=Extensions', '<i class="fa fa-plug"></i>', '' );
+        return $page;
 	}
-        
-	public static function renderHeader( $shownPage, &$extensions ) {     
-                MainWP_UI::render_left_menu();
+
+	public static function renderHeader( $shownPage, &$extensions ) {
+        MainWP_UI::render_left_menu();
 		?>
-		<div class="mainwp-wrap">               
+		<div class="mainwp-wrap">
 		<h1><i class="fa fa-plug"></i> <?php _e( 'Extensions', 'mainwp' ); ?></h1>
 
 		<div class="mainwp-tabs" id="mainwp-tabs">
@@ -608,7 +608,7 @@ class MainWP_Extensions_View {
 					'product_id' => 'MainWP Post Dripper Extension',
 					'catalog_id' => '11756',
 					'group' => array('content')
-				),			
+				),
 			'mainwp-rocket-extension' =>
 				array(
 					'slug' => 'mainwp-rocket-extension',
