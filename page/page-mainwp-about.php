@@ -78,7 +78,7 @@ class MainWP_About {
 			<li>Fixed: an issue with abandoned Themes and Plugins checks</li>
 			<li>Fixed: an issue with detecting Extension updates</li>
 			<li>Fixed: a database query issue while performing updates</li>
-			<li>Fixed: warious PHP Warnings and Errors</li>
+			<li>Fixed: various PHP Warnings and Errors</li>
 			<li>Fixed: redirect issue for users that don't have permission to access MainWP Dashboard</li>
 			<li>Fixed: an issue with sorting Posts and Pages by Date</li>
 			<li>Fixed: multiple layout issues</li>
