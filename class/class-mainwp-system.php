@@ -1243,7 +1243,7 @@ class MainWP_System {
                         if ( substr( $change_log, - 1 ) != '/' ) {
                                 $change_log .= '/';
                         }
-                        $change_log .= 'changelog/';
+                        $change_log .= '#developers';
                         $infoTxt .= ' - ' . '<a href="' . $change_log .  '" target="_blank">Changelog</a>';
                         $infoNewTxt .= ' - ' . '<a href="' . $change_log .  '" target="_blank">Changelog</a>';
                     }
@@ -2077,9 +2077,15 @@ class MainWP_System {
 			'jquery-ui-dialog',
 			'jquery-ui-datepicker',
 		), $this->current_version );
+        
+        $enableLegacyBackupFeature = get_option( 'mainwp_enableLegacyBackupFeature' );
+        $primaryBackup = get_option('mainwp_primaryBackup');  
+        $disable_backup_checking = (empty($enableLegacyBackupFeature) && empty($primaryBackup)) ? true : false;
+        
 		$mainwpParams = array(
 			'image_url'             => MAINWP_PLUGIN_URL . 'images/',
 			'backup_before_upgrade' => ( get_option( 'mainwp_backup_before_upgrade' ) == 1 ),
+            'disable_checkBackupBeforeUpgrade' => $disable_backup_checking,
 			'admin_url'             => admin_url(),
 			'date_format'           => get_option( 'date_format' ),
 			'time_format'           => get_option( 'time_format' ),

@@ -53,6 +53,7 @@ class MainWP_Hooks {
         add_filter( 'mainwp_addsite', array( &$this, 'mainwp_add_site' ), 10, 1 );
         add_filter( 'mainwp_editsite', array( &$this, 'mainwp_edit_site' ), 10, 1 );
         add_action( 'mainwp_add_sub_leftmenu', array( &$this, 'hookAddSubLeftMenu' ), 10, 6 );
+        add_filter( 'mainwp_getwebsiteoptions', array( &$this, 'getWebsiteOptions' ), 10, 3 );
 	}
 
 	public function mainwp_log_debug( $pText ) {
@@ -239,7 +240,21 @@ class MainWP_Hooks {
 	public function getUserExtension() {
 		return MainWP_DB::Instance()->getUserExtension();
 	}
-
+    
+    public function getWebsiteOptions($options, $website, $name = '') {        
+        
+        if (empty($name))
+            return $options;
+                
+        if(is_numeric($website)) {
+            $obj = new stdClass();        
+            $obj->id = $website;
+            $website = $obj;
+        }
+        
+		return MainWP_DB::Instance()->getWebsiteOption( $website, $name );
+	}
+    
 	public function getWebsitesByUrl( $url ) {
 		return MainWP_DB::Instance()->getWebsitesByUrl( $url );
 	}

@@ -2053,6 +2053,11 @@ var rightnowShowBusyTimeout;
 var rightnowShowBusy;
 mainwp_rightnow_checkBackups = function(sitesToUpdate, siteNames)
 {
+    if (mainwpParams['disable_checkBackupBeforeUpgrade'] == true) {
+         if (rightnowContinueAfterBackup != undefined) rightnowContinueAfterBackup();
+        return false;        
+    }
+    
     rightnowShowBusy = true;
     rightnowShowBusyFunction = function()
     {
