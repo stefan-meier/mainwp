@@ -889,15 +889,14 @@ class MainWP_System {
 			MainWP_DB::Instance()->updateWebsiteSyncValues( $website->id, $websiteValues );
 		}
 
-		if ( count( $checkupdate_websites ) == 0 ) {
-            if ( 'Y' != get_option('mainwp_updatescheck_ready_sendmail') ) {
-                MainWP_Utility::update_option( 'mainwp_updatescheck_ready_sendmail', 'Y' );
-                return; // to check time before send notification
-            }
-
+		if ( count( $checkupdate_websites ) == 0 ) {            
 			$busyCounter = MainWP_DB::Instance()->getWebsitesCountWhereDtsAutomaticSyncSmallerThenStart();
-
-			if ( $busyCounter == 0 ) {
+			if ( $busyCounter == 0 ) {                
+                if ( 'Y' != get_option('mainwp_updatescheck_ready_sendmail') ) {
+                    MainWP_Utility::update_option( 'mainwp_updatescheck_ready_sendmail', 'Y' );
+                    return; // to check time before send notification
+                }
+            
                 update_option('mainwp_last_synced_all_sites', time());
 				MainWP_Logger::Instance()->debug( 'CRON :: updates check :: got to the mail part' );
 
@@ -1182,25 +1181,25 @@ class MainWP_System {
 					$infoTxt    = '<a href="' . admin_url('admin.php?page=managesites&dashboard=' . $website->id) . '">' . stripslashes( $website->name ) . '</a> - ' . $websiteCoreUpgrades['current'] . ' to ' . $websiteCoreUpgrades['new'];
 					$infoNewTxt = '*NEW* <a href="' . admin_url('admin.php?page=managesites&dashboard=' . $website->id) . '">' . stripslashes( $website->name ) . '</a> - ' . $websiteCoreUpgrades['current'] . ' to ' . $websiteCoreUpgrades['new'];
 					$newUpdate  = ! ( isset( $websiteLastCoreUpgrades['current'] ) && ( $websiteLastCoreUpgrades['current'] == $websiteCoreUpgrades['current'] ) && ( $websiteLastCoreUpgrades['new'] == $websiteCoreUpgrades['new'] ) );
-                    if ($website->is_ignoreCoreUpdates) {
-                        continue;
+                    // to fix
+                    if (!$website->is_ignoreCoreUpdates) {                        
+                        if ( $website->automatic_update == 1 ) {
+                            if ( $newUpdate ) {
+                                $coreNewUpdate[] = array( $website->id, $infoNewTxt, $infoTrustedText );
+                            } else {
+                                //Check ignore ? $ignoredCoreToUpdate
+                                $coreToUpdateNow[]           = $website->id;
+                                $allWebsites[ $website->id ] = $website;
+                                $coreToUpdate[]              = array( $website->id, $infoTxt, $infoTrustedText );
+                            }
+                        } else {
+                            if ( $newUpdate ) {
+                                $ignoredCoreNewUpdate[] = array( $website->id, $infoNewTxt, $infoNotTrustedText );
+                            } else {
+                                $ignoredCoreToUpdate[] = array( $website->id, $infoTxt, $infoNotTrustedText );
+                            }
+                        }
                     }
-					if ( $website->automatic_update == 1 ) {
-						if ( $newUpdate ) {
-							$coreNewUpdate[] = array( $website->id, $infoNewTxt, $infoTrustedText );
-						} else {
-							//Check ignore ? $ignoredCoreToUpdate
-							$coreToUpdateNow[]           = $website->id;
-							$allWebsites[ $website->id ] = $website;
-							$coreToUpdate[]              = array( $website->id, $infoTxt, $infoTrustedText );
-						}
-					} else {
-						if ( $newUpdate ) {
-							$ignoredCoreNewUpdate[] = array( $website->id, $infoNewTxt, $infoNotTrustedText );
-						} else {
-							$ignoredCoreToUpdate[] = array( $website->id, $infoTxt, $infoNotTrustedText );
-						}
-					}
 				}
 
 				/** Check plugins **/
