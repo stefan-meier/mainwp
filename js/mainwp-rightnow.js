@@ -1425,6 +1425,7 @@ rightnow_global_upgrade_all = function ()
     var sitesToUpgrade = [];
     var sitesPluginSlugs = {};
     var sitesThemeSlugs = {};
+    var sitesTranslationSlugs = {};
     var siteNames = {};
 
     var upgradeList = jQuery('#rightnow-upgrade-list');
@@ -1545,6 +1546,53 @@ rightnow_global_upgrade_all = function ()
         }
     }
 
+
+    //Find translation to update
+    foundChildren = jQuery('#wp_translation_upgrades').find('div[updated="0"]');
+    if (foundChildren.length != 0)
+    {
+        for (var i = 0; i < foundChildren.length; i++)
+        {
+            var child = jQuery(foundChildren[i]);
+            var parent = child.parent();
+
+            var siteElement;
+            var themeElement;
+
+            var checkAttr = child.attr('site_id');
+            if ((typeof checkAttr !== 'undefined') && (checkAttr !== false))
+            {
+                siteElement = child;
+                themeElement = parent;
+            }
+            else
+            {
+                siteElement = parent;
+                themeElement = child;
+            }
+
+            var siteId = siteElement.attr('site_id');
+            var siteName = siteElement.attr('site_name');
+            var transSlug = themeElement.attr('translation_slug');
+            //var themeName = themeElement.attr('theme_name');
+            if (sitesToUpdate.indexOf(siteId) == -1)
+            {
+                sitesCount++;
+                sitesToUpdate.push(siteId);
+                siteNames[siteId] = siteName;
+            }
+
+            if (sitesTranslationSlugs[siteId] == undefined)
+            {
+                sitesTranslationSlugs[siteId] = transSlug;
+            }
+            else
+            {
+                sitesTranslationSlugs[siteId] += ',' + transSlug;
+            }
+        }
+    }
+    
     //Build form
     for (var j = 0; j < sitesToUpdate.length; j++)
     {
@@ -1576,6 +1624,18 @@ rightnow_global_upgrade_all = function ()
             whatToUpgrade += '<span class="theme">' + updateCount + ' theme' + (updateCount > 1 ? 's' : '') + '</span>';
         }
 
+
+        if (sitesTranslationSlugs[siteId] != undefined)
+        {
+            var updateCount = sitesTranslationSlugs[siteId].match(/\,/g);
+            if (updateCount == null) updateCount = 1;
+            else updateCount = updateCount.length + 1;
+
+            if (whatToUpgrade != '') whatToUpgrade += ', ';
+
+            whatToUpgrade += '<span class="translation">' + updateCount + ' translation' + (updateCount > 1 ? 's' : '') + '</span>';
+        }
+        
         upgradeList.append('<tr><td>' + decodeURIComponent(siteNames[siteId]) + ' (' + whatToUpgrade + ')</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + siteId + '">'+ '<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
     }
 
@@ -1604,7 +1664,7 @@ rightnow_global_upgrade_all = function ()
 //    //Step 3: start updates
 //    rightnow_upgrade_all_int(sitesToUpdate, sitesToUpgrade, sitesPluginSlugs, sitesThemeSlugs);
 
-    rightnowContinueAfterBackup = function(pSitesCount, pSitesToUpdate, pSitesToUpgrade, pSitesPluginSlugs, pSitesThemeSlugs) { return function()
+    rightnowContinueAfterBackup = function(pSitesCount, pSitesToUpdate, pSitesToUpgrade, pSitesPluginSlugs, pSitesThemeSlugs, psitesTranslationSlugs) { return function()
     {
         //Step 2: show form
         var upgradeStatusBox = jQuery('#rightnow-upgrade-status-box');
@@ -1629,16 +1689,16 @@ rightnow_global_upgrade_all = function ()
         countRealItemsUpdated = 0;
 
         //Step 3: start updates
-        rightnow_upgrade_all_int(pSitesToUpdate, pSitesToUpgrade, pSitesPluginSlugs, pSitesThemeSlugs);
+        rightnow_upgrade_all_int(pSitesToUpdate, pSitesToUpgrade, pSitesPluginSlugs, pSitesThemeSlugs, psitesTranslationSlugs);
 
         rightnowContinueAfterBackup = undefined;
-    } }(sitesCount, sitesToUpdate, sitesToUpgrade, sitesPluginSlugs, sitesThemeSlugs);
+    } }(sitesCount, sitesToUpdate, sitesToUpgrade, sitesPluginSlugs, sitesThemeSlugs, sitesTranslationSlugs);
 
     return mainwp_rightnow_checkBackups(sitesToUpdate, siteNames);
 
 };
 
-rightnow_upgrade_all_int = function (pSitesToUpdate, pSitesToUpgrade, pSitesPluginSlugs, pSitesThemeSlugs)
+rightnow_upgrade_all_int = function (pSitesToUpdate, pSitesToUpgrade, pSitesPluginSlugs, pSitesThemeSlugs, psitesTranslationSlugs)
 {
     websitesToUpdate = pSitesToUpdate;
 
@@ -1650,6 +1710,9 @@ rightnow_upgrade_all_int = function (pSitesToUpdate, pSitesToUpgrade, pSitesPlug
     websitesThemeSlugsToUpgrade = pSitesThemeSlugs;
     currentThemeSlugToUpgrade = undefined;
 
+    websitesTransSlugsToUpgrade = psitesTranslationSlugs;
+    currentTransSlugToUpgrade = undefined;
+    
     currentWebsite = 0;
     websitesDone = 0;
     websitesTotal = websitesLeft = websitesToUpdate.length;
@@ -1683,12 +1746,13 @@ rightnow_upgrade_all_upgrade_next = function ()
 
     var themeSlugToUpgrade = websitesThemeSlugsToUpgrade[websiteId];
     var pluginSlugToUpgrade = websitesPluginSlugsToUpgrade[websiteId];
+    var transSlugToUpgrade = websitesTransSlugsToUpgrade[websiteId];    
     var wordpressUpgrade = (websitesToUpgrade.indexOf(websiteId) != -1);
 
-    rightnow_upgrade_int(websiteId, themeSlugToUpgrade, pluginSlugToUpgrade, wordpressUpgrade);
+    rightnow_upgrade_int(websiteId, themeSlugToUpgrade, pluginSlugToUpgrade, wordpressUpgrade, transSlugToUpgrade);
 };
 
-rightnow_upgrade_int = function (websiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade)
+rightnow_upgrade_int = function (websiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pTransSlugToUpgrade)
 {
     if (pThemeSlugToUpgrade != undefined)
     {
@@ -1722,7 +1786,23 @@ rightnow_upgrade_int = function (websiteId, pThemeSlugToUpgrade, pPluginSlugToUp
         }
     }
 
-    rightnow_upgrade_int_flow(websiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, (pThemeSlugToUpgrade == undefined), (pPluginSlugToUpgrade == undefined), !pWordpressUpgrade, undefined);
+    if (pTransSlugToUpgrade != undefined)
+    {
+        var transSlugParts = pTransSlugToUpgrade.split(',');
+        for (var i = 0; i < transSlugParts.length; i++)
+        {
+            var websiteHolder = jQuery('div[translation_slug="' + transSlugParts[i] + '"] div[site_id="' + websiteId + '"]');
+            if (!websiteHolder.exists())
+            {
+                websiteHolder = jQuery('div[site_id="' + websiteId + '"] div[translation_slug="' + transSlugParts[i] + '"]');
+            }
+
+            websiteHolder.find('.translationsAction').hide();
+            websiteHolder.find('.translationsInfo').html('<i class="fa fa-spinner fa-pulse"></i> '+__('Updating...'));
+        }
+    }
+    
+    rightnow_upgrade_int_flow(websiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, (pThemeSlugToUpgrade == undefined), (pPluginSlugToUpgrade == undefined), !pWordpressUpgrade, undefined, pTransSlugToUpgrade, (pTransSlugToUpgrade == undefined));
 
     return false;
 };
@@ -1749,7 +1829,7 @@ rightnow_upgrade_all_update_done = function ()
     rightnow_upgrade_all_loop_next();
 };
 
-rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage)
+rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
 {
     if (!pThemeDone)
     {
@@ -1764,7 +1844,7 @@ rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSl
             type: "POST",
             url: ajaxurl,
             data: data,
-            success: function (pWebsiteId, pSlug, pPluginSlugToUpgrade, pWordpressUpgrade, pPluginDone, pUpgradeDone, pErrorMessage)
+            success: function (pWebsiteId, pSlug, pPluginSlugToUpgrade, pWordpressUpgrade, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
             {
                 return function (response)
                 {
@@ -1809,22 +1889,22 @@ rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSl
 
                     //If all done: continue, else delay 400ms to not stress the server
                     var fnc = function() {
-                        rightnow_upgrade_int_flow(pWebsiteId, pSlug, pPluginSlugToUpgrade, pWordpressUpgrade, true, pPluginDone, pUpgradeDone, pErrorMessage);
+                        rightnow_upgrade_int_flow(pWebsiteId, pSlug, pPluginSlugToUpgrade, pWordpressUpgrade, true, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone);
                     };
 
-                    if (pPluginDone && pUpgradeDone) fnc();
+                    if (pPluginDone && pUpgradeDone && pTransDone) fnc();
                     else setTimeout(fnc, 400);
                 }
-            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pPluginDone, pUpgradeDone, pErrorMessage),
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone),
             tryCount : 0,
             retryLimit : 3,
-            endError: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage)
+            endError: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
             {
                 return function ()
                 {
-                    rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, true, true, true, 'Error processing request');
+                    rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, true, true, true, 'Error processing request', pTransSlugToUpgrade, true);
                 }
-            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage),
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone),
             error: function(xhr, textStatus, errorThrown ) {
                 this.tryCount++;
                 if (this.tryCount >= this.retryLimit) {
@@ -1862,7 +1942,7 @@ rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSl
             type: "POST",
             url: ajaxurl,
             data: data,
-            success: function (pWebsiteId, pThemeSlugToUpgrade, pSlug, pWordpressUpgrade, pThemeDone, pUpgradeDone, pErrorMessage)
+            success: function (pWebsiteId, pThemeSlugToUpgrade, pSlug, pWordpressUpgrade, pThemeDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
             {
                 return function (response)
                 {
@@ -1907,22 +1987,22 @@ rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSl
 
                     //If all done: continue, else delay 400ms to not stress the server
                     var fnc = function() {
-                        rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pSlug, pWordpressUpgrade, pThemeDone, true, pUpgradeDone, pErrorMessage);
+                        rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pSlug, pWordpressUpgrade, pThemeDone, true, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone);
                     };
 
-                    if (pThemeDone && pUpgradeDone) fnc();
+                    if (pThemeDone && pUpgradeDone && pTransDone) fnc();
                     else setTimeout(fnc, 400);
                 }
-            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pUpgradeDone, pErrorMessage),
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone),
             tryCount : 0,
             retryLimit : 3,
-            endError: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage)
+            endError: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
             {
                 return function ()
                 {
-                    rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, true, true, true, 'Error processing request');
+                    rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, true, true, true, 'Error processing request', pTransSlugToUpgrade, true);
                 }
-            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage),
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone),
             error: function(xhr, textStatus, errorThrown ) {
                 this.tryCount++;
                 if (this.tryCount >= this.retryLimit) {
@@ -1963,7 +2043,7 @@ rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSl
             type: "POST",
             url: ajaxurl,
             data: data,
-            success: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pErrorMessage)
+            success: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
             {
                 return function (response)
                 {
@@ -1988,22 +2068,120 @@ rightnow_upgrade_int_flow = function (pWebsiteId, pThemeSlugToUpgrade, pPluginSl
 
                     //If all done: continue, else delay 400ms to not stress the server
                     var fnc = function() {
-                        rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, true, pErrorMessage);
+                        rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, true, pErrorMessage, pTransSlugToUpgrade, pTransDone);
                     };
 
-                    if (pThemeDone && pPluginDone) fnc();
+                    if (pThemeDone && pPluginDone && pTransDone) fnc();
                     else setTimeout(fnc, 400);
                 }
-            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pErrorMessage),
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pErrorMessage, pTransSlugToUpgrade, pTransDone ),
             tryCount : 0,
             retryLimit : 3,
-            endError: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage)
+            endError: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
             {
                 return function ()
                 {
-                    rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, true, true, true, 'Error processing request');
+                    rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, true, true, true, 'Error processing request', pTransSlugToUpgrade, true);
                 }
-            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage),
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone),
+            error: function(xhr, textStatus, errorThrown ) {
+                this.tryCount++;
+                if (this.tryCount >= this.retryLimit) {
+                    this.endError();
+                    return;
+                }
+
+                var fnc = function(pRqst, pXhr) {
+                    return function() {
+                        if (pXhr.status == 404) {
+                            //handle error
+                            jQuery.ajax(pRqst);
+                        } else if (pXhr.status == 500) {
+                            //handle error
+                        } else {
+                            //handle error
+                        }
+                    }
+                }(this, xhr);
+                setTimeout(fnc, 1000);
+            },
+            dataType: 'json'
+        });
+    }
+     else if (!pTransDone)
+    {
+        var data = mainwp_secure_data({
+            action:'mainwp_upgradeplugintheme',
+            websiteId:pWebsiteId,
+            type:'translation',
+            slug:pTransSlugToUpgrade
+        });
+
+        jQuery.ajax({
+            type: "POST",
+            url: ajaxurl,
+            data: data,
+            success: function (pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pUpgradeDone, pErrorMessage, pSlug, pTransDone)
+            {
+                return function (response)
+                {
+                    var slugParts = pSlug.split(',');
+                    for (var i = 0; i < slugParts.length; i++)
+                    {
+                        var result;
+                        var websiteHolder = jQuery('div[translation_slug="' + slugParts[i] + '"] div[site_id="' + pWebsiteId + '"]');
+                        if (!websiteHolder.exists())
+                        {
+                            websiteHolder = jQuery('div[site_id="' + pWebsiteId + '"] div[translation_slug="' + slugParts[i] + '"]');
+                        }
+                        if (response.error)
+                        {
+                            result = getErrorMessage(response.error);
+                            pErrorMessage = result;
+                        }
+                        else
+                        {
+                            var res = response.result;
+
+                            if (res[slugParts[i]])
+                            {
+                                result = __('Update successful!');
+                                if (response.site_url)
+                                    result = result + '<br/>' + '<a href="' + response.site_url + '" target="_blank">View Site</a> | <a href="admin.php?page=SiteOpen&newWindow=yes&websiteid=' + pWebsiteId + '" target="_blank">WP Admin</a>';
+                                websiteHolder.attr('updated', 1);
+                                countRealItemsUpdated++;
+                                if (itemsToUpdate.indexOf(slugParts[i]) == -1) itemsToUpdate.push(slugParts[i]);
+                            }
+                            else
+                            {
+                                result = __('Update failed!');
+                                pErrorMessage = result;
+                            }
+
+                        }
+
+                        websiteHolder.find('.translationsInfo').html(result);
+                    }
+                    rightnow_upgrade_all_update_site_bold(pWebsiteId, 'translation');
+
+                    //If all done: continue, else delay 400ms to not stress the server
+                    var fnc = function() {
+                        rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pSlug, true);
+                    };
+
+                    if (pThemeDone && pUpgradeDone && pPluginDone) fnc();
+                    else setTimeout(fnc, 400);
+                }
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone),
+            tryCount : 0,
+            retryLimit : 3,
+            endError: function (WebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone)
+            {
+                return function ()
+                {
+                    rightnow_upgrade_int_flow(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, true, true, true, 'Error processing request', pTransSlugToUpgrade, true);
+                }
+            }(pWebsiteId, pThemeSlugToUpgrade, pPluginSlugToUpgrade, pWordpressUpgrade, pThemeDone, pPluginDone, pUpgradeDone, pErrorMessage, pTransSlugToUpgrade, pTransDone),
             error: function(xhr, textStatus, errorThrown ) {
                 this.tryCount++;
                 if (this.tryCount >= this.retryLimit) {
