@@ -1072,7 +1072,10 @@ class MainWP_System {
                     MainWP_Utility::update_option( 'mainwp_automaticUpdate_httpChecks', '' );
                 }
 
-
+                $disabled_notification = apply_filters( 'mainwp_updatescheck_disable_notification_mail', false );                  
+                if ($disabled_notification)
+                    return;
+                
 				if ( ! $sendMail ) {
 					MainWP_Logger::Instance()->debug( 'CRON :: updates check :: sendMail is false' );
 
