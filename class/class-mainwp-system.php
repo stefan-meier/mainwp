@@ -2506,6 +2506,7 @@ class MainWP_System {
 			wp_enqueue_script( 'mainwp-managesites', MAINWP_PLUGIN_URL . 'js/mainwp-managesites.js', array(), $this->current_version );
 			wp_enqueue_script( 'mainwp-extensions', MAINWP_PLUGIN_URL . 'js/mainwp-extensions.js', array(), $this->current_version );
             wp_enqueue_script( 'select2', MAINWP_PLUGIN_URL . 'js/select2/js/select2.min.js', array( 'jquery' ), '4.0.3', true );
+            wp_enqueue_script( 'mainwp-moment', MAINWP_PLUGIN_URL . 'js/moment.min.js', array(), $this->current_version );
 		}
 
 		wp_enqueue_script( 'mainwp-ui', MAINWP_PLUGIN_URL . 'js/mainwp-ui.js', array(), $this->current_version );
@@ -2513,7 +2514,7 @@ class MainWP_System {
 		wp_enqueue_script( 'mainwp-date', MAINWP_PLUGIN_URL . 'js/date.js', array(), $this->current_version );
 		wp_enqueue_script( 'mainwp-tablesorter', MAINWP_PLUGIN_URL . 'js/jquery.tablesorter.min.js', array(), $this->current_version );
 		wp_enqueue_script( 'mainwp-tablesorter-pager', MAINWP_PLUGIN_URL . 'js/jquery.tablesorter.pager.js', array(), $this->current_version );
-		wp_enqueue_script( 'mainwp-moment', MAINWP_PLUGIN_URL . 'js/moment.min.js', array(), $this->current_version );
+		
 		if (isset($_GET['page'])) {
 			if ($_GET['page'] == 'managesites' || $_GET['page'] == 'PluginsManage' || $_GET['page'] == 'ThemesManage' ) {
 				wp_enqueue_script( 'dragtable', MAINWP_PLUGIN_URL . 'js/dragtable/jquery.dragtable.js', array( 'jquery' ), '1.0', false );
