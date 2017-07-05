@@ -1325,7 +1325,8 @@ class MainWP_Utility {
 			@curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
 		}
 
-		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );
+		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );        
+        @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
 
 		$timeout = 20 * 60 * 60; //20 minutes
 		@curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
