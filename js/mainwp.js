@@ -5208,8 +5208,8 @@ mainwp_pages_table_reinit = function () {
             textExtraction:function (node) {
                 if (jQuery(node).find('abbr').length == 0) {
                     return node.innerHTML
-                } else {
-                    var raw = jQuery(node).find('abbr')[0].raw_value;
+                } else {                    
+                    var raw = jQuery(jQuery(node).find('abbr')[0]).attr('raw_value'); 
                     if (typeof raw !== typeof undefined && raw !== false) {
                         return raw;
                     }
@@ -5846,10 +5846,10 @@ mainwp_posts_table_reinit = function () {
                 if (jQuery(node).find('abbr').length == 0) {
                     return node.innerHTML
                 } else {
-                    var raw = jQuery(node).find('abbr')[0].raw_value;
-                    if (typeof raw !== typeof undefined && raw !== false) {
+                    var raw = jQuery(jQuery(node).find('abbr')[0]).attr('raw_value');                    
+                    if (typeof raw !== typeof undefined && raw !== false) {                        
                         return raw;
-                    }
+                    }                  
                     return jQuery(node).find('abbr')[0].title;
                 }
             },
