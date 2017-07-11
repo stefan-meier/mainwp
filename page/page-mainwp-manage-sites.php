@@ -379,7 +379,7 @@ class MainWP_Manage_Sites {
         if ( !get_option('mainwp_enableLegacyBackupFeature')) {
             return false;
         }
-                
+
 		$userid        = $pTask->userid;
 		$type          = $pTask->type;
 		$exclude       = $pTask->exclude;
@@ -965,7 +965,7 @@ class MainWP_Manage_Sites {
         if ( !get_option('mainwp_enableLegacyBackupFeature')) {
             return false;
         }
-        
+
 		if ( trim( $pFilename ) == '' ) {
 			$pFilename = null;
 		}

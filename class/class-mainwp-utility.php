@@ -646,8 +646,8 @@ class MainWP_Utility {
 
 					if ( file_exists( $cookieFile ) ) {
 						@chmod( $cookieFile, 0777 );
-						@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
-						@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
+//						@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
+//						@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 					}
 				}
 
@@ -898,8 +898,8 @@ class MainWP_Utility {
 
 				if ( file_exists( $cookieFile ) ) {
 					@chmod( $cookieFile, 0777 );
-					@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
-					@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
+//					@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
+//					@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 				}
 			}
 
@@ -1286,8 +1286,8 @@ class MainWP_Utility {
 
 			if ( file_exists( $cookieFile ) ) {
 				@chmod( $cookieFile, 0777 );
-				@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
-				@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
+//				@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
+//				@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 			}
 		}
 
@@ -1325,7 +1325,7 @@ class MainWP_Utility {
 			@curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
 		}
 
-		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );        
+		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );
         @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
 
 		$timeout = 20 * 60 * 60; //20 minutes

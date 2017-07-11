@@ -119,12 +119,12 @@ class MainWP_Manage_Sites_List_Table extends WP_List_Table {
                 $disable_backup = true;
             }
         } else if (!is_array($primaryBackupMethods) || empty($primaryBackupMethods)) {
-            $disable_backup = true;                                                   
+            $disable_backup = true;
 		}
                 
         if ($disable_backup && isset($columns['backup'])) {
                 unset($columns['backup']);
-        } 
+        }
                 
 		return $columns;
 	}

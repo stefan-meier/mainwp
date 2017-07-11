@@ -257,7 +257,7 @@ class MainWP_Main {
 								<?php
 							} else if ( $sync_status === 'all_synced' ) {
                                 $now = time();
-                                $last_sync_all = get_option('mainwp_last_synced_all_sites', 0);                              
+                                $last_sync_all = get_option('mainwp_last_synced_all_sites', 0);
                                 if ($last_sync_all == 0)
                                     $last_sync_all = $last_sync;
 								?>

@@ -593,9 +593,9 @@ class MainWP_Post_Handler {
         if ( !isset( $_POST['status'] ) ) {
             die( -1 );
         }
-        
-        if ('last_sync_sites' ==  $_POST['status']) {
-            update_option('mainwp_last_synced_all_sites', time());
+
+        if ( 'last_sync_sites' == $_POST['status'] ) {
+            update_option( 'mainwp_last_synced_all_sites', time() );
             die( 'ok' );
         }
 
