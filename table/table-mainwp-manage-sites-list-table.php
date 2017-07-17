@@ -953,17 +953,15 @@ class MainWP_Manage_Sites_List_Table extends WP_List_Table {
                 }
             } else {
                 $_class = MainWP_Utility::sanitize_file_name( $group_class );
-                $classes = strtolower($_class);
+                $classes .= " " . strtolower($_class);
             }            
         }
         
-        if ($classes != '' || $row_class != '') {
-            $classes = trim($classes);
-            $classes = ' class="' . $classes . " " . $row_class. '"';
-        }
         
+        $classes = trim($classes);
+        $classes = ' class="child-site ' . $classes . " " . $row_class. '"';
         
-		echo '<tr' . $classes . ' siteid="' . $item['id'] . '" site-url="' . $item['url'] . '">';
+		echo '<tr id="child-site-' . $item['id'] . '"' . $classes . ' siteid="' . $item['id'] . '" site-url="' . $item['url'] . '">';
 		$this->single_row_columns( $item );
 		echo '</tr>';
 	}
