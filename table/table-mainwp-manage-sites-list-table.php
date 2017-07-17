@@ -939,14 +939,36 @@ class MainWP_Manage_Sites_List_Table extends WP_List_Table {
 
 	function single_row( $item ) {
 		static $row_class = '';
-		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
-
-		echo '<tr' . $row_class . ' siteid="' . $item['id'] . '" site-url="' . $item['url'] . '">';
+		$row_class = ( $row_class == '' ? 'alternate' : '' );  
+        
+        $classes = '';
+        if (isset($item['groups']) && !empty($item['groups'])) {            
+            $group_class = $item['groups'];
+            $group_class = explode(',', $group_class);            
+            if(is_array($group_class)) {
+                foreach( $group_class as $_class) {
+                    $_class = trim($_class);
+                    $_class = MainWP_Utility::sanitize_file_name( $_class );
+                    $classes .= " " . strtolower($_class);
+                }
+            } else {
+                $_class = MainWP_Utility::sanitize_file_name( $group_class );
+                $classes = strtolower($_class);
+            }            
+        }
+        
+        if ($classes != '' || $row_class != '') {
+            $classes = trim($classes);
+            $classes = ' class="' . $classes . " " . $row_class. '"';
+        }
+        
+        
+		echo '<tr' . $classes . ' siteid="' . $item['id'] . '" site-url="' . $item['url'] . '">';
 		$this->single_row_columns( $item );
 		echo '</tr>';
 	}
         
-        public function print_column_headers( $with_id = true ) {
+    public function print_column_headers( $with_id = true ) {
 		list( $columns, $hidden, $sortable, $primary ) = $this->get_column_info();
 
 		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
