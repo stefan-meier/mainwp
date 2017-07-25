@@ -2,7 +2,7 @@
 
 class MainWP_DB {
 	//Config
-	private $mainwp_db_version = '8.11';
+	private $mainwp_db_version = '8.12';
 	//Private
 	private $table_prefix;
 	//Singleton
@@ -119,6 +119,7 @@ class MainWP_DB {
   is_ignorePluginUpdates tinyint(1) NOT NULL DEFAULT 0,
   is_ignoreThemeUpdates tinyint(1) NOT NULL DEFAULT 0,
   verify_certificate tinyint(1) NOT NULL DEFAULT 1,
+  force_use_ipv4 tinyint(1) NOT NULL DEFAULT 0,
   ssl_version tinyint(1) NOT NULL DEFAULT 0,
   ip text NOT NULL DEFAULT "",
   uniqueId text NOT NULL,

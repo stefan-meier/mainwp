@@ -355,6 +355,7 @@ class MainWP_Post {
 					<label for="mainwp_get_custom_post_types_select"><?php _e('Post type:','mainwp'); ?></label><br/>
 					<select id="mainwp_get_custom_post_types_select">
 						<option value="any"><?php _e('All post types', 'mainwp'); ?></option>
+                        <option value="post"><?php _e('Post', 'mainwp'); ?></option>
 						<?php
 						foreach (get_post_types(array('_builtin' => false)) as $key) {
 							if (!in_array($key, MainWPCustomPostType::$default_post_types))
@@ -422,6 +423,26 @@ class MainWP_Post {
 				<th scope="col" id="status" class="drag-enable manage-column column-status sortable asc" style="width: 120px;">
 					<a href="#" onclick="return false;"><span><?php _e( 'Status', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
+                
+                <?php
+				if ( MainWP_Utility::enabled_wp_seo() ) :
+        			?>
+					<th scope="col" id="seo-links" class="drag-enable manage-column column-seo-links sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links in this post', 'mainwp' ); ?>"><?php echo __( 'Links', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>
+                    <th scope="col" id="seo-linked" class="drag-enable manage-column column-seo-linked sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links linking to this post', 'mainwp' ); ?>"><?php echo __( 'Linked', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>
+                    <th scope="col" id="seo-score" class="drag-enable manage-column column-seo-score sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('SEO score', 'mainwp'); ?>"><?php echo __( 'SEO score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>
+                    <th scope="col" id="seo-readability" class="drag-enable manage-column column-seo-readability sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('Readability score', 'mainwp'); ?>"><?php echo __( 'Readability score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>                    
+					<?php
+				endif;
+				?>
+                    
 				<th scope="col" id="website" class="drag-enable manage-column column-categories sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Website', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
@@ -457,6 +478,24 @@ class MainWP_Post {
 				<th scope="col" id="status" class="manage-column column-status sortable asc" style="width: 120px;">
 					<a href="#" onclick="return false;"><span><?php _e( 'Status', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
+                <?php
+				if ( MainWP_Utility::enabled_wp_seo() ) :
+        			?>
+					<th scope="col" id="seo-links" class="drag-enable manage-column column-seo-links sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links in this post', 'mainwp' ); ?>"><?php echo __( 'Links', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>
+                    <th scope="col" id="seo-linked" class="drag-enable manage-column column-seo-linked sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links linking to this post', 'mainwp' ); ?>"><?php echo __( 'Linked', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>
+                    <th scope="col" id="seo-score" class="drag-enable manage-column column-seo-score sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('SEO score', 'mainwp'); ?>"><?php echo __( 'SEO score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>
+                    <th scope="col" id="seo-readability" class="drag-enable manage-column column-seo-readability sortable desc" style="">
+						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('Readability score', 'mainwp'); ?>"><?php echo __( 'Readability score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
+					</th>    
+					<?php
+				endif;
+				?>                    
 				<th scope="col" id="website" class="manage-column column-categories sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Website', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
@@ -553,6 +592,13 @@ class MainWP_Post {
 			// Add support for custom post type
 			if (is_plugin_active('mainwp-custom-post-types/mainwp-custom-post-types.php')) {
 				$post_data['post_type'] = $post_type;
+                if ($post_type == 'any') {
+                    $post_data['exclude_page_type'] = 1; // to exclude pages in posts listing, custom post type extension
+                }
+			}
+            
+            if ( MainWP_Utility::enabled_wp_seo() ) {
+				$post_data['WPSEOEnabled'] = 1;
 			}
 
 			if ( isset( $postId ) && ( $postId != '' ) ) {
@@ -624,7 +670,7 @@ class MainWP_Post {
 					}
 				}
 			}
-
+                        
 			foreach ( $posts as $post ) {
                 $raw_dts = '';
 				if ( isset( $post['dts'] ) ) {
@@ -752,7 +798,26 @@ class MainWP_Post {
 					<td class="date column-date"><abbr raw_value="<?php echo $raw_dts; ?>"
 							title="<?php echo $post['dts']; ?>"><?php echo $post['dts']; ?></abbr>
 					</td>
-					<td class="date column-status"><?php echo self::getStatus( $post['status'] ); ?></td>
+					<td class="date column-status"><?php echo self::getStatus( $post['status'] ); ?></td>                    
+                    <?php
+                    if ( MainWP_Utility::enabled_wp_seo() ) {                             
+                        $count_seo_links = $count_seo_linked = null;
+                        $seo_score = $readability_score = ''; 
+                        if ( isset($post['seo_data'])) {
+                            $seo_data = $post['seo_data'];
+                            $count_seo_links = esc_html($seo_data['count_seo_links']);
+                            $count_seo_linked = esc_html($seo_data['count_seo_linked']);
+                            $seo_score = $seo_data['seo_score'];
+                            $readability_score = $seo_data['readability_score'];                            
+                        }                             
+                        ?>
+                        <td><abbr raw_value="<?php echo $count_seo_links !== null ? $count_seo_links : -1; ?>" title=""><?php echo $count_seo_links !== null ? $count_seo_links : ''; ?></abbr></td>
+                        <td><abbr raw_value="<?php echo $count_seo_linked !== null ? $count_seo_linked : -1; ?>" title=""><?php echo $count_seo_linked !== null ? $count_seo_linked : ''; ?></abbr></td>
+                        <td><abbr raw_value="<?php echo $seo_score ? 1 : 0; ?>" title=""><?php echo $seo_score; ?></abbr></td>
+                        <td><abbr raw_value="<?php echo $readability_score ? 1 : 0; ?>" title=""><?php echo $readability_score; ?></abbr></td>
+                        <?php                       
+                    };
+                    ?>
 					<td class="categories column-categories">
 						<a href="<?php echo $website->url; ?>" target="_blank"><?php echo $website->url; ?></a>
 

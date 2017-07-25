@@ -1239,6 +1239,7 @@ class MainWP_Post_Handler {
 		if ( isset( $_POST['url'] ) ) {
 			$url               = $_POST['url'];
 			$verifyCertificate = $_POST['test_verify_cert'];
+            $forceUseIPv4 = $_POST['test_force_use_ipv4'];            
 			$sslVersion        = MainWP_Utility::getCURLSSLVersion( $_POST['test_ssl_version'] );
 			$http_user         = $_POST['http_user'];
 			$http_pass         = $_POST['http_pass'];
@@ -1248,20 +1249,21 @@ class MainWP_Post_Handler {
 				$url               = $website->url;
 				$name              = $website->name;
 				$verifyCertificate = $website->verify_certificate;
+                $forceUseIPv4      = $website->force_use_ipv4;
 				$sslVersion        = $website->ssl_version;
 				$http_user         = $website->http_user;
 				$http_pass         = $website->http_pass;
 			}
 		}
 
-		$rslt = MainWP_Utility::tryVisit( $url, $verifyCertificate, $http_user, $http_pass, $sslVersion);
+		$rslt = MainWP_Utility::tryVisit( $url, $verifyCertificate, $http_user, $http_pass, $sslVersion, $forceUseIPv4);
 
 		if ( isset( $rslt['error'] ) && ( $rslt['error'] != '' ) && ( substr( $url, - 9 ) != 'wp-admin/' ) ) {
 			if ( substr( $url, - 1 ) != '/' ) {
 				$url .= '/';
 			}
 			$url .= 'wp-admin/';
-			$newrslt = MainWP_Utility::tryVisit( $url, $verifyCertificate, $http_user, $http_pass, $sslVersion );
+			$newrslt = MainWP_Utility::tryVisit( $url, $verifyCertificate, $http_user, $http_pass, $sslVersion, $forceUseIPv4 );
 			if ( isset( $newrslt['error'] ) && ( $rslt['error'] != '' ) ) {
 				$rslt = $newrslt;
 			}

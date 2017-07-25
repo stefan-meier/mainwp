@@ -1,7 +1,10 @@
 <?php
 
 class MainWP_Utility {
-	public static function startsWith( $haystack, $needle ) {
+    
+    public static $enabled_wp_seo = null;
+    
+    public static function startsWith( $haystack, $needle ) {
 		return ! strncmp( $haystack, $needle, strlen( $needle ) );
 	}
 
@@ -71,9 +74,11 @@ class MainWP_Utility {
 		$http_pass = null;
 		$sslVersion = null;
 		$verifyCertificate = null;
+        $forceUseIPv4 = null;
 		if ( is_object( $website ) && isset( $website->url ) ) {
 			$url               = $website->url;
 			$verifyCertificate = isset( $website->verify_certificate ) ? $website->verify_certificate : null;
+            $forceUseIPv4      = $website->force_use_ipv4;
 			$http_user         = $website->http_user;
 			$http_pass         = $website->http_pass;
 			$sslVersion        = $website->ssl_version;
@@ -85,7 +90,7 @@ class MainWP_Utility {
 			return false;
 		}
 
-		return MainWP_Utility::tryVisit( $url, $verifyCertificate, $http_user, $http_pass, $sslVersion );
+		return MainWP_Utility::tryVisit( $url, $verifyCertificate, $http_user, $http_pass, $sslVersion, $forceUseIPv4);
 	}
 
 	private static function isDomainValid( $url ) {
@@ -94,7 +99,7 @@ class MainWP_Utility {
 	}
 
 
-	public static function tryVisit( $url, $verifyCertificate = null, $http_user = null, $http_pass = null, $sslVersion = 0 ) {
+	public static function tryVisit( $url, $verifyCertificate = null, $http_user = null, $http_pass = null, $sslVersion = 0, $forceUseIPv4 = null ) {
 		//$agent    = 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)';
 		$agent = 'Mozilla/5.0 (compatible; MainWP/' . MainWP_System::$version . '; +http://mainwp.com)';
 		$postdata = array( 'test' => 'yes' );
@@ -135,6 +140,28 @@ class MainWP_Utility {
 		}
 
 		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );
+        @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
+        
+        $force_use_ipv4 = false;                                     
+        if ( $forceUseIPv4 !== null ) {
+            if ( $forceUseIPv4 == 1 ) {
+                $force_use_ipv4 = true;
+            } else if ( $forceUseIPv4 == 2 ) { // use global setting
+                if ( get_option( 'mainwp_forceUseIPv4' ) == 1 )  {
+                    $force_use_ipv4 = true;
+                }
+            }
+        } else {
+            if (  get_option( 'mainwp_forceUseIPv4' ) == 1 ) {
+                $force_use_ipv4 = true;
+            }
+        }                
+
+        if ($force_use_ipv4) {
+            if (defined('CURLOPT_IPRESOLVE') AND defined('CURL_IPRESOLVE_V4')) {
+                @curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            }
+        }  
 
 		$disabled_functions = ini_get( 'disable_functions' );
 		if ( empty( $disabled_functions ) || ( stristr( $disabled_functions, 'curl_multi_exec' ) === false ) ) {
@@ -688,7 +715,30 @@ class MainWP_Utility {
 				}
 
 				@curl_setopt( $ch, CURLOPT_SSLVERSION, $website->ssl_version );
+                @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
+                
+                $force_use_ipv4 = false;
+                $forceUseIPv4 = isset( $website->force_use_ipv4 ) ? $website->force_use_ipv4 : null;                                
+                if ( $forceUseIPv4 !== null ) {
+                    if ( $forceUseIPv4 == 1 ) {
+                        $force_use_ipv4 = true;
+                    } else if ( $forceUseIPv4 == 2 ) { // use global setting
+                        if ( get_option( 'mainwp_forceUseIPv4' ) == 1 )  {
+                            $force_use_ipv4 = true;
+                        }
+                    }
+                } else {
+                    if (  get_option( 'mainwp_forceUseIPv4' ) == 1 ) {
+                        $force_use_ipv4 = true;
+                    }
+                }                
 
+                if ($force_use_ipv4) {
+                    if (defined('CURLOPT_IPRESOLVE') AND defined('CURL_IPRESOLVE_V4')) {
+                        @curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+                    }
+                }                
+                
 				@curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout ); //20minutes
 				if ( version_compare(phpversion(), '5.3.0') >= 0 || ! ini_get( 'safe_mode' ) ) {
 					@set_time_limit( $timeout );
@@ -1028,7 +1078,7 @@ class MainWP_Utility {
 		$params['optimize'] = ( ( get_option( 'mainwp_optimize' ) == 1 ) ? 1 : 0 );
 
 		$postdata    = MainWP_Utility::getPostDataAuthed( $website, $what, $params );
-		$information = MainWP_Utility::fetchUrl( $website, $website->url, $postdata, $checkConstraints, $pForceFetch, $website->verify_certificate, $pRetryFailed, $website->http_user, $website->http_pass, $website->ssl_version );
+		$information = MainWP_Utility::fetchUrl( $website, $website->url, $postdata, $checkConstraints, $pForceFetch, $website->verify_certificate, $pRetryFailed, $website->http_user, $website->http_pass, $website->ssl_version, array('force_use_ipv4' => $website->force_use_ipv4) );
 
 		if ( is_array( $information ) && isset( $information['sync'] ) && ! empty( $information['sync'] ) ) {
 			MainWP_Sync::syncInformationArray( $website, $information['sync'] );
@@ -1074,11 +1124,11 @@ class MainWP_Utility {
 		return $information;
 	}
 
-	static function fetchUrlNotAuthed( $url, $admin, $what, $params = null, $pForceFetch = false, $verifyCertificate = null, $http_user = null, $http_pass = null, $sslVersion = 0 ) {
+	static function fetchUrlNotAuthed( $url, $admin, $what, $params = null, $pForceFetch = false, $verifyCertificate = null, $http_user = null, $http_pass = null, $sslVersion = 0, $others = array() ) {
 		$postdata = MainWP_Utility::getPostDataNotAuthed( $url, $admin, $what, $params );
 		$website  = null;
 
-		return MainWP_Utility::fetchUrl( $website, $url, $postdata, false, $pForceFetch, $verifyCertificate, true, $http_user, $http_pass,  $sslVersion);
+		return MainWP_Utility::fetchUrl( $website, $url, $postdata, false, $pForceFetch, $verifyCertificate, true, $http_user, $http_pass,  $sslVersion, $others);
 	}
 
 	static function fetchUrlClean( $url, $postdata ) {
@@ -1109,7 +1159,7 @@ class MainWP_Utility {
 		}
 	}
 
-	static function fetchUrl( &$website, $url, $postdata, $checkConstraints = false, $pForceFetch = false, $verifyCertificate = null, $pRetryFailed = true, $http_user = null, $http_pass = null, $sslVersion = 0 ) {
+	static function fetchUrl( &$website, $url, $postdata, $checkConstraints = false, $pForceFetch = false, $verifyCertificate = null, $pRetryFailed = true, $http_user = null, $http_pass = null, $sslVersion = 0, $others = array() ) {
 		$start = time();
 
 		try {
@@ -1122,7 +1172,7 @@ class MainWP_Utility {
 				$tmpUrl .= 'wp-admin/admin-ajax.php';
 			}
 
-			return self::_fetchUrl( $website, $tmpUrl, $postdata, $checkConstraints, $pForceFetch, $verifyCertificate, $http_user, $http_pass, $sslVersion );
+			return self::_fetchUrl( $website, $tmpUrl, $postdata, $checkConstraints, $pForceFetch, $verifyCertificate, $http_user, $http_pass, $sslVersion, $others);
 		} catch ( Exception $e ) {
 			if ( ! $pRetryFailed || ( ( time() - $start ) > 30 ) ) {
 				//If more then 30secs past since the initial request, do not retry this!
@@ -1130,14 +1180,14 @@ class MainWP_Utility {
 			}
 
 			try {
-				return self::_fetchUrl( $website, $url, $postdata, $checkConstraints, $pForceFetch, $verifyCertificate, $http_user, $http_pass, $sslVersion );
+				return self::_fetchUrl( $website, $url, $postdata, $checkConstraints, $pForceFetch, $verifyCertificate, $http_user, $http_pass, $sslVersion, $others );
 			} catch ( Exception $ex ) {
 				throw $e;
 			}
 		}
 	}
 
-	static function _fetchUrl( &$website, $url, $postdata, $checkConstraints = false, $pForceFetch = false, $verifyCertificate = null, $http_user = null, $http_pass = null, $sslVersion = 0 ) {
+	static function _fetchUrl( &$website, $url, $postdata, $checkConstraints = false, $pForceFetch = false, $verifyCertificate = null, $http_user = null, $http_pass = null, $sslVersion = 0, $others = array() ) {
 		//$agent = 'Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)';
 		$agent = 'Mozilla/5.0 (compatible; MainWP/' . MainWP_System::$version . '; +http://mainwp.com)';
 
@@ -1316,7 +1366,7 @@ class MainWP_Utility {
 				$ssl_verifyhost = true;
 			}
 		}
-
+        
 		if ( $ssl_verifyhost ) {
 			@curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 2 );
 			@curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
@@ -1327,6 +1377,29 @@ class MainWP_Utility {
 
 		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );
         @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
+                
+        $force_use_ipv4 = false;
+        $forceUseIPv4 = isset($others['force_use_ipv4']) ? $others['force_use_ipv4'] : null;                   
+        if ( $forceUseIPv4 !== null ) {
+            if ( $forceUseIPv4 == 1 ) {
+                $force_use_ipv4 = true;
+            } else if ( $forceUseIPv4 == 2 ) { // use global setting
+                if ( get_option( 'mainwp_forceUseIPv4' ) == 1 )  {
+                    $force_use_ipv4 = true;
+                }
+            }
+        } else {
+            if (  get_option( 'mainwp_forceUseIPv4' ) == 1 ) {
+                $force_use_ipv4 = true;
+            }
+        }
+        
+        if ($force_use_ipv4) {
+            if (defined('CURLOPT_IPRESOLVE') AND defined('CURL_IPRESOLVE_V4')) {
+                @curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            }
+        }
+        
 
 		$timeout = 20 * 60 * 60; //20 minutes
 		@curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
@@ -2832,4 +2905,11 @@ EOT;
 		}
 		$array = $ret;
 	}
+    
+    public static function enabled_wp_seo() {         
+        if (self::$enabled_wp_seo === null) {
+            self::$enabled_wp_seo = is_plugin_active('wordpress-seo-extension/wordpress-seo-extension.php'); 
+        }
+        return self::$enabled_wp_seo;
+    }
 }
