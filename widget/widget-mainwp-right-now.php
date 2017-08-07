@@ -907,7 +907,7 @@ class MainWP_Right_Now {
 						<select class="mainwp-select2-mini" id="mainwp_select_options_siteview" name="select_mainwp_options_siteview">
 							<option value="1" <?php echo $userExtension->site_view == 1 ? 'selected' : ''; ?>><?php esc_html_e( 'Site', 'mainwp' ); ?></option>
 							<option value="0" <?php echo $userExtension->site_view == 0 ? 'selected' : ''; ?>><?php esc_html_e( 'Plugin/Theme', 'mainwp' ); ?></option>
-                                                        <option value="2" <?php echo $userExtension->site_view == 2 ? 'selected' : ''; ?>><?php esc_html_e( 'Group', 'mainwp' ); ?></option>
+                            <option value="2" <?php echo $userExtension->site_view == 2 ? 'selected' : ''; ?>><?php esc_html_e( 'Group', 'mainwp' ); ?></option>
 						</select>
 					</form>
 				</div>
@@ -998,7 +998,21 @@ class MainWP_Right_Now {
             }
         }
 
+        // the hook using to set maximum number of plugins/themes for huge number of updates
+        $limit_updates_all = apply_filters('mainwp_limit_updates_all', 0);    
+        $continue_update = $continue_update_slug = $continue_class = '';        
+        if ($limit_updates_all > 0) {
+            if (isset($_GET['continue_update']) && $_GET['continue_update'] != '') {
+                $continue_update = $_GET['continue_update'];
+                if ($continue_update == 'plugins_upgrade_all' || $continue_update == 'themes_upgrade_all' || $continue_update == 'translations_upgrade_all' ) {
+                    if (isset($_GET['slug']) && $_GET['slug'] != '') {
+                        $continue_update_slug = $_GET['slug'];
+                    }
+                }                
+            }
+        }
 		?>
+        <input type="hidden" name="rightnow_limit_updates_all" id="rightnow_limit_updates_all" value="<?php echo intval($limit_updates_all); ?>"> 
                 <?php if ($globalView) { ?>
                 <div class="mainwp-row-top">
 			<div class="mainwp-left">
@@ -1045,9 +1059,11 @@ class MainWP_Right_Now {
 			</div>
 			<div class="mainwp-right mainwp-cols-2 mainwp-t-align-right">
 				<?php if ( mainwp_current_user_can( 'dashboard', 'update_wordpress' ) ) {
-					if ( $total_wp_upgrades > 0 ) { ?>
+					if ( $total_wp_upgrades > 0 ) { 
+                        $continue_class = ($continue_update == 'wpcore_global_upgrade_all') ? 'rightnow_continue_update_me' : '';                        
+                        ?>
 						&nbsp;
-						<a href="#" onClick="return rightnow_wordpress_global_upgrade_all();" class="button-primary"><?php echo _n( 'Update All', 'Update All', $total_wp_upgrades, 'mainwp' ); ?></a>
+						<a href="#" onClick="return rightnow_wordpress_global_upgrade_all();" class="button-primary <?php echo $continue_class; ?>"><?php echo _n( 'Update All', 'Update All', $total_wp_upgrades, 'mainwp' ); ?></a>
 					<?php }
 				} ?>
 			</div>
@@ -1218,8 +1234,10 @@ class MainWP_Right_Now {
 					</a>
 				</div>
 				<div class="mainwp-right mainwp-cols-4 mainwp-t-align-right">
-					<?php if (mainwp_current_user_can("dashboard", "update_plugins")) {  ?>
-						<?php if ($total_plugin_upgrades > 0 && ($userExtension->site_view == 1 || $userExtension->site_view == 2)) { ?>&nbsp; <a href="#" onClick="return rightnow_plugins_global_upgrade_all();" class="button-primary"><?php echo _n('Update All', 'Update All', $total_plugin_upgrades, 'mainwp'); ?></a><?php } else if ($total_plugin_upgrades > 0 && ($userExtension->site_view == 0)) { ?>&nbsp; <a href="#" onClick="return rightnow_plugins_global_upgrade_all();" class="button-primary"><?php echo _n('Update All', 'Update All', $total_plugin_upgrades, 'mainwp'); ?></a>
+					<?php if (mainwp_current_user_can("dashboard", "update_plugins")) {  
+                            $continue_class = ($continue_update == 'plugins_global_upgrade_all') ? 'rightnow_continue_update_me' : '';   
+                        ?>
+						<?php if ($total_plugin_upgrades > 0 && ($userExtension->site_view == 1 || $userExtension->site_view == 2)) { ?>&nbsp; <a href="#" onClick="return rightnow_plugins_global_upgrade_all();" class="button-primary"><?php echo _n('Update All', 'Update All', $total_plugin_upgrades, 'mainwp'); ?></a><?php } else if ($total_plugin_upgrades > 0 && ($userExtension->site_view == 0)) { ?>&nbsp; <a href="#" onClick="return rightnow_plugins_global_upgrade_all();" class="button-primary <?php echo $continue_class; ?>"><?php echo _n('Update All', 'Update All', $total_plugin_upgrades, 'mainwp'); ?></a>
 						<?php } } ?>
 				</div>
 				<div class="mainwp-right mainwp-cols-4 mainwp-t-align-right mainwp-padding-top-5">
@@ -1489,9 +1507,16 @@ class MainWP_Right_Now {
                                         <?php
                                     }
                                                                      
-                                } else {                                    
+                                } else {  
+                    
 					foreach ( $allPlugins as $slug => $val ) {
 						$cnt = $val['cnt'];
+//                        $limit_check = false;
+//                        if ($limit_updates_all > 0 && $cnt > $limit_updates_all) {
+//                            $cnt = $limit_updates_all;
+//                            $limit_check = true;
+//                        }
+                            
 						$plugin_name = urlencode( $slug );
 						if ( $globalView ) {
 							?>
@@ -1510,8 +1535,10 @@ class MainWP_Right_Now {
 								</div>
 								<div class="mainwp-right mainwp-cols-4 mainwp-t-align-right">
 									<?php if ( mainwp_current_user_can( 'dashboard', 'update_plugins' ) ) { ?>
-										&nbsp; <?php if ( $cnt > 0 ) { ?>
-											<a href="#" class="mainwp-upgrade-button button" onClick="return rightnow_plugins_upgrade_all('<?php echo $plugin_name; ?>', '<?php echo urlencode( $pluginsInfo[ $slug ]['name'] ); ?>')"><?php echo _n( 'Update', 'Update All', $cnt, 'mainwp' ); ?></a>
+										&nbsp; <?php if ( $cnt > 0 ) { 
+                                            $continue_class = ($continue_update == 'plugins_upgrade_all' && $continue_update_slug == $slug  && $userExtension->site_view == 0) ? 'rightnow_continue_update_me' : '';
+                                            ?>
+											<a href="#" class="mainwp-upgrade-button button <?php echo $continue_class; ?>" onClick="return rightnow_plugins_upgrade_all('<?php echo $plugin_name; ?>', '<?php echo urlencode( $pluginsInfo[ $slug ]['name'] ); ?>')"><?php echo _n( 'Update', 'Update All', $cnt, 'mainwp' ); ?></a>
 										<?php } ?>
 									<?php } ?>
 								</div>
@@ -1527,6 +1554,7 @@ class MainWP_Right_Now {
 						?>
 						<div plugin_slug="<?php echo $plugin_name; ?>" plugin_name="<?php echo urlencode( $pluginsInfo[ $slug ]['name'] ); ?>" premium="<?php echo $pluginsInfo[ $slug ]['premium'] ? 1 : 0; ?>" <?php if ( $globalView ) { ?>style="display: none"<?php } ?>>
 							<?php
+                            $count_limit_updates = 0;
 							@MainWP_DB::data_seek( $websites, 0 );
 							while ( $websites && ( $website = @MainWP_DB::fetch_object( $websites ) ) ) {
 								if ( $website->is_ignorePluginUpdates ) {
@@ -1555,7 +1583,13 @@ class MainWP_Right_Now {
 								if ( ! isset( $plugin_upgrades[ $slug ] ) ) {
 									continue;
 								}
-
+                                
+//                                if ($limit_check) {
+//                                    $count_limit_updates++;
+//                                    if ($count_limit_updates > $limit_updates_all ) {
+//                                        break;
+//                                    }
+//                                }
 								$plugin_upgrade = $plugin_upgrades[ $slug ];
 								?>
 								<div class="mainwp-sub-row" site_id="<?php echo $website->id; ?>" site_name="<?php echo rawurlencode( stripslashes( $website->name ) ); ?>" updated="0">
@@ -1616,9 +1650,11 @@ class MainWP_Right_Now {
 				</div>
             	<div class="mainwp-right mainwp-cols-4 mainwp-t-align-right">
 					<?php if ( mainwp_current_user_can( 'dashboard', 'update_themes' ) ) { ?>
-						<?php if ( $total_theme_upgrades > 0 && ( $userExtension->site_view == 1 ||  $userExtension->site_view == 2) ) { ?>&nbsp;
-							<a href="#" onClick="return rightnow_themes_global_upgrade_all();" class="button-primary"><?php echo _n( 'Update All', 'Update All', $total_theme_upgrades, 'mainwp' ); ?></a><?php } else if ( $total_theme_upgrades > 0 && ( $userExtension->site_view == 0 ) ) { ?>&nbsp;
-							<a href="#" onClick="return rightnow_themes_global_upgrade_all();" class="button-primary"><?php echo _n( 'Update All', 'Update All', $total_theme_upgrades, 'mainwp' ); ?></a><?php } ?>
+						<?php if ( $total_theme_upgrades > 0 && ( $userExtension->site_view == 1 ||  $userExtension->site_view == 2) ) {?>&nbsp;
+							<a href="#" onClick="return rightnow_themes_global_upgrade_all();" class="button-primary"><?php echo _n( 'Update All', 'Update All', $total_theme_upgrades, 'mainwp' ); ?></a><?php } else if ( $total_theme_upgrades > 0 && ( $userExtension->site_view == 0 ) ) { 
+                                $continue_class = ($continue_update == 'themes_global_upgrade_all') ? 'rightnow_continue_update_me' : '';
+                                ?>&nbsp;
+							<a href="#" onClick="return rightnow_themes_global_upgrade_all();" class="button-primary <?php echo $continue_class; ?>"><?php echo _n( 'Update All', 'Update All', $total_theme_upgrades, 'mainwp' ); ?></a><?php } ?>
 					<?php } ?>
 				</div>
 				<div class="mainwp-cols-4 mainwp-right mainwp-t-align-right mainwp-padding-top-5">
@@ -1871,6 +1907,11 @@ class MainWP_Right_Now {
                                 } else {                                        
 					foreach ( $allThemes as $slug => $val ) {
 						$cnt = $val['cnt'];
+//                        $limit_check = false;
+//                        if ($limit_updates_all > 0 && $cnt > $limit_updates_all) {
+//                            $cnt = $limit_updates_all;
+//                            $limit_check = true;
+//                        }
 						$theme_name = urlencode( $slug );
 						if ( $globalView ) {
 							?>
@@ -1885,8 +1926,10 @@ class MainWP_Right_Now {
 								</div>
 								<div class="mainwp-right mainwp-cols-4 mainwp-t-align-right">
 									<?php if ( mainwp_current_user_can( 'dashboard', 'update_themes' ) ) { ?>
-										<?php if ( $cnt > 0 ) { ?>
-											<a href="#" class="mainwp-upgrade-button button" onClick="return rightnow_themes_upgrade_all('<?php echo $theme_name; ?>', '<?php echo urlencode( $themesInfo[ $slug ]['name'] ); ?>')"><?php echo _n( 'Update', 'Update All', $cnt, 'mainwp' ); ?></a><?php } else { ?> &nbsp;
+										<?php if ( $cnt > 0 ) { 
+                                            $continue_class = ($continue_update == 'themes_upgrade_all' && $continue_update_slug == $theme_name  && $userExtension->site_view == 0) ? 'rightnow_continue_update_me' : '';
+                                            ?>
+											<a href="#" class="mainwp-upgrade-button button <?php echo $continue_class; ?>" onClick="return rightnow_themes_upgrade_all('<?php echo $theme_name; ?>', '<?php echo urlencode( $themesInfo[ $slug ]['name'] ); ?>')"><?php echo _n( 'Update', 'Update All', $cnt, 'mainwp' ); ?></a><?php } else { ?> &nbsp;
 											<a class="button" disabled="disabled"><?php _e( 'No Updates', 'mainwp' ); ?></a> <?php } ?>
 									<?php } ?>
 								</div>
@@ -1902,6 +1945,7 @@ class MainWP_Right_Now {
 						?>
 						<div theme_slug="<?php echo $theme_name; ?>" theme_name="<?php echo urlencode( $themesInfo[ $slug ]['name'] ); ?>" premium="<?php echo $themesInfo[ $slug ]['premium'] ? 1 : 0; ?>" <?php if ( $globalView ) { ?>style="display: none"<?php } ?>>
 							<?php
+                            $count_limit_updates = 0;
 							@MainWP_DB::data_seek( $websites, 0 );
 							while ( $websites && ( $website = @MainWP_DB::fetch_object( $websites ) ) ) {
 								if ( $website->is_ignoreThemeUpdates ) {
@@ -1932,6 +1976,13 @@ class MainWP_Right_Now {
 									continue;
 								}
 
+//                                if ($limit_check) {
+//                                    $count_limit_updates++;
+//                                    if ($count_limit_updates > $limit_updates_all ) {
+//                                        break;
+//                                    }
+//                                }
+                                
 								$theme_upgrade = $theme_upgrades[ $slug ];
 								?>
 								<div class="mainwp-row" site_id="<?php echo $website->id; ?>" site_name="<?php echo rawurlencode( stripslashes( $website->name ) ); ?>" updated="0">
@@ -1987,8 +2038,11 @@ class MainWP_Right_Now {
 						<?php echo _n( 'Translation update', 'Translation updates', $total_wp_upgrades, 'mainwp') ?> <?php _e('available','mainwp'); ?>
 					</a>&nbsp;<?php MainWP_Utility::renderToolTip(__('If you have non-English WordPress installations on your child sites, available Translation updates can be managed from this line. To disable the Translation Updates, go to the Settings page and disable the option in the Updates Option box.','mainwp'), 'https://make.wordpress.org/polyglots/handbook/about/what-we-do/', 'images/info.png', 'float: none !important;'); ?>
 				</div>
-				<div class="mainwp-right mainwp-cols-2 mainwp-t-align-right">
-					<?php if (mainwp_current_user_can("dashboard", "update_translations")) {  ?><?php if ($total_translation_upgrades > 0 && ($userExtension->site_view == 1)) { ?>&nbsp; <a href="#" onClick="return rightnow_translations_global_upgrade_all();" class="button-primary"><?php echo _n('Update All', 'Update All', $total_translation_upgrades, 'mainwp'); ?></a><?php } else if ($total_translation_upgrades > 0 && ($userExtension->site_view == 0)) { ?>&nbsp; <a href="#" onClick="return rightnow_translations_global_upgrade_all();" class="button-primary"><?php echo _n('Update All', 'Update All', $total_translation_upgrades, 'mainwp'); ?></a><?php } }?>
+				<div class="mainwp-right mainwp-cols-2 mainwp-t-align-right">                    
+					<?php if (mainwp_current_user_can("dashboard", "update_translations")) {  ?><?php if ($total_translation_upgrades > 0 && ($userExtension->site_view == 1)) {
+                        ?>&nbsp; <a href="#" onClick="return rightnow_translations_global_upgrade_all();" class="button-primary"><?php echo _n('Update All', 'Update All', $total_translation_upgrades, 'mainwp'); ?></a><?php } else if ($total_translation_upgrades > 0 && ($userExtension->site_view == 0)) { 
+                            $continue_class = ($continue_update == 'translations_global_upgrade_all') ? 'rightnow_continue_update_me' : '';
+                            ?>&nbsp; <a href="#" onClick="return rightnow_translations_global_upgrade_all();" class="button-primary <?php echo $continue_class; ?>"><?php echo _n('Update All', 'Update All', $total_translation_upgrades, 'mainwp'); ?></a><?php } }?>
 				</div>
 				<div class="mainwp-clear"></div>
 			</div>
@@ -2216,8 +2270,10 @@ class MainWP_Right_Now {
 								</div>
 								<div class="mainwp-right mainwp-cols-3 mainwp-t-align-right translationsAction">
 									<?php if ( mainwp_current_user_can( 'dashboard', 'update_translations' ) ) { ?>
-										&nbsp; <?php if ( $cnt > 0 ) { ?>
-											<a href="#" class="mainwp-upgrade-button button" onClick="return rightnow_translations_upgrade_all('<?php echo $slug; ?>', '<?php echo urlencode( $translationsInfo[ $slug ]['name'] ); ?>')"><?php echo _n( 'Update', 'Update All', $cnt, 'mainwp' ); ?></a>
+										&nbsp; <?php if ( $cnt > 0 ) {
+                                            $continue_class = ($continue_update == 'translations_upgrade_all' && $continue_update_slug == $slug  && $userExtension->site_view == 0) ? 'rightnow_continue_update_me' : '';                                            
+                                            ?>
+											<a href="#" class="mainwp-upgrade-button button <?php echo $continue_class; ?>" onClick="return rightnow_translations_upgrade_all('<?php echo $slug; ?>', '<?php echo urlencode( $translationsInfo[ $slug ]['name'] ); ?>')"><?php echo _n( 'Update', 'Update All', $cnt, 'mainwp' ); ?></a>
 										<?php } ?>
 									<?php } ?>
 								</div>
@@ -2601,7 +2657,7 @@ class MainWP_Right_Now {
 								<div class="mainwp-sub-row">
 									<div class="mainwp-left mainwp-cols-3">
 										<a href="<?php echo admin_url() . 'plugin-install.php?tab=plugin-information&plugin=' . dirname( $slug ) . '&url=' . ( isset( $pluginsOutdateInfo[ $slug ]['uri-'] ) ? rawurlencode( $pluginsOutdateInfo[ $slug ]['uri'] ) : '' ) . '&name=' . rawurlencode( $pluginsOutdateInfo[ $slug ]['Name'] ) . '&TB_iframe=true&width=640&height=477'; ?>" target="_blank"
-										   class="thickbox open-plugin-details-modal" title="More information about <?php echo $pluginsOutdateInfo[ $slug ]['Name']; ?>">
+										   class="thickbox" title="More information about <?php echo $pluginsOutdateInfo[ $slug ]['Name']; ?>">
 											<?php echo $pluginsOutdateInfo[ $slug ]['Name']; ?>
 										</a>
 									</div>

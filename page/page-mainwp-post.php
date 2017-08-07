@@ -219,7 +219,7 @@ class MainWP_Post {
 		self::renderHeader( 'BulkManage' );
 		if (is_plugin_active('mainwp-custom-post-types/mainwp-custom-post-types.php') ):
 			?>
-			<div class="updated">You have Custom Post Type Extension activated. You can choose post type.</div>
+			<div class="mainwp-notice mainwp-notice-green">You have Custom Post Type Extension activated. You can choose post type.</div>
 			<?php
 		endif;
 		?>
@@ -1145,7 +1145,7 @@ class MainWP_Post {
 							<?php foreach ( $dbwebsites as $website ) {
 								?>
 								<a href="<?php echo admin_url( 'admin.php?page=managesites&dashboard=' . $website->id ); ?>"><?php echo stripslashes( $website->name ); ?></a>
-								: <?php echo( isset( $output->ok[ $website->id ] ) && $output->ok[ $website->id ] == 1 ? $succes_message . ' <a href="' . $output->link[ $website->id ] . '" target="_blank">View Post</a>' : 'ERROR: ' . $output->errors[ $website->id ] ); ?><br/>
+								: <?php echo( isset( $output->ok[ $website->id ] ) && $output->ok[ $website->id ] == 1 ? $succes_message . ' <a href="' . $output->link[ $website->id ] . '" target="_blank">View Post</a>' : $output->errors[ $website->id ] ); ?><br/>
 							<?php } ?>
 						</div>
 						<?php
