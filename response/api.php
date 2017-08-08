@@ -59,13 +59,18 @@ function checkifvalidclient( $email, $siteid ) {
 	if ( $checkPermission ) {
 		liveReportsResponderClasses();
 		global $wpdb;
-		$get_site_details = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}mainwp_client_report_site_token WHERE token_id=%d AND token_value='%s' AND site_url=(SELECT `url` FROM {$wpdb->prefix}mainwp_wp WHERE id=%d)", 12, $email, $siteid ) );
-		if ( $get_site_details ) {
-			$result['result'] = 'success';
-			$result['data'] = $get_site_details;
-		}
+                
+                $get_site_url = $wpdb->get_row( $wpdb->prepare( "SELECT `url` FROM {$wpdb->prefix}mainwp_wp WHERE id=%d",$siteid));
+                if(!empty($get_site_url)){
+                    $get_site_details = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}mainwp_client_report_site_token WHERE token_id=%d AND token_value='%s' AND site_url='".$get_site_url->url."'", 12, $email ) );
+                    if ( $get_site_details ) {
+                            $result['result'] = 'success';
+                            $result['data'] = $get_site_details;
+                    }
+                }
 	}
-	return $result;
+      
+        return  $result;
 }
 
 if ( isset( $_POST[ 'content' ] ) && isset( $_POST[ 'action' ] ) && ( 'displaycontent' == $_POST[ 'action'] ) ) {
@@ -118,10 +123,10 @@ if ( isset( $_POST[ 'content' ] ) && isset( $_POST[ 'action' ] ) && ( 'displayco
 if ( isset( $_POST[ 'content' ] ) && isset( $_POST[ 'action' ] ) && ( 'livereport' == $_POST[ 'action' ] ) ) {
 	$secureconnection = LiveReportsResponderSecureConnection( $_POST[ 'livereportingurl' ], ( isset( $_POST[ 'securitykey' ] ) ) ? $_POST['securitykey'] : '', isset( $_POST[ 'signature'] ) ? $_POST['signature'] : null, isset( $_POST[ 'action'] ) ? $_POST['action'] : null, isset( $_POST[ 'timestamp'] ) ? $_POST['timestamp'] : null );
 	if ( $secureconnection === true ) {
-		$checkPermission = checkLiveReportingAccess( $_POST[ 'livereportingurl' ] );
+                $checkPermission = checkLiveReportingAccess( $_POST[ 'livereportingurl' ] );
 		if ( $checkPermission ) {
-			liveReportsResponderClasses();
-			$checkifvalidclient = checkifvalidclient( $_POST[ 'email' ], $_POST[ 'siteid' ] );
+                    	liveReportsResponderClasses();
+			$checkifvalidclient = checkifvalidclient( $_POST[ 'email' ], $_POST[ 'siteid' ] );     
 			if ( isset( $checkifvalidclient[ 'result' ] ) && 'success' == $checkifvalidclient[ 'result' ] ) {
 				$report = new stdClass();
 				$report->title = "Live Report";
@@ -143,7 +148,7 @@ if ( isset( $_POST[ 'content' ] ) && isset( $_POST[ 'action' ] ) && ( 'liverepor
 				$report->footer = "";
 				$report->type = 0;
 				$sites = base64_encode( serialize( array( $_POST['siteid'] ) ) );
-                $report->sites = $sites;
+                                $report->sites = $sites;
 				$report->groups = "";
 				$report->schedule_nextsend = 0;
 				$filtered_reports = MainWP_Live_Reports_Class::filter_report( $report, $_POST[ 'allowed_tokens' ] );
