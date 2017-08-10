@@ -2480,3 +2480,4 @@ li.mainwp-menu-sub-item-filer{
     font-weight: bold;
 }
 #mainwp-synced-status-sites-wrap {border-bottom: 1px solid #e5e5e5;}
+#mainwp_posts_wrap_table tr th#tags { width: auto !important;}

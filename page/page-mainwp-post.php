@@ -9,7 +9,7 @@ class MainWP_Post {
 	}
 
 	public static $subPages;
-
+    
 	public static function init() {
 		/**
 		 * This hook allows you to render the Post page header via the 'mainwp-pageheader-post' action.
@@ -31,16 +31,17 @@ class MainWP_Post {
 		 *
 		 * @see \MainWP_Post::renderFooter
 		 */
-		add_action( 'mainwp-pagefooter-post', array( MainWP_Post::getClassName(), 'renderFooter' ) );
+		add_action( 'mainwp-pagefooter-post', array( MainWP_Post::getClassName(), 'renderFooter' ) );        
 	}
 
 	public static function initMenu() {
 		$_page = add_submenu_page( 'mainwp_tab', __( 'Posts', 'mainwp' ), '<span id="mainwp-Posts">' . __( 'Posts', 'mainwp' ) . '</span>', 'read', 'PostBulkManage', array(
 			MainWP_Post::getClassName(),
 			'render',
-		) );
-		add_action( 'load-' . $_page, array(MainWP_Post::getClassName(), 'on_load_page'));
-
+		) );        
+		add_action( 'load-' . $_page, array(MainWP_Post::getClassName(), 'on_load_page'));        
+        add_filter( 'manage_' . $_page . '_columns', array(MainWP_Post::getClassName(), 'get_manage_columns'));
+        
 		add_submenu_page( 'mainwp_tab', __( 'Posts', 'mainwp' ), '<div class="mainwp-hidden">' . __( 'Add New', 'mainwp' ). '</div>', 'read', 'PostBulkAdd', array(
 			MainWP_Post::getClassName(),
 			'renderBulkAdd',
@@ -67,11 +68,58 @@ class MainWP_Post {
         MainWP_Post::init_sub_sub_left_menu(self::$subPages);
 	}
 
-	public static function on_load_page() {
+	public static function on_load_page() { 
+        add_action( 'admin_head', array( MainWP_Post::getClassName(), 'admin_head' ) );        
+        add_filter( 'hidden_columns', array(MainWP_Post::getClassName(), 'get_hidden_columns'), 10, 3);
+        
 		MainWP_System::enqueue_postbox_scripts();
 		self::add_meta_boxes();
 	}
-
+    
+    
+    public static function get_manage_columns() {        
+		$colums =  array(
+            'title' => 'Title',
+            'author' => 'Author',
+            'date' => 'Date',
+            'categories' => 'Categories',
+            'tags' => 'Tags',
+            'post-type' => 'Post type',
+            'comments' => 'Comments',
+            'status' => 'Status',
+            'seo-links' => 'Links',
+            'seo-linked' => 'Linked',
+            'seo-score' => 'SEO Score',
+            'seo-readability' => 'Readability score',
+            'website' => 'Website'            
+        );
+        
+        if ( !MainWP_Utility::enabled_wp_seo() ) {
+            unset($colums['seo-links']);
+            unset($colums['seo-linked']);
+            unset($colums['seo-score']);
+            unset($colums['seo-readability']);
+        }
+        
+        return $colums;
+	}
+    
+    public static function admin_head() {  
+        global $current_screen;
+        // fake pagenow to compatible with wp_ajax_hidden_columns
+        ?>
+        <script type="text/javascript"> pagenow = '<?php echo strtolower($current_screen->id); ?>';</script>
+        <?php    
+	}    
+    // to fix compatible with fake pagenow
+    public static function get_hidden_columns($hidden, $screen) {          
+        if($screen && $screen->id == 'mainwp_page_PostBulkManage') {            
+            $hidden = get_user_option( 'manage' . strtolower($screen->id) . 'columnshidden' );
+        }        
+        return $hidden;
+	}
+    
+        
 	public static function add_meta_boxes() {
 		$i = 1;
 		add_meta_box(
@@ -202,8 +250,7 @@ class MainWP_Post {
 			mainwp_do_not_have_permissions( __( 'manage posts', 'mainwp' ) );
 
 			return;
-		}
-
+		}        
 		$cachedSearch = MainWP_Cache::getCachedContext( 'Post' );
 
 		$selected_sites = $selected_groups = array();
@@ -380,8 +427,12 @@ class MainWP_Post {
 		</div>
 		<?php
 	}
-
-	public static function renderTable( $cached, $keyword = '', $dtsstart = '', $dtsstop = '', $status = '', $groups = '', $sites = '', $postId = 0, $userId = 0, $post_type = '' ) {
+    
+    public static function renderTable( $cached, $keyword = '', $dtsstart = '', $dtsstop = '', $status = '', $groups = '', $sites = '', $postId = 0, $userId = 0, $post_type = '' ) {        
+        // to fix for ajax call
+        $load_page = 'mainwp_page_PostBulkManage';
+        $hidden = get_user_option( 'manage' . strtolower($load_page) . 'columnshidden' );
+        
 		?>
 		<table class="wp-list-table widefat fixed posts tablesorter fix-select-all-ajax-table" id="mainwp_posts_table"
 		       cellspacing="0">
@@ -389,61 +440,61 @@ class MainWP_Post {
 			<tr>
 				<th scope="col" id="cb" class="manage-column column-cb check-column" style=""><input
 						type="checkbox"></th>
-				<th scope="col" id="title" class="drag-enable manage-column column-title sortable desc" style="">
+				<th scope="col" id="title" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('title', $hidden); ?> column-title sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Title', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="author" class="drag-enable manage-column column-author sortable desc" style="">
+				<th scope="col" id="author" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('author', $hidden); ?> column-author sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Author', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="categories" class="drag-enable manage-column column-categories sortable desc" style="">
+				<th scope="col" id="categories" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('categories', $hidden); ?> column-categories sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Categories', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="tags" class="drag-enable manage-column column-tags sortable desc" style="">
+				<th scope="col" id="tags" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('tags', $hidden); ?> column-tags sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Tags', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
 				<?php
 				if (is_plugin_active('mainwp-custom-post-types/mainwp-custom-post-types.php')):
 					?>
-					<th scope="col" id="tags" class="drag-enable manage-column column-post-type sortable desc" style="">
+					<th scope="col" id="post-type" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('post-type', $hidden); ?> column-post-type sortable desc" style="">
 						<a href="#" onclick="return false;"><span><?php _e('Post type','mainwp'); ?></span><span class="sorting-indicator"></span></a>
 					</th>
 					<?php
 				endif;
 				?>
-				<th scope="col" id="comments" class="drag-enable manage-column column-comments num sortable desc" style="">
+				<th scope="col" id="comments" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('comments', $hidden); ?> column-comments num sortable desc" style="">
 					<a href="#" onclick="return false;">
              <span><span class="vers"><img alt="Comments"
                                            src="<?php echo admin_url( 'images/comment-grey-bubble.png' ); ?>"></span></span>
 						<span class="sorting-indicator"></span>
 					</a>
 				</th>
-				<th scope="col" id="date" class="drag-enable manage-column column-date sortable asc" style="">
+				<th scope="col" id="date" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('date', $hidden); ?> column-date sortable asc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Date', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="status" class="drag-enable manage-column column-status sortable asc" style="width: 120px;">
+				<th scope="col" id="status" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('status', $hidden); ?> column-status sortable asc" style="width: 120px;">
 					<a href="#" onclick="return false;"><span><?php _e( 'Status', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
                 
                 <?php
 				if ( MainWP_Utility::enabled_wp_seo() ) :
         			?>
-					<th scope="col" id="seo-links" class="drag-enable manage-column column-seo-links sortable desc" style="">
+					<th scope="col" id="seo-links" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('seo-links', $hidden); ?> column-seo-links sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links in this post', 'mainwp' ); ?>"><?php echo __( 'Links', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>
-                    <th scope="col" id="seo-linked" class="drag-enable manage-column column-seo-linked sortable desc" style="">
+                    <th scope="col" id="seo-linked" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('seo-linked', $hidden); ?> column-seo-linked sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links linking to this post', 'mainwp' ); ?>"><?php echo __( 'Linked', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>
-                    <th scope="col" id="seo-score" class="drag-enable manage-column column-seo-score sortable desc" style="">
+                    <th scope="col" id="seo-score" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('seo-score', $hidden); ?> column-seo-score sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('SEO score', 'mainwp'); ?>"><?php echo __( 'SEO score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>
-                    <th scope="col" id="seo-readability" class="drag-enable manage-column column-seo-readability sortable desc" style="">
+                    <th scope="col" id="seo-readability" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('seo-readability', $hidden); ?> column-seo-readability sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('Readability score', 'mainwp'); ?>"><?php echo __( 'Readability score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>                    
 					<?php
 				endif;
 				?>
                     
-				<th scope="col" id="website" class="drag-enable manage-column column-categories sortable desc" style="">
+				<th scope="col" id="website" class="drag-enable manage-column <?php MainWP_Utility::gen_hidden_column('website', $hidden); ?> column-website sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Website', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
 			</tr>
@@ -451,52 +502,61 @@ class MainWP_Post {
 
 			<tfoot>
 			<tr>
-				<th scope="col" id="cb" class="manage-column column-cb check-column" style=""><input
+				<th scope="col" id="cb" class="column-cb check-column" style=""><input
 						type="checkbox"></th>
-				<th scope="col" id="title" class="manage-column column-title sortable desc" style="">
+				<th scope="col" id="title" class="column-title <?php MainWP_Utility::gen_hidden_column('title', $hidden); ?> sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Title', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="author" class="manage-column column-author sortable desc" style="">
+				<th scope="col" id="author" class="column-author <?php MainWP_Utility::gen_hidden_column('author', $hidden); ?> sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Author', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="categories" class="manage-column column-categories sortable desc" style="">
+				<th scope="col" id="categories" class="column-categories <?php MainWP_Utility::gen_hidden_column('categories', $hidden); ?> sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Categories', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="tags" class="manage-column column-tags sortable desc" style="">
+				<th scope="col" id="tags" class="column-tags <?php MainWP_Utility::gen_hidden_column('tags', $hidden); ?> sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Tags', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="comments" class="manage-column column-comments num sortable desc" style="">
+                <?php
+				if (is_plugin_active('mainwp-custom-post-types/mainwp-custom-post-types.php')):
+					?>
+					<th scope="col" id="post-type" class="drag-enable <?php MainWP_Utility::gen_hidden_column('post-type', $hidden); ?> column-post-type sortable desc" style="">
+						<a href="#" onclick="return false;"><span><?php _e('Post type','mainwp'); ?></span><span class="sorting-indicator"></span></a>
+					</th>
+					<?php
+				endif;
+				?>
+				<th scope="col" id="comments" class="column-comments <?php MainWP_Utility::gen_hidden_column('comments', $hidden); ?> num sortable desc" style="">
 					<a href="#" onclick="return false;">
                                          <span><span class="vers"><img alt="Comments"
-                                                                       src="<?php echo admin_url( 'images/comment-grey-bubble.png' ); ?>"></span></span>
+                                                src="<?php echo admin_url( 'images/comment-grey-bubble.png' ); ?>"></span></span>
 						<span class="sorting-indicator"></span>
 					</a>
 				</th>
-				<th scope="col" id="date" class="manage-column column-date sortable asc" style="">
+				<th scope="col" id="date" class="column-date <?php MainWP_Utility::gen_hidden_column('date', $hidden); ?> sortable asc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Date', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
-				<th scope="col" id="status" class="manage-column column-status sortable asc" style="width: 120px;">
+				<th scope="col" id="status" class="column-status <?php MainWP_Utility::gen_hidden_column('status', $hidden); ?> sortable asc" style="width: 120px;">
 					<a href="#" onclick="return false;"><span><?php _e( 'Status', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
                 <?php
 				if ( MainWP_Utility::enabled_wp_seo() ) :
         			?>
-					<th scope="col" id="seo-links" class="drag-enable manage-column column-seo-links sortable desc" style="">
+					<th scope="col" id="seo-links" class="column-seo-links <?php MainWP_Utility::gen_hidden_column('seo-links', $hidden); ?> sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links in this post', 'mainwp' ); ?>"><?php echo __( 'Links', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>
-                    <th scope="col" id="seo-linked" class="drag-enable manage-column column-seo-linked sortable desc" style="">
+                    <th scope="col" id="seo-linked" class="column-seo-linked <?php MainWP_Utility::gen_hidden_column('seo-linked', $hidden); ?> sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__( 'Number of internal links linking to this post', 'mainwp' ); ?>"><?php echo __( 'Linked', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>
-                    <th scope="col" id="seo-score" class="drag-enable manage-column column-seo-score sortable desc" style="">
+                    <th scope="col" id="seo-score" class="column-seo-score <?php MainWP_Utility::gen_hidden_column('seo-score', $hidden); ?> sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('SEO score', 'mainwp'); ?>"><?php echo __( 'SEO score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>
-                    <th scope="col" id="seo-readability" class="drag-enable manage-column column-seo-readability sortable desc" style="">
+                    <th scope="col" id="seo-readability" class="column-seo-readability <?php MainWP_Utility::gen_hidden_column('seo-readability', $hidden); ?> sortable desc" style="">
 						<a href="#" onclick="return false;"><span title="<?php echo esc_attr__('Readability score', 'mainwp'); ?>"><?php echo __( 'Readability score', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 					</th>    
 					<?php
 				endif;
 				?>                    
-				<th scope="col" id="website" class="manage-column column-categories sortable desc" style="">
+				<th scope="col" id="website" class="column-website <?php MainWP_Utility::gen_hidden_column('website', $hidden); ?> sortable desc" style="">
 					<a href="#" onclick="return false;"><span><?php _e( 'Website', 'mainwp' ); ?></span><span class="sorting-indicator"></span></a>
 				</th>
 			</tr>
@@ -670,6 +730,10 @@ class MainWP_Post {
 					}
 				}
 			}
+            
+            // to fix for ajax call
+            $load_page = 'mainwp_page_PostBulkManage';
+            $hidden = get_user_option( 'manage' . strtolower($load_page) . 'columnshidden' );
                         
 			foreach ( $posts as $post ) {
                 $raw_dts = '';
@@ -690,7 +754,7 @@ class MainWP_Post {
 				    class="post-1 post type-post status-publish format-standard hentry category-uncategorized alternate iedit author-self"
 				    valign="top">
 					<th scope="row" class="check-column"><input type="checkbox" name="post[]" value="1"></th>
-					<td class="post-title page-title column-title">
+					<td class="title <?php MainWP_Utility::gen_hidden_column('title', $hidden); ?> column-title">
 						<input class="postId" type="hidden" name="id" value="<?php echo $post['id']; ?>"/>
 						<input class="allowedBulkActions" type="hidden" name="allowedBulkActions" value="|get_edit|trash|delete|<?php if ( $post['status'] == 'publish' ) {
 							echo 'unpublish|';
@@ -775,30 +839,30 @@ class MainWP_Post {
 						<div class="row-actions-working">
 							<i class="fa fa-spinner fa-pulse"></i> <?php _e( 'Please wait...', 'mainwp' ); ?></div>
 					</td>
-					<td class="author column-author">
+					<td class="author <?php MainWP_Utility::gen_hidden_column('author', $hidden); ?> column-author">
 						<?php echo $post['author']; ?>
 					</td>
-					<td class="categories column-categories">
+					<td class="categories <?php MainWP_Utility::gen_hidden_column('categories', $hidden); ?> column-categories">
 						<?php echo $post['categories']; ?>
 					</td>
-					<td class="tags column-tags"><?php echo( $post['tags'] == '' ? 'No Tags' : $post['tags'] ); ?></td>
+					<td class="tags <?php MainWP_Utility::gen_hidden_column('tags', $hidden); ?> column-tags"><?php echo( $post['tags'] == '' ? 'No Tags' : $post['tags'] ); ?></td>
 					<?php
 					if (is_plugin_active('mainwp-custom-post-types/mainwp-custom-post-types.php')):
 						?>
-						<td><?php echo esc_html($post['post_type']) ?></td>
+						<td class="post-type <?php MainWP_Utility::gen_hidden_column('post-type', $hidden); ?> column-post-type"><?php echo esc_html($post['post_type']) ?></td>
 						<?php
 					endif;
 					?>
-					<td class="comments column-comments">
+					<td class="comments <?php MainWP_Utility::gen_hidden_column('comments', $hidden); ?> column-comments">
 						<div class="post-com-count-wrapper">
 							<a href="<?php echo admin_url( 'admin.php?page=CommentBulkManage&siteid=' . $website->id . '&postid=' . $post['id'] ); ?>" title="0 pending" class="post-com-count"><span
 									class="comment-count"><abbr title="<?php echo $post['comment_count']; ?>"><?php echo $post['comment_count']; ?></abbr></span></a>
 						</div>
 					</td>
-					<td class="date column-date"><abbr raw_value="<?php echo $raw_dts; ?>"
+					<td class="date <?php MainWP_Utility::gen_hidden_column('date', $hidden); ?> column-date"><abbr raw_value="<?php echo $raw_dts; ?>"
 							title="<?php echo $post['dts']; ?>"><?php echo $post['dts']; ?></abbr>
 					</td>
-					<td class="date column-status"><?php echo self::getStatus( $post['status'] ); ?></td>                    
+					<td class="status <?php MainWP_Utility::gen_hidden_column('status', $hidden); ?> column-status"><?php echo self::getStatus( $post['status'] ); ?></td>                    
                     <?php
                     if ( MainWP_Utility::enabled_wp_seo() ) {                             
                         $count_seo_links = $count_seo_linked = null;
@@ -811,14 +875,14 @@ class MainWP_Post {
                             $readability_score = $seo_data['readability_score'];                            
                         }                             
                         ?>
-                        <td><abbr raw_value="<?php echo $count_seo_links !== null ? $count_seo_links : -1; ?>" title=""><?php echo $count_seo_links !== null ? $count_seo_links : ''; ?></abbr></td>
-                        <td><abbr raw_value="<?php echo $count_seo_linked !== null ? $count_seo_linked : -1; ?>" title=""><?php echo $count_seo_linked !== null ? $count_seo_linked : ''; ?></abbr></td>
-                        <td><abbr raw_value="<?php echo $seo_score ? 1 : 0; ?>" title=""><?php echo $seo_score; ?></abbr></td>
-                        <td><abbr raw_value="<?php echo $readability_score ? 1 : 0; ?>" title=""><?php echo $readability_score; ?></abbr></td>
+                        <td class="<?php MainWP_Utility::gen_hidden_column('seo-links', $hidden); ?> column-seo-links" ><abbr raw_value="<?php echo $count_seo_links !== null ? $count_seo_links : -1; ?>" title=""><?php echo $count_seo_links !== null ? $count_seo_links : ''; ?></abbr></td>
+                        <td class="<?php MainWP_Utility::gen_hidden_column('seo-linked', $hidden); ?> column-seo-linked"><abbr raw_value="<?php echo $count_seo_linked !== null ? $count_seo_linked : -1; ?>" title=""><?php echo $count_seo_linked !== null ? $count_seo_linked : ''; ?></abbr></td>
+                        <td class="<?php MainWP_Utility::gen_hidden_column('seo-score', $hidden); ?> column-seo-score"><abbr raw_value="<?php echo $seo_score ? 1 : 0; ?>" title=""><?php echo $seo_score; ?></abbr></td>
+                        <td class="<?php MainWP_Utility::gen_hidden_column('seo-readability', $hidden); ?> column-seo-readability"><abbr raw_value="<?php echo $readability_score ? 1 : 0; ?>" title=""><?php echo $readability_score; ?></abbr></td>
                         <?php                       
                     };
                     ?>
-					<td class="categories column-categories">
+					<td class="website <?php MainWP_Utility::gen_hidden_column('website', $hidden); ?> column-website">
 						<a href="<?php echo $website->url; ?>" target="_blank"><?php echo $website->url; ?></a>
 
 						<div class="row-actions">
@@ -1318,7 +1382,7 @@ class MainWP_Post {
 		$post_category       = rawurldecode( isset( $post_data['post_category'] ) ? base64_decode( $post_data['post_category'] ) : null );
 		$post_tags           = rawurldecode( isset( $new_post['post_tags'] ) ? $new_post['post_tags'] : null );
 		$post_featured_image = base64_decode( $post_data['post_featured_image'] );
-                $post_gallery_images = base64_decode( $post_data['post_gallery_images'] );
+        $post_gallery_images = base64_decode( $post_data['post_gallery_images'] );
 		$upload_dir          = maybe_unserialize( base64_decode( $post_data['child_upload_dir'] ) );
 		return MainWP_Post::createPost( $new_post, $post_custom, $post_category, $post_featured_image, $upload_dir, $post_tags, $post_gallery_images );
 	}
@@ -1426,8 +1490,8 @@ class MainWP_Post {
 		//Save the post to the wp
 		remove_filter( 'content_save_pre', 'wp_filter_post_kses' );  // to fix brake scripts or html
 		$post_status             = $new_post['post_status'];
-                $new_post['post_status'] = 'auto-draft';
-                $new_post_id             = wp_insert_post( $new_post, $wp_error );
+        $new_post['post_status'] = 'auto-draft';
+        $new_post_id             = wp_insert_post( $new_post, $wp_error );
 
 		//Show errors if something went wrong
 		if ( is_wp_error( $wp_error ) ) {
@@ -1446,11 +1510,11 @@ class MainWP_Post {
                     }
 		}
 
-                // update meta for bulkedit
-                update_post_meta( $new_post_id, '_mainwp_edit_post_id', $edit_id );
-                update_post_meta($new_post_id, '_slug', base64_encode($new_post['post_name']) );
-                if ( isset( $post_category ) && '' !== $post_category ) {
-                        update_post_meta($new_post_id, '_categories', base64_encode($post_category) );
+        // update meta for bulkedit
+        update_post_meta( $new_post_id, '_mainwp_edit_post_id', $edit_id );
+        update_post_meta($new_post_id, '_slug', base64_encode($new_post['post_name']) );
+        if ( isset( $post_category ) && '' !== $post_category ) {
+                update_post_meta($new_post_id, '_categories', base64_encode($post_category) );
 		}
 
 		if ( isset( $post_tags ) && '' !== $post_tags ) {

@@ -2912,4 +2912,14 @@ EOT;
         }
         return self::$enabled_wp_seo;
     }
+    
+    public static function gen_hidden_column( $col, $hidden) {
+        if (!is_array($hidden))
+            return;
+        if (in_array($col, $hidden)) {
+            echo 'hidden';
+            return;
+        }
+        return;
+    }    
 }
