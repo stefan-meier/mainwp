@@ -134,6 +134,7 @@ class MainWP_System {
 		add_action( 'save_post', array( &$this, 'save_bulkpost' ) );
 		add_action( 'save_post', array( &$this, 'save_bulkpage' ) );
 		add_action( 'add_meta_boxes_bulkpost', array( 'MainWP_Post', 'addStickyOption' ) );
+        add_action( 'post_submitbox_misc_actions', array( 'MainWP_Post', 'submitbox_misc_actions' ) );
 
 		//Handle the bulkpage
 		add_action( 'publish_bulkpage', array( &$this, 'publish_bulkpage' ) );
@@ -2267,7 +2268,8 @@ class MainWP_System {
 		if ( $pid == $post_id ) {
 			/** @var $wpdb wpdb */
 			global $wpdb;
-			$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
+            // fixed by submitbox_misc_actions
+			//$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
 			add_filter( 'redirect_post_location', create_function( '$location', 'return esc_url_raw(add_query_arg(array("message" => "' . $message_id . '", "hideall" => 1), $location));' ) );
 		} else {
 			$this->metaboxes->add_categories_handle( $post_id, 'bulkpost' );
@@ -2314,12 +2316,14 @@ class MainWP_System {
 
 		if ( isset( $_POST['save'] ) ) {
 			global $wpdb;
-			$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
+            // fixed by submitbox_misc_actions
+			//$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
 			add_filter( 'redirect_post_location', create_function( '$location', 'return esc_url_raw(add_query_arg(array("message" => "' . $message_id . '", "hideall" => 1), $location));' ) );
 		} else if ( $pid == $post_id ) {
 			/** @var $wpdb wpdb */
 			global $wpdb;
-			$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
+            // fixed by submitbox_misc_actions
+			//$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
 			add_filter( 'redirect_post_location', create_function( '$location', 'return esc_url_raw(add_query_arg(array("message" => "' . $message_id . '", "hideall" => 1), $location));' ) );
 		} else if ( isset( $_POST['publish'] ) ) {
 			//Redirect to handle page! (to actually post the messages)
@@ -2344,7 +2348,8 @@ class MainWP_System {
 		if ( $pid == $post_id ) {
 			/** @var $wpdb wpdb */
 			global $wpdb;
-			$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
+            // fixed by submitbox_misc_actions
+			//$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
 			add_filter( 'redirect_post_location', create_function( '$location', 'return esc_url_raw(add_query_arg(array("message" => "' . $message_id . '", "hideall" => 1), $location));' ) );
 		} else {
 			$this->metaboxes->add_slug_handle( $post_id, 'bulkpage' );
@@ -2385,12 +2390,14 @@ class MainWP_System {
 
 		if ( isset( $_POST['save'] ) ) {
 			global $wpdb;
-			$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
+            // fixed by submitbox_misc_actions
+			//$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
 			add_filter( 'redirect_post_location', create_function( '$location', 'return esc_url_raw(add_query_arg(array("message" => "' . $message_id . '", "hideall" => 1), $location));' ) );
 		} else if ( $pid == $post_id ) {
 			/** @var $wpdb wpdb */
 			global $wpdb;
-			$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
+            // fixed by submitbox_misc_actions
+            //$wpdb->update( $wpdb->posts, array( 'post_status' => 'draft' ), array( 'ID' => $post_id ) );
 			add_filter( 'redirect_post_location', create_function( '$location', 'return esc_url_raw(add_query_arg(array("message" => "' . $message_id . '", "hideall" => 1), $location));' ) );
 		} else {
 			//Redirect to handle page! (to actually post the messages)

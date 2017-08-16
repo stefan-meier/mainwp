@@ -1642,6 +1642,20 @@ class MainWP_Post {
 			);
 		}
 	}
+    
+    public static function submitbox_misc_actions($post) {
+		// fake publish button
+        ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                jQuery('#publish').hide();
+                jQuery('#publish').attr('disabled','disabled');
+                jQuery('#publish').after('<input name="publish" id="publish" class="fake-publish-button button button-primary button-large" value="Publish" type="submit">');
+            });
+
+        </script>
+        <?php
+	}
 
 	public static function post_submit_meta_box( $post ) {
 		@ob_start();
