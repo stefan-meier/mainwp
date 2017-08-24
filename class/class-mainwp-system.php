@@ -13,7 +13,7 @@ define( 'MAINWP_API_INVALID', 'INVALID' );
 define( 'MAINWP_TWITTER_MAX_SECONDS', 60 * 5 ); // seconds
 
 class MainWP_System {
-	public static $version = '3.4.2';
+	public static $version = '3.4.3';
 	//Singleton
 	private static $instance = null;
 
@@ -534,11 +534,11 @@ class MainWP_System {
 				<?php
 			}
 		}
-        
+
         if ( MainWP_Server_Information::isOpensslConfigWarning() ) {
-            if ( MainWP_Utility::showMainWPMessage( 'notice', 'ssl_warn' ) ) { 
+            if ( MainWP_Utility::showMainWPMessage( 'notice', 'ssl_warn' ) ) {
                 if ( isset($_GET['page']) && $_GET['page'] != 'SettingsAdvanced' ) {
-            ?>            
+            ?>
                 <div class="mainwp-notice-wrap mainwp-notice mainwp-notice-red mainwp-margin-top-20">
                     <?php echo sprintf(__('<strong>WARNING:</strong><br/>MainWP has detected that the <strong>OpenSSL.cnf</strong> file is not configured properly.<br/>It is required to configure this so you can start connecting your child sites. Please, %sclick here to configure it!%s', 'mainwp' ), '<a href="admin.php?page=SettingsAdvanced">','</a>'); ?>
                     <span class="mainwp-right"><a class="mainwp-notice-dismiss" notice-id="ssl_warn"
@@ -548,7 +548,7 @@ class MainWP_System {
                 }
             }
         }
-            
+
 		if ( is_multisite() && ( !isset( $current_options['hide_multi_site_notice'] ) || empty( $current_options['hide_multi_site_notice'] ) ) ) {
 			?>
 			<div class="mainwp-events-notice mainwp-notice mainwp-notice-red">
@@ -1902,7 +1902,7 @@ class MainWP_System {
 		return false;
 	}
 
-	public static function get_openssl_conf() {		
+	public static function get_openssl_conf() {
 		$setup_conf_loc = '';
 		if ( MainWP_Settings::isLocalWindowConfig() ) {
 			$setup_conf_loc = get_option( 'mwp_setup_opensslLibLocation' );

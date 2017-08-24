@@ -1479,7 +1479,7 @@ class MainWP_Manage_Sites {
                         if ( $backup_before_upgrade > 2 ) {
                                 $backup_before_upgrade = 2;
                         }
-                        
+
                         $forceuseipv4 = isset( $_POST['mainwp_managesites_edit_forceuseipv4'] ) ? intval( $_POST['mainwp_managesites_edit_forceuseipv4'] ) : 0;
                         if ( $forceuseipv4 > 2 ) {
                                 $forceuseipv4 = 0;
@@ -1503,8 +1503,8 @@ class MainWP_Manage_Sites {
                     }
                 }
                 MainWP_Manage_Sites::renderEditSite($websiteid, $updated);
-                return;        
-            }			
+                return;
+            }
 
 		} 		
 		MainWP_Manage_Sites::renderAllSites();

@@ -1,9 +1,9 @@
 <?php
 
 class MainWP_Utility {
-    
+
     public static $enabled_wp_seo = null;
-    
+
     public static function startsWith( $haystack, $needle ) {
 		return ! strncmp( $haystack, $needle, strlen( $needle ) );
 	}
@@ -141,8 +141,8 @@ class MainWP_Utility {
 
 		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );
         @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
-        
-        $force_use_ipv4 = false;                                     
+
+        $force_use_ipv4 = false;
         if ( $forceUseIPv4 !== null ) {
             if ( $forceUseIPv4 == 1 ) {
                 $force_use_ipv4 = true;
@@ -155,13 +155,13 @@ class MainWP_Utility {
             if (  get_option( 'mainwp_forceUseIPv4' ) == 1 ) {
                 $force_use_ipv4 = true;
             }
-        }                
+        }
 
         if ($force_use_ipv4) {
             if (defined('CURLOPT_IPRESOLVE') AND defined('CURL_IPRESOLVE_V4')) {
                 @curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             }
-        }  
+        }
 
 		$disabled_functions = ini_get( 'disable_functions' );
 		if ( empty( $disabled_functions ) || ( stristr( $disabled_functions, 'curl_multi_exec' ) === false ) ) {
@@ -588,7 +588,7 @@ class MainWP_Utility {
      *          $output has to be filled in by the handler-function - it is used as an output variable!
      */
 
-	static function fetchUrlsAuthed( &$websites, $what, $params = null, $handler, &$output, $whatPage = null ) {
+	static function fetchUrlsAuthed( &$websites, $what, $params = null, $handler, &$output, $whatPage = null, $others = array() ) {
 		if ( ! is_array( $websites ) || empty( $websites ) ) {
 			return false;
 		}
@@ -599,7 +599,7 @@ class MainWP_Utility {
 			$loops = ceil( $total / $chunkSize );
 			for ( $i = 0; $i < $loops; $i ++ ) {
 				$newSites = array_slice( $websites, $i * $chunkSize, $chunkSize, true );
-				self::fetchUrlsAuthed( $newSites, $what, $params, $handler, $output, $whatPage );
+				self::fetchUrlsAuthed( $newSites, $what, $params, $handler, $output, $whatPage, $others );
 				sleep( 5 );
 			}
 
@@ -665,7 +665,8 @@ class MainWP_Utility {
 
 				$ch = curl_init();
 
-				if ( $website != null ) {
+				//For WPE upgrades we require cookies too, for normal WPE syncing we do not require cookies, messes up the connection
+				if ( ( $website != null ) && ( ( $website->wpe != 1 ) || ( isset( $others['upgrade'] ) && ( $others['upgrade'] === true ) ) ) ) {
 					$cookieFile = $cookieDir . '/' . sha1( sha1( 'mainwp' . LOGGED_IN_SALT . $website->id ) . NONCE_SALT . 'WP_Cookie' );
 					if ( ! file_exists( $cookieFile ) ) {
 						@file_put_contents( $cookieFile, '' );
@@ -673,8 +674,8 @@ class MainWP_Utility {
 
 					if ( file_exists( $cookieFile ) ) {
 						@chmod( $cookieFile, 0777 );
-//						@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
-//						@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
+						@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
+						@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 					}
 				}
 
@@ -716,9 +717,9 @@ class MainWP_Utility {
 
 				@curl_setopt( $ch, CURLOPT_SSLVERSION, $website->ssl_version );
                 @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
-                
+
                 $force_use_ipv4 = false;
-                $forceUseIPv4 = isset( $website->force_use_ipv4 ) ? $website->force_use_ipv4 : null;                                
+                $forceUseIPv4 = isset( $website->force_use_ipv4 ) ? $website->force_use_ipv4 : null;
                 if ( $forceUseIPv4 !== null ) {
                     if ( $forceUseIPv4 == 1 ) {
                         $force_use_ipv4 = true;
@@ -731,14 +732,14 @@ class MainWP_Utility {
                     if (  get_option( 'mainwp_forceUseIPv4' ) == 1 ) {
                         $force_use_ipv4 = true;
                     }
-                }                
+                }
 
                 if ($force_use_ipv4) {
                     if (defined('CURLOPT_IPRESOLVE') AND defined('CURL_IPRESOLVE_V4')) {
                         @curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
                     }
-                }                
-                
+                }
+
 				@curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout ); //20minutes
 				if ( version_compare(phpversion(), '5.3.0') >= 0 || ! ini_get( 'safe_mode' ) ) {
 					@set_time_limit( $timeout );
@@ -940,7 +941,8 @@ class MainWP_Utility {
 
 			$ch = curl_init();
 
-			if ( $website != null ) {
+			//For WPE upgrades we require cookies too, for normal WPE syncing we do not require cookies, messes up the connection
+			if ( ( $website != null ) && ( ( $website->wpe != 1 ) || ( isset( $others['upgrade'] ) && ( $others['upgrade'] === true ) ) ) ) {
 				$cookieFile = $cookieDir . '/' . sha1( sha1( 'mainwp' . LOGGED_IN_SALT . $website->id ) . NONCE_SALT . 'WP_Cookie' );
 				if ( ! file_exists( $cookieFile ) ) {
 					@file_put_contents( $cookieFile, '' );
@@ -948,8 +950,8 @@ class MainWP_Utility {
 
 				if ( file_exists( $cookieFile ) ) {
 					@chmod( $cookieFile, 0777 );
-//					@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
-//					@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
+					@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
+					@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 				}
 			}
 
@@ -1078,7 +1080,7 @@ class MainWP_Utility {
 		$params['optimize'] = ( ( get_option( 'mainwp_optimize' ) == 1 ) ? 1 : 0 );
 
 		$postdata    = MainWP_Utility::getPostDataAuthed( $website, $what, $params );
-		$information = MainWP_Utility::fetchUrl( $website, $website->url, $postdata, $checkConstraints, $pForceFetch, $website->verify_certificate, $pRetryFailed, $website->http_user, $website->http_pass, $website->ssl_version, array('force_use_ipv4' => $website->force_use_ipv4) );
+		$information = MainWP_Utility::fetchUrl( $website, $website->url, $postdata, $checkConstraints, $pForceFetch, $website->verify_certificate, $pRetryFailed, $website->http_user, $website->http_pass, $website->ssl_version, array('force_use_ipv4' => $website->force_use_ipv4, 'upgrade' => ( $what == 'upgradeplugintheme' || $what == 'upgrade' || $what == 'upgradetranslation' ) ) );
 
 		if ( is_array( $information ) && isset( $information['sync'] ) && ! empty( $information['sync'] ) ) {
 			MainWP_Sync::syncInformationArray( $website, $information['sync'] );
@@ -1328,7 +1330,8 @@ class MainWP_Utility {
 
 		$ch = curl_init();
 
-		if ( $website != null ) {
+		//For WPE upgrades we require cookies too, for normal WPE syncing we do not require cookies, messes up the connection
+		if ( ( $website != null ) && ( ( $website->wpe != 1 ) || ( isset( $others['upgrade'] ) && ( $others['upgrade'] === true ) ) ) ) {
 			$cookieFile = $cookieDir . '/' . sha1( sha1( 'mainwp' . LOGGED_IN_SALT . $website->id ) . NONCE_SALT . 'WP_Cookie' );
 			if ( ! file_exists( $cookieFile ) ) {
 				@file_put_contents( $cookieFile, '' );
@@ -1336,8 +1339,8 @@ class MainWP_Utility {
 
 			if ( file_exists( $cookieFile ) ) {
 				@chmod( $cookieFile, 0777 );
-//				@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
-//				@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
+				@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
+				@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 			}
 		}
 
@@ -1366,7 +1369,7 @@ class MainWP_Utility {
 				$ssl_verifyhost = true;
 			}
 		}
-        
+
 		if ( $ssl_verifyhost ) {
 			@curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 2 );
 			@curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, true );
@@ -1377,9 +1380,9 @@ class MainWP_Utility {
 
 		@curl_setopt( $ch, CURLOPT_SSLVERSION, $sslVersion );
         @curl_setopt( $ch, CURLOPT_HTTPHEADER, array("X-Requested-With: XMLHttpRequest"));
-                
+
         $force_use_ipv4 = false;
-        $forceUseIPv4 = isset($others['force_use_ipv4']) ? $others['force_use_ipv4'] : null;                   
+        $forceUseIPv4 = isset($others['force_use_ipv4']) ? $others['force_use_ipv4'] : null;
         if ( $forceUseIPv4 !== null ) {
             if ( $forceUseIPv4 == 1 ) {
                 $force_use_ipv4 = true;
@@ -1393,13 +1396,13 @@ class MainWP_Utility {
                 $force_use_ipv4 = true;
             }
         }
-        
+
         if ($force_use_ipv4) {
             if (defined('CURLOPT_IPRESOLVE') AND defined('CURL_IPRESOLVE_V4')) {
                 @curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
             }
         }
-        
+
 
 		$timeout = 20 * 60 * 60; //20 minutes
 		@curl_setopt( $ch, CURLOPT_TIMEOUT, $timeout );
@@ -2905,14 +2908,14 @@ EOT;
 		}
 		$array = $ret;
 	}
-    
-    public static function enabled_wp_seo() {         
+
+    public static function enabled_wp_seo() {
         if (self::$enabled_wp_seo === null) {
-            self::$enabled_wp_seo = is_plugin_active('wordpress-seo-extension/wordpress-seo-extension.php'); 
+            self::$enabled_wp_seo = is_plugin_active('wordpress-seo-extension/wordpress-seo-extension.php');
         }
         return self::$enabled_wp_seo;
     }
-    
+
     public static function gen_hidden_column( $col, $hidden) {
         if (!is_array($hidden))
             return;
@@ -2921,5 +2924,5 @@ EOT;
             return;
         }
         return;
-    }    
+    }
 }

@@ -127,7 +127,7 @@ class MainWP_WP_CLI_Command extends WP_CLI_Command {
 	 *
 	 * [--list]
 	 * : Get a list of plugins with available updates
-	 * 
+	 *
      * [--list-all]
 	 * : List all plugins
 	 *
@@ -236,7 +236,7 @@ class MainWP_WP_CLI_Command extends WP_CLI_Command {
 					continue;
 				}
 
-				$plugins_to_list = json_decode( $website->plugins, true );                                
+				$plugins_to_list = json_decode( $website->plugins, true );
 				if ( is_array( $plugins_to_list ) ) {
 					$tmp = array();
 					foreach ($plugins_to_list as $plugin) {
@@ -249,14 +249,14 @@ class MainWP_WP_CLI_Command extends WP_CLI_Command {
 			$idLength = strlen('id');
 			$nameLength = strlen('name');
 			$pluginLength = strlen('plugin');
-			$oldVersionLength = strlen('version');			
+			$oldVersionLength = strlen('version');
 			foreach ( $websites_to_list as $website_item ) {
 				if ( $idLength < strlen( $website_item['id'] ) ) $idLength = strlen( $website_item['id'] );
 				if ( $nameLength < strlen( $website_item['name'] ) ) $nameLength = strlen( $website_item['name'] );
 
 				foreach ( $website_item['plugins'] as $plugin_item ) {
 					if ( $pluginLength < strlen( $plugin_item['name'] ) ) $pluginLength = strlen( $plugin_item['name'] );
-					if ( $oldVersionLength < strlen( $plugin_item['version'] ) ) $oldVersionLength = strlen( $plugin_item['version'] );					
+					if ( $oldVersionLength < strlen( $plugin_item['version'] ) ) $oldVersionLength = strlen( $plugin_item['version'] );
 				}
 			}
 
@@ -353,7 +353,7 @@ class MainWP_WP_CLI_Command extends WP_CLI_Command {
 	 *
      * [--list-all]
 	 * : list all themes
-     * 
+     *
 	 * [--upgrade=<theme>]
 	 * : Update the themes
 	 *
@@ -457,8 +457,8 @@ class MainWP_WP_CLI_Command extends WP_CLI_Command {
 				if ( ( count( $sites ) > 0 ) && ( ! in_array( $website->id, $sites ) ) ) {
 					continue;
 				}
-				$theme_to_list = json_decode( $website->themes, true );                                
-				if ( is_array( $theme_to_list ) ) {					
+				$theme_to_list = json_decode( $website->themes, true );
+				if ( is_array( $theme_to_list ) ) {
 					$tmp = array();
 					foreach ($theme_to_list as $theme) {
 						$tmp[] = array('name' => $theme['name'], 'active' => $theme['active'] ? 'yes' : '', 'version' => $theme['version']);
@@ -470,15 +470,15 @@ class MainWP_WP_CLI_Command extends WP_CLI_Command {
 			$idLength = strlen('id');
 			$nameLength = strlen('name');
 			$themeLength = strlen('theme');
-			$oldVersionLength = strlen('version');			
+			$oldVersionLength = strlen('version');
             $activeLength = strlen('active');
 			foreach ( $websites_to_upgrade as $website_item ) {
 				if ( $idLength < strlen( $website_item['id'] ) ) $idLength = strlen( $website_item['id'] );
 				if ( $nameLength < strlen( $website_item['name'] ) ) $nameLength = strlen( $website_item['name'] );
-                
+
 				foreach ( $website_item['themes'] as $theme_item ) {
 					if ( $themeLength < strlen( $theme_item['name'] ) ) $themeLength = strlen( $theme_item['name'] );
-					if ( $oldVersionLength < strlen( $theme_item['version'] ) ) $oldVersionLength = strlen( $theme_item['version'] );					
+					if ( $oldVersionLength < strlen( $theme_item['version'] ) ) $oldVersionLength = strlen( $theme_item['version'] );
 				}
 			}
 

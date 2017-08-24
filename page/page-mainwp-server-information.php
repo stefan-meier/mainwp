@@ -904,11 +904,11 @@ public static function renderFooter( $shownPage ) {
         if ( $ssl_warning != '') {
             if (stristr($ssl_warning, 'No such file or directory') !== false) {
                 return true;
-            } 
+            }
         }
         return false;
-	}  
-         
+	}
+
 	public static function getCurlSupport() {
 		return function_exists( 'curl_version' );
 	}
