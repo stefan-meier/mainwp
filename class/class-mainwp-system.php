@@ -880,6 +880,8 @@ class MainWP_System {
 			}
 		}
 
+        $disable_send_noti = apply_filters( 'mainwp_updatescheck_disable_sendmail', false );
+        
 		$websites = array();
 		$checkupdate_websites = MainWP_DB::Instance()->getWebsitesCheckUpdates( 4 );
 
@@ -1070,7 +1072,7 @@ class MainWP_System {
 					}
 
 					$email = get_option( 'mainwp_updatescheck_mail_email' );
-					if ( !empty( $email ) && $mail_offline != '') {
+					if ( !$disable_send_noti && !empty( $email ) && $mail_offline != '') {
 						MainWP_Logger::Instance()->debug( 'CRON :: http check :: send mail to ' . $email );
 						$mail_offline = '<div>After running auto updates, following sites are not returning expected HTTP request response:</div>
                                 <div></div>
@@ -1097,7 +1099,7 @@ class MainWP_System {
 					return;
 				}
 
-				if ( ($mainwpAutomaticDailyUpdate !== false && $mainwpAutomaticDailyUpdate != 0) || !empty($plugin_automaticDailyUpdate) || !empty($theme_automaticDailyUpdate) ) {
+				if ( !$disable_send_noti && ( ($mainwpAutomaticDailyUpdate !== false && $mainwpAutomaticDailyUpdate != 0) || !empty($plugin_automaticDailyUpdate) || !empty($theme_automaticDailyUpdate) ) ) {                     
 					//Create a nice email to send
 					$email = get_option( 'mainwp_updatescheck_mail_email' );
 					MainWP_Logger::Instance()->debug( 'CRON :: updates check :: send mail to ' . $email );
