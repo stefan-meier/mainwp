@@ -2481,3 +2481,9 @@ li.mainwp-menu-sub-item-filer{
 }
 #mainwp-synced-status-sites-wrap {border-bottom: 1px solid #e5e5e5;}
 #mainwp_posts_wrap_table tr th#tags { width: auto !important;}
+
+.mainwp-input-invalid {    
+    border-color: #dc3232 !important;
+    -webkit-box-shadow: 0 0 2px rgba( 204, 0, 0, 0.8 );
+    box-shadow: 0 0 2px rgba( 204, 0, 0, 0.8 );
+}
