@@ -316,10 +316,9 @@ class MainWP_System {
 		MainWP_Plugins::init();
 		MainWP_Right_Now::init();
 		MainWP_Setup_Wizard::init();
-        MainWP_WP_General_Settings::init();
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			MainWP_WP_CLI_Command::init();
-		}        
+		}
 		//WP-Cron
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
 			if ( isset($_GET[ 'mainwp_run' ]) && ! empty( $_GET[ 'mainwp_run' ] ) ) {

@@ -57,11 +57,6 @@ class MainWP_Settings {
 		));
 		add_action('load-' . $_page, array(MainWP_Settings::getClassName(), 'on_load_page'));
 
-        add_submenu_page('mainwp_tab', __('Wordpress General Settings', 'mainwp'), ' <div class="mainwp-hidden">' . __('Wordpress General Settings', 'mainwp') . '</div>', 'read', 'mainwp-wp-general-settings', array(
-			MainWP_WP_General_Settings::Instance(),
-			'renderWPGeneralSettings',
-		));
-		
 		$_page = add_submenu_page('mainwp_tab', __('Managed Client Reports Responder', 'mainwp'), ' <div class="mainwp-hidden">' . __('Managed Client Reports Responder', 'mainwp') . '</div>', 'read', 'SettingsClientReportsResponder', array(
 			MainWP_Settings::getClassName(),
 			'renderReportResponder',
@@ -275,10 +270,7 @@ class MainWP_Settings {
 			if ($shownPage === 'MainWPTools') {
 				echo 'nav-tab-active';
 			}
-			?>" href="admin.php?page=MainWPTools"><?php _e('MainWP Tools', 'mainwp'); ?></a><?php
-            if ($shownPage === 'WPGeneral') { ?>
-            <a class="nav-tab pos-nav-tab nav-tab-active" href="admin.php?page=mainwp-wp-general-settings"><?php _e('Wordpress General Settings', 'mainwp'); ?></a><?php
-            } ?>
+			?>" href="admin.php?page=MainWPTools"><?php _e('MainWP Tools', 'mainwp'); ?></a>
 			<a class="nav-tab pos-nav-tab <?php
 			if ($shownPage === 'SettingsClientReportsResponder') {
 				echo 'nav-tab-active';
@@ -796,15 +788,6 @@ class MainWP_Settings {
 					<a href="admin.php?page=mainwp-setup" class="button-primary button" id="mainwp_start_qsw" /><?php _e('Start quick setup', 'mainwp'); ?></a><br/>
 					<em>
 						<?php _e('MainWP Quick Setup allows you to quickly set your MainWP Dashboard preferences.', 'mainwp'); ?>
-					</em>
-				</td>
-			</tr>
-            <tr>
-				<th scope="row"><?php _e('Wordpress General Settings', 'mainwp'); ?></th>
-				<td>
-					<a href="admin.php?page=mainwp-wp-general-settings" class="button-primary button" id="mainwp_start_qsw" /><?php _e('Wordpress General Settings', 'mainwp'); ?></a><br/>
-					<em>
-						<?php _e('Wordpress General Settings allows you to set Child sites General Settings.', 'mainwp'); ?>
 					</em>
 				</td>
 			</tr>
