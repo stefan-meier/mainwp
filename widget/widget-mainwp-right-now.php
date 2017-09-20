@@ -1524,7 +1524,7 @@ class MainWP_Right_Now {
 						<div class="mainwp-left mainwp-cols-3 mainwp-padding-top-5">
 							<?php if (in_array($slug, $trustedPlugins)) { echo $trusted_icon; } ; ?>
 							<a href="<?php echo admin_url() . 'plugin-install.php?tab=plugin-information&plugin=' . $pluginsInfo[ $slug ]['slug'] . '&url=' . ( isset( $pluginsInfo[ $slug ]['uri'] ) ? rawurlencode( $pluginsInfo[ $slug ]['uri'] ) : '' ) . '&name=' . rawurlencode( $pluginsInfo[ $slug ]['name'] ) . '&TB_iframe=true&width=640&height=477'; ?>" target="_blank"
-							   class="thickbox" title="More information about <?php echo $pluginsInfo[ $slug ]['name']; ?>">
+									   class="thickbox open-plugin-details-modal" title="More information about <?php echo $pluginsInfo[ $slug ]['name']; ?>">
 								<?php echo $pluginsInfo[ $slug ]['name']; ?>
 							</a>
 						</div>
@@ -2657,7 +2657,7 @@ class MainWP_Right_Now {
 						<div class="mainwp-sub-row">
 							<div class="mainwp-left mainwp-cols-3">
 								<a href="<?php echo admin_url() . 'plugin-install.php?tab=plugin-information&plugin=' . dirname( $slug ) . '&url=' . ( isset( $pluginsOutdateInfo[ $slug ]['uri-'] ) ? rawurlencode( $pluginsOutdateInfo[ $slug ]['uri'] ) : '' ) . '&name=' . rawurlencode( $pluginsOutdateInfo[ $slug ]['Name'] ) . '&TB_iframe=true&width=640&height=477'; ?>" target="_blank"
-								   class="thickbox" title="More information about <?php echo $pluginsOutdateInfo[ $slug ]['Name']; ?>">
+										   class="thickbox open-plugin-details-modal" title="More information about <?php echo $pluginsOutdateInfo[ $slug ]['Name']; ?>">
 									<?php echo $pluginsOutdateInfo[ $slug ]['Name']; ?>
 								</a>
 							</div>
