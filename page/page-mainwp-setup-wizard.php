@@ -265,13 +265,13 @@ class MainWP_Setup_Wizard {
 		?>
 		<h1><?php _e( 'Installation', 'mainwp' ); ?></h1>
 		<form method="post">
-			<p><?php  _e( 'What type of server is this?' ); ?></p>
+			<p><?php  _e( 'What type of server is this?', 'mainwp' ); ?></p>
 			<ul class="mwp-setup-list os-list" id="mwp_setup_installation_hosting_type">
 				<li><label><input type="radio" name="mwp_setup_installation_hosting_type" required = "required" <?php echo ($hostingType == 1 ? 'checked="true"' : ''); ?> value="1"> <?php _e( 'Web Host', 'mainwp' ); ?></label></li>
 				<li><label><input type="radio" name="mwp_setup_installation_hosting_type" required = "required" <?php echo ($hostingType == 2 ? 'checked="true"' : ''); ?> value="2"> <?php _e( 'Localhost', 'mainwp' ); ?></label></li>
 			</ul>
 			<div id="mwp_setup_os_type" <?php echo $style; ?>>
-				<p><?php  _e( 'What operating system do you use?' ); ?></p>
+				<p><?php  _e( 'What operating system do you use?', 'mainwp' ); ?></p>
 				<ul class="mwp-setup-list os-list">
 					<li><label><input type="radio" name="mwp_setup_installation_system_type" required = "required" <?php echo ($systemType == 1 ? 'checked="true"' : ''); ?> value="1" <?php echo $disabled; ?>> <?php _e( 'MacOS', 'mainwp' ); ?></label></li>
 					<li><label><input type="radio" name="mwp_setup_installation_system_type" required = "required" <?php echo ($systemType == 2 ? 'checked="true"' : ''); ?> value="2" <?php echo $disabled; ?>> <?php _e( 'Linux', 'mainwp' ); ?></label></li>
