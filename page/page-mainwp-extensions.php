@@ -691,6 +691,7 @@ class MainWP_Extensions {
 
 	public static function downloadAndInstall() {
 		MainWP_System::Instance()->posthandler->secure_request( 'mainwp_extension_downloadandinstall' );
+        ini_set("zlib.output_compression", "Off"); // to fix bug
 		$return = self::installPlugin( $_POST['download_link'] );
 		die( '<mainwp>' . json_encode( $return ) . '</mainwp>' );
 	}
