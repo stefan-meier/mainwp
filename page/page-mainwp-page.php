@@ -374,14 +374,23 @@ class MainWP_Page {
 				<label for="mainwp_page_search_type_trash" ><?php _e( 'Trash', 'mainwp' ); ?></label>
 			</li>
 		</ul>
+        <?php
+        $searchon = 'title'; 
+        if ( $cachedSearch != null ) { $searchon = $cachedSearch['search_on']; }  
+        ?>
 		<div class="mainwp-padding-bottom-20">
 			<div class="mainwp-cols-2 mainwp-left">
 				<label for="mainwp_page_search_by_keyword"><?php _e( 'Containing Keyword:', 'mainwp' ); ?></label><br/>
 				<input type="text" 
 					   id="mainwp_page_search_by_keyword" 
 					   class="" 
-					   size="50" 
-					   value="<?php if ( $cachedSearch != null ) { echo $cachedSearch['keyword']; } ?>"/>
+					   size="25" 
+					   value="<?php if ( $cachedSearch != null ) { echo $cachedSearch['keyword']; } ?>"/> <?php _e('in', 'mainwp'); ?> 
+                       <select class="mainwp-select2-mini" name="page_search_on" id="mainwp_page_search_on">
+                            <option value="title" <?php echo $searchon == 'title' ? 'selected' : ''; ?>><?php _e( 'Title', 'mainwp' ); ?></option>
+                            <option value="content" <?php echo $searchon == 'content' ? 'selected' : ''; ?>><?php _e( 'Body', 'mainwp' ); ?></option>                
+                            <option value="all" <?php echo $searchon == 'all' ? 'selected' : ''; ?>><?php _e( 'Title and Body', 'mainwp' ); ?></option>                                                        
+                    </select>
 			</div>
 			<div class="mainwp-cols-2 mainwp-left">
 				<label for="mainwp_page_search_by_dtsstart"><?php _e( 'Date Range:', 'mainwp' ); ?></label><br/>
@@ -398,15 +407,7 @@ class MainWP_Page {
         $searchon = 'all'; 
         if ( $cachedSearch != null ) { $searchon = $cachedSearch['search_on']; } 
         ?>
-		<br/><br/>
-        <div>			
-            <label for="mainwp_page_search_on"><?php _e( 'Search on:', 'mainwp' ); ?></label><br/>
-            <select class="mainwp-select2-mini" name="page_search_on" id="mainwp_page_search_on">
-                <option value="all" <?php echo $searchon == 'all' ? 'selected' : ''; ?>><?php _e( 'All', 'mainwp' ); ?></option>
-                <option value="title" <?php echo $searchon == 'title' ? 'selected' : ''; ?>><?php _e( 'Title', 'mainwp' ); ?></option>
-                <option value="content" <?php echo $searchon == 'content' ? 'selected' : ''; ?>><?php _e( 'Content', 'mainwp' ); ?></option>                
-            </select>
-		</div>	
+		<br/><br/>        
 		<div class="mainwp-padding-bottom-20 mainwp-padding-top-20">
 			<label for="mainwp_maximumPages"><?php _e( 'Maximum number of pages to return', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( __( '0 for unlimited, CAUTION: depending on your server settings a large return amount may decrease the speed of results or temporarily break communication between Dashboard and Child.', 'mainwp' ) ); ?></label><br/>	
             <input type="number" 

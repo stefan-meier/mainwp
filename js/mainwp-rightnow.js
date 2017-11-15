@@ -107,8 +107,12 @@ rightnow_wordpress_global_upgrade_all = function (groupId)
     
     // new confirm message
     if (!continueUpdating) {      
-        if (jQuery(siteNames).length > 0) {            
-            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', __('WordPress Core files'), Object.values(siteNames).join(', ') );
+        if (jQuery(siteNames).length > 0) {   
+            var sitesList = [];
+            jQuery.each(siteNames, function( index, value ) {                    
+                    sitesList.push(decodeURIComponent(value));
+            }); 
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', __('WordPress Core files'), sitesList.join(', ') );
             if (!confirm(confirmMsg)) {
                 return false;
             }
@@ -332,8 +336,12 @@ rightnow_translations_global_upgrade_all = function(groupId)
 
     // new confirm message
     if (!continueUpdating) {      
-        if (jQuery(siteNames).length > 0) {            
-            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'translations', Object.values(siteNames).join(', ') );
+        if (jQuery(siteNames).length > 0) {  
+            var sitesList = [];
+            jQuery.each(siteNames, function( index, value ) {                    
+                    sitesList.push(decodeURIComponent(value));
+            });
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'translations', sitesList.join(', ') );
             if (!confirm(confirmMsg)) {
                 return false;
             }
@@ -428,8 +436,12 @@ rightnow_translations_upgrade_all = function (slug, translationName)
     
      // new confirm message
     if (!continueUpdating) {      
-        if (jQuery(siteNames).length > 0) {            
-            var confirmMsg = __( 'CONFIRM: You are about to update the %1 translation on the following site(s):\n%2?', translationName, Object.values(siteNames).join(', ') );
+        if (jQuery(siteNames).length > 0) {    
+            var sitesList = [];
+            jQuery.each(siteNames, function( index, value ) {                    
+                    sitesList.push(decodeURIComponent(value));
+            });
+            var confirmMsg = __( 'CONFIRM: You are about to update the %1 translation on the following site(s):\n%2?', translationName, sitesList.join(', ') );
             if (!confirm(confirmMsg)) {
                 return false;
             }
@@ -773,7 +785,11 @@ rightnow_plugins_global_upgrade_all = function(groupId)
     // new confirm message
     if (!continueUpdating) {      
         if (jQuery(siteNames).length > 0) {            
-            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'plugins', Object.values(siteNames).join(', ') );
+            var sitesList = [];
+            jQuery.each(siteNames, function( index, value ) {                    
+                    sitesList.push(decodeURIComponent(value));
+            }); 
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'plugins', sitesList.join(', ') );
             if (!confirm(confirmMsg)) {
                 return false;
             }
@@ -868,8 +884,12 @@ rightnow_plugins_upgrade_all = function (slug, pluginName)
         
     // new confirm message
     if (!continueUpdating) {      
-        if (jQuery(siteNames).length > 0) {                   
-            var confirmMsg = __( 'CONFIRM: You are about to update the %1 plugin on the following site(s):\n%2?', pluginName, Object.values(siteNames).join(', ') );
+        if (jQuery(siteNames).length > 0) {         
+            var sitesList = [];
+            jQuery.each(siteNames, function( index, value ) {                    
+                    sitesList.push(decodeURIComponent(value));
+            });
+            var confirmMsg = __( 'CONFIRM: You are about to update the %1 plugin on the following site(s):\n%2?', pluginName, sitesList.join(', ') );
             if (!confirm(confirmMsg)) {
                 return false;
             }
@@ -1259,8 +1279,12 @@ rightnow_themes_global_upgrade_all = function (groupId)
       
     // new confirm message
     if (!continueUpdating) {      
-        if (jQuery(siteNames).length > 0) {                   
-            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'themes', Object.values(siteNames).join(', ') );
+        if (jQuery(siteNames).length > 0) { 
+            var sitesList = [];
+            jQuery.each(siteNames, function( index, value ) {                    
+                    sitesList.push(decodeURIComponent(value));
+            });
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'themes', sitesList.join(', ') );
             if (!confirm(confirmMsg)) {
                 return false;
             }
@@ -1353,8 +1377,12 @@ rightnow_themes_upgrade_all = function (slug, themeName)
      
      // new confirm message
     if (!continueUpdating) {
-        if (jQuery(siteNames).length > 0) {                   
-            var confirmMsg = __( 'CONFIRM: You are about to update the %1 theme on the following site(s):\n%2?', themeName, Object.values(siteNames).join(', ') );
+        if (jQuery(siteNames).length > 0) {    
+            var sitesList = [];
+            jQuery.each(siteNames, function( index, value ) {                    
+                    sitesList.push(decodeURIComponent(value));
+            });
+            var confirmMsg = __( 'CONFIRM: You are about to update the %1 theme on the following site(s):\n%2?', themeName, sitesList.join(', ') );
             if (!confirm(confirmMsg)) {
                 return false;
             }
@@ -1774,8 +1802,12 @@ rightnow_global_upgrade_all = function ()
     }
     
      // new confirm message    
-    if (jQuery(siteNames).length > 0) {                           
-        var confirmMsg = __( 'CONFIRM: You are about to update WordPress core files, plugins, themes and translations on the following site(s):\n%1?', Object.values(siteNames).join(', ') );
+    if (jQuery(siteNames).length > 0) {     
+        var sitesList = [];
+        jQuery.each(siteNames, function( index, value ) {                    
+            sitesList.push(decodeURIComponent(value));
+        });
+        var confirmMsg = __( 'CONFIRM: You are about to update WordPress core files, plugins, themes and translations on the following site(s):\n%1?', sitesList.join(', ') );
         if (!confirm(confirmMsg)) {
             return false;
         }

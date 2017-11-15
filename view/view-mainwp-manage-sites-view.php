@@ -269,14 +269,14 @@ class MainWP_Manage_Sites_View {
                 
                 $pre_next = '';
                 if ($prev_siteid)
-                    $pre_next .= '<a href="admin.php?page=managesites&dashboard=' . $prev_siteid. '" class="button button-secondary">< Previous</a>';
+                    $pre_next .= '<a href="admin.php?page=managesites&dashboard=' . $prev_siteid. '" title="' . __('Previous', 'mainwp') . '" class="button button-secondary"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>';
                 else
-                    $pre_next .= '<a href="#" disabled class="button button-secondary">< Previous</a>';
+                    $pre_next .= '<a href="#" disabled class="button button-secondary"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>';
                 if ($next_siteid) 
-                    $pre_next .= '&nbsp;&nbsp;<a href="admin.php?page=managesites&dashboard=' . $next_siteid. '" class="button button-secondary">Next ></a>';
+                    $pre_next .= '<a href="admin.php?page=managesites&dashboard=' . $next_siteid. '" title="' . __('Next', 'mainwp') . '" class="button button-secondary"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
                 else
-                    $pre_next .= '&nbsp;&nbsp;<a href="#" disabled class="button button-secondary">Next ></a>';
-                
+                    $pre_next .= '<a href="#" disabled class="button button-secondary"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+                                        
                 $html .= '
                         </select>
                         <select id="mainwp-quick-jump-page" name="" class="mainwp-select2">
@@ -299,8 +299,8 @@ class MainWP_Manage_Sites_View {
                                 }
                             }   
                             $html .= '<option value="scanid">' . __( 'Security Scan ','mainwp' ) . '</option>
-                        </select><br/><br/>' . $pre_next . 
-                    '</span>
+                        </select>&nbsp;&nbsp;' . $pre_next . '
+                    </span>
                     <div style="clear: both;"></div>
                     </div>
                 </div>';
