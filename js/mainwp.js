@@ -453,7 +453,7 @@ jQuery(document).ready(function () {
                     return false;
                 }
             }(securityIssues_fixes[i]));
-            if (securityIssues_fixes[i] == 'readme') continue;
+            //if (securityIssues_fixes[i] == 'readme') continue; // to enable unfix for readme.html
             jQuery('#' + securityIssues_fixes[i] + '_unfix').bind('click', function (what) {
                 return function (event) {
                     securityIssues_unfix(what);
@@ -672,7 +672,7 @@ mainwp_refresh_dashboard = function (syncSiteIds)
         allWebsiteIds = selectedIds;
         jQuery('#refresh-status-total').text(allWebsiteIds.length);
         globalSync = false;
-    }
+    }  
 
 
     for (var i = 0; i < allWebsiteIds.length; i++)
@@ -1050,7 +1050,7 @@ rightnow_themes_detail_show = function (slug) {
     return false;
 };
 rightnow_plugins_ignore_detail = function (slug, name, id, groupId) {
-    if (!confirm(__('Are you sure you want to ignore this plugin updates? The updates will no longer be visible in your MainWP Dashboard.')))
+    if (!confirm(__('Are you sure you want to ignore the %1 plugin updates? The updates will no longer be visible in your MainWP Dashboard.', name )))
         return false;
     return rightnow_ignore_plugintheme_by_site('plugin', slug, name, id, groupId);
 };
@@ -1061,7 +1061,7 @@ rightnow_plugins_unignore_detail_all = function () {
     return rightnow_unignore_plugintheme_by_site_all('plugin');
 };
 rightnow_themes_ignore_detail = function (slug, name, id, groupId) {
-    if (!confirm(__('Are you sure you want to ignore this theme updates? The updates will no longer be visible in your MainWP Dashboard.')))
+    if (!confirm(__('Are you sure you want to ignore the %1 theme updates? The updates will no longer be visible in your MainWP Dashboard.', name)))
         return false;
     return rightnow_ignore_plugintheme_by_site('theme', slug, name, id, groupId);
 };
@@ -1072,7 +1072,7 @@ rightnow_themes_unignore_detail_all = function () {
     return rightnow_unignore_plugintheme_by_site_all('theme');
 };
 rightnow_plugins_ignore_all = function (slug, name) {
-    if (!confirm(__('Are you sure you want to ignore this plugin updates? The updates will no longer be visible in your MainWP Dashboard.')))
+    if (!confirm(__('Are you sure you want to ignore the %1 plugin updates? The updates will no longer be visible in your MainWP Dashboard.', name)))
         return false;
     rightnow_plugins_detail_show(slug);
     var data = mainwp_secure_data({
@@ -1126,7 +1126,7 @@ rightnow_plugins_unignore_globally = function (slug) {
     return false;
 };
 rightnow_themes_ignore_all = function (slug, name) {
-    if (!confirm(__('Are you sure you want to ignore this theme updates? The updates will no longer be visible in your MainWP Dashboard.')))
+    if (!confirm(__('Are you sure you want to ignore the %1 theme updates? The updates will no longer be visible in your MainWP Dashboard.', name)))
         return false;
     rightnow_themes_detail_show(slug);
     var data = mainwp_secure_data({
@@ -3536,6 +3536,56 @@ mainwp_ss_select_by = function (me, what) {
     return false;
 };
 
+// to support staging extension
+mainwp_ss_staging_select_by = function(me, what) {
+    var parent = jQuery(me).closest('.mainwp_select_sites_wrapper');
+    parent.find('#select_by').val('site');
+    
+    parent.find('#mainwp_ss_live_site_link').css('display', (what == 'live' ? 'none' : 'inline'));
+    parent.find('#mainwp_ss_live_site_text').css('display', (what == 'live' ? 'inline' : 'none'));
+
+    parent.find('#mainwp_ss_staging_site_link').css('display', (what == 'staging' ? 'none' : 'inline'));
+    parent.find('#mainwp_ss_staging_site_text').css('display', (what == 'staging' ? 'inline' : 'none'));
+    
+    parent.find('#selected_groups').css('display', 'none'); // hide it
+
+    parent.find('#selected_sites-filter').css('display', 'block'); // display it
+    
+    if (what == 'staging') {     
+        parent.find('.selected_sites_wrapper[is-staging="0"]').attr('id', 'selected_sites_live').hide(); 
+        parent.find('.selected_sites_wrapper[is-staging="1"]').attr('id', 'selected_sites').show();  // show staging sites       
+        // uncheck live sites
+        parent.find('#selected_sites_live INPUT:checkbox').attr('checked', false);
+        parent.find('#selected_sites_live .selected_sites_item_checked').removeClass('selected_sites_item_checked');
+        
+        parent.find('#mainwp_ss_site_link').css('display', 'none');
+        parent.find('#mainwp_ss_site_text').css('display', 'inline');
+        
+        // hide select by group
+        parent.find('#mainwp_ss_group_link').css('display', 'none');
+        parent.find('#mainwp_ss_group_text').css('display', 'none');
+    
+    } else { //live
+        parent.find('.selected_sites_wrapper[is-staging="0"]').attr('id', 'selected_sites').show(); // show live sites
+        parent.find('.selected_sites_wrapper[is-staging="1"]').attr('id', 'selected_sites_stanging').hide();        
+        // uncheck staging sites
+        parent.find('#selected_sites_stanging INPUT:checkbox').attr('checked', false);
+        parent.find('#selected_sites_stanging .selected_sites_item_checked').removeClass('selected_sites_item_checked');   
+        
+        parent.find('#mainwp_ss_site_link').css('display', 'none');
+        parent.find('#mainwp_ss_site_text').css('display', 'inline');
+
+        parent.find('#mainwp_ss_group_link').css('display', 'inline');
+        parent.find('#mainwp_ss_group_text').css('display', 'none');
+    }    
+    
+    parent.find('#selected_groups INPUT:checkbox').attr('checked', false);
+    parent.find('#selected_groups .selected_groups_item_checked').removeClass('selected_groups_item_checked');        
+    
+    mainwp_selected_refresh_count(me);    
+    return false;
+}
+
 mainwp_ss_cats_select_by = function (me, what) {
     var parent = jQuery(me).closest("div.mainwp_select_sites_box");
     parent.find('.mainwp_ss_site_link').css('display', (what == 'site' ? 'none' : 'inline'));
@@ -5284,7 +5334,8 @@ mainwp_fetch_pages = function () {
         status:status,
         'groups[]':selected_groups,
         'sites[]':selected_sites,
-        maximum: jQuery("#mainwp_maximumPages").val()
+        maximum: jQuery("#mainwp_maximumPages").val(),
+        search_on: jQuery("#mainwp_page_search_on").val(),
     };
 
     jQuery('#mainwp_pages_loading').show();
@@ -5316,7 +5367,8 @@ jQuery(document).ready(function () {
         return false;
     });
     jQuery('.mainwp_plugin_check_all').live('change', function () {
-        jQuery(".selected_plugin[value='"+jQuery(this).val()+"']").prop('checked', jQuery(this).prop('checked'));
+        //jQuery(".selected_plugin[value='"+jQuery(this).val()+"']").prop('checked', jQuery(this).prop('checked'));        
+        jQuery(".selected_plugin[value='"+jQuery(this).val()+"'][version='"+jQuery(this).attr('version')+"']").prop('checked', jQuery(this).prop('checked'));        
     });
     jQuery('.mainwp_site_check_all').live('change', function () {
         var rowElement = jQuery(this).parents('tr');
@@ -5932,7 +5984,8 @@ mainwp_fetch_posts = function (postId, userId) {
         postId: (postId == undefined ? '' : postId),
         userId: (userId == undefined ? '' : userId),
         post_type: jQuery("#mainwp_get_custom_post_types_select").val(),
-        maximum: jQuery("#mainwp_maximumPosts").val()
+        maximum: jQuery("#mainwp_maximumPosts").val(),
+        search_on: jQuery("#mainwp_post_search_on").val()
     };
 
     jQuery('#mainwp_posts_loading').show();
@@ -7283,7 +7336,20 @@ mainwp_managesites_doaction = function(action) {
             return false;
 
         if (action == 'delete' || action == 'update_plugins' || action == 'update_themes' || action == 'update_wpcore' || action == 'update_translations' ) {
-            if (!confirm("Are you sure?"))
+            
+            var confirmMsg = '';
+            if (action == 'delete')
+                confirmMsg = __("CONFIRM: You are about to remove the selected sites from your MainWP Dashboard?");
+            else if (action == 'update_plugins')
+                confirmMsg = __("CONFIRM: You are about to update plugins on the selected sites?");
+            else if (action == 'update_themes')
+                confirmMsg = __("CONFIRM: You are about to update themes on the selected sites?");
+            else if (action == 'update_wpcore')
+                confirmMsg = __("CONFIRM: You are about to update WordPress core files on the selected sites?");
+            else if (action == 'update_translations')
+                confirmMsg = __("CONFIRM: You are about to update translations on the selected sites?");
+            
+            if (confirmMsg == '' || !confirm( confirmMsg ))
                 return false;
         }
         managesites_bulk_init();
@@ -7531,8 +7597,8 @@ mainwp_managesites_bulk_reconnect_specific = function(pCheckedBox) {
 
 
 mainwp_force_destroy_sessions = function() {
-    var q = confirm(__('Are you sure?'));
-    if (q) {
+    var confirmMsg = __('CONFIRM: Forces your dashboard to reconnect with your child sites?');     
+    if (confirm(confirmMsg)) {
         jQuery('#refresh-status-box').dialog({
             resizable: false,
             height: 350,

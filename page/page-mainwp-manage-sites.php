@@ -1625,12 +1625,18 @@ class MainWP_Manage_Sites {
 			$website = MainWP_DB::Instance()->getWebsiteById( $_POST['id'] );
 			if ( MainWP_Utility::can_edit_website( $website ) ) {
 				$error = '';
-
-				try {
-					$information = MainWP_Utility::fetchUrlAuthed( $website, 'deactivate' );
-				} catch ( MainWP_Exception $e ) {
-					$error = $e->getMessage();
-				}
+                
+                // deactive child plugin on live site only, 
+                // do not deactive child on staging site, it will deactive child plugin of source site
+                if (! $website->is_staging ) { 
+                    try {
+                        $information = MainWP_Utility::fetchUrlAuthed( $website, 'deactivate' );
+                    } catch ( MainWP_Exception $e ) {
+                        $error = $e->getMessage();
+                    }
+                } else {
+                    $information['removed'] = true;
+                }
 
                 // delete icon file
                 $favi     = MainWP_DB::Instance()->getWebsiteOption( $website, 'favi_icon', '' );
@@ -1653,6 +1659,8 @@ class MainWP_Manage_Sites {
 					die( json_encode( array( 'error' => $error ) ) );
 				} else if ( isset( $information['deactivated'] ) ) {
 					die( json_encode( array( 'result' => 'SUCCESS' ) ) );
+				} else if ( isset( $information['removed'] ) ) {
+					die( json_encode( array( 'result' => 'REMOVED' ) ) );
 				} else {
 					die( json_encode( array( 'undefined_error' => true ) ) );
 				}

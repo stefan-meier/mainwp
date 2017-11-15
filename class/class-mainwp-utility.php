@@ -700,7 +700,7 @@ class MainWP_Utility {
 					}
 
 					if ( file_exists( $cookieFile ) ) {
-						@chmod( $cookieFile, 0777 );
+						@chmod( $cookieFile, 0644 );
 						@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
 						@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 					}
@@ -989,7 +989,7 @@ class MainWP_Utility {
 				}
 
 				if ( file_exists( $cookieFile ) ) {
-					@chmod( $cookieFile, 0777 );
+					@chmod( $cookieFile, 0644 );
 					@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
 					@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 				}
@@ -1103,7 +1103,7 @@ class MainWP_Utility {
 		return true;
 	}
 
-	static function fetchUrlAuthed( &$website, $what, $params = null, $checkConstraints = false, $pForceFetch = false, $pRetryFailed = true ) {
+	static function fetchUrlAuthed( &$website, $what, $params = null, $checkConstraints = false, $pForceFetch = false, $pRetryFailed = true, $rawResponse = null ) {
 		if ( $params == null ) {
 			$params = array();
 		}
@@ -1120,7 +1120,12 @@ class MainWP_Utility {
 		$params['optimize'] = ( ( get_option( 'mainwp_optimize' ) == 1 ) ? 1 : 0 );
 
 		$postdata    = MainWP_Utility::getPostDataAuthed( $website, $what, $params );
-		$information = MainWP_Utility::fetchUrl( $website, $website->url, $postdata, $checkConstraints, $pForceFetch, $website->verify_certificate, $pRetryFailed, $website->http_user, $website->http_pass, $website->ssl_version, array('force_use_ipv4' => $website->force_use_ipv4, 'upgrade' => ( $what == 'upgradeplugintheme' || $what == 'upgrade' || $what == 'upgradetranslation' ) ) );
+        
+        $others = array('force_use_ipv4' => $website->force_use_ipv4, 'upgrade' => ( $what == 'upgradeplugintheme' || $what == 'upgrade' || $what == 'upgradetranslation' ) );
+        if (isset($rawResponse) && $rawResponse)
+            $others['raw_response'] = 'yes'; 
+        
+		$information = MainWP_Utility::fetchUrl( $website, $website->url, $postdata, $checkConstraints, $pForceFetch, $website->verify_certificate, $pRetryFailed, $website->http_user, $website->http_pass, $website->ssl_version, $others );
 
 		if ( is_array( $information ) && isset( $information['sync'] ) && ! empty( $information['sync'] ) ) {
 			MainWP_Sync::syncInformationArray( $website, $information['sync'] );
@@ -1405,7 +1410,7 @@ class MainWP_Utility {
 			}
 
 			if ( file_exists( $cookieFile ) ) {
-				@chmod( $cookieFile, 0777 );
+				@chmod( $cookieFile, 0644 );
 				@curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookieFile );
 				@curl_setopt( $ch, CURLOPT_COOKIEFILE, $cookieFile );
 			}
@@ -1522,11 +1527,12 @@ class MainWP_Utility {
 			MainWP_DB::Instance()->insertOrUpdateRequestLog( $website->id, $ip, null, microtime( true ) );
 		}
 
-
+        $raw_response = isset($others['raw_response']) && $others['raw_response'] == 'yes' ? true : false;
+                
 		MainWP_Logger::Instance()->debugForWebsite( $website, '_fetchUrl', 'http status: [' . $http_status . '] err: [' . $err . '] data: [' . $data . ']' );
-		if ($http_status == '400') MainWP_Logger::Instance()->debugForWebsite( $website, '_fetchUrl', 'post data: [' . print_r($postdata , 1). ']' );
-
-		if ( ( $data === false ) && ( $http_status == 0 ) ) {
+		if ($http_status == '400') MainWP_Logger::Instance()->debugForWebsite( $website, '_fetchUrl', 'post data: [' . print_r($postdata , 1). ']' );        
+		
+        if ( ( $data === false ) && ( $http_status == 0 ) ) {
 			MainWP_Logger::Instance()->debugForWebsite( $website, 'fetchUrl', '[' . $url . '] HTTP Error: [status=0][' . $err . ']' );
 			throw new MainWP_Exception( 'HTTPERROR', $err );
 		} else if ( empty( $data ) && ! empty( $err ) ) {
@@ -1537,6 +1543,9 @@ class MainWP_Utility {
 			$information = unserialize( base64_decode( $result ) );
 			MainWP_Logger::Instance()->debugForWebsite( $website, '_fetchUrl', 'information: [OK]' );
 			return $information;
+		} else if ( $raw_response ) {
+            MainWP_Logger::Instance()->debugForWebsite( $website, '_fetchUrl', 'Response: [RAW]' );            
+            return $data;
 		} else {
 			MainWP_Logger::Instance()->debugForWebsite( $website, 'fetchUrl', '[' . $url . '] Result was: [' . $data . ']' );
 			throw new MainWP_Exception( 'NOMAINWP', $url );

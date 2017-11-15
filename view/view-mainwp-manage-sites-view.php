@@ -242,46 +242,70 @@ class MainWP_Manage_Sites_View {
 		$websites = MainWP_DB::Instance()->query( MainWP_DB::Instance()->getSQLWebsitesForCurrentUser() );
 		$html = '';
 		if ( ! empty( $str_breadcrumb ) ) {
-			$html = '<div class="postbox"><div class="inside"><span class="mainwp-left mainwp-cols-2 mainwp-padding-top-15"><i class="fa fa-map-signs" aria-hidden="true"></i> ' . __( 'You are here: ','mainwp' ) . '&nbsp;&nbsp;' .  $str_breadcrumb . '
-                    </span><span class="mainwp-right mainwp-padding-top-10 mainwp-cols-2 mainwp-t-align-right">' .  __( 'Jump to ','mainwp' ) . '
-                        <select id="mainwp-quick-jump-child" name="" class="mainwp-select2">
-                            <option value="" selected="selected">' . __( 'Select Site ','mainwp' ) . '</option>';
-			while ( $websites && ($website = @MainWP_DB::fetch_object( $websites )) ) {
-				$html .= '<option value="'.$website->id.'">' . stripslashes( $website->name ) . '</option>';
+            $selectOpts = array();
+            while ( $websites && ($website = @MainWP_DB::fetch_object( $websites )) ) {
+                $selectOpts[] = array( 'siteid' => $website->id, 'name' => stripslashes( $website->name ) );				
 			}
-				@MainWP_DB::free_result( $websites );
+            @MainWP_DB::free_result( $websites );
+            
+            if ($selectOpts) {                
+                $html = '<div class="postbox"><div class="inside"><span class="mainwp-left mainwp-cols-2 mainwp-padding-top-15"><i class="fa fa-map-signs" aria-hidden="true"></i> ' . __( 'You are here: ','mainwp' ) . '&nbsp;&nbsp;' .  $str_breadcrumb . '
+                        </span><span class="mainwp-right mainwp-padding-top-10 mainwp-cols-2 mainwp-t-align-right">' .  __( 'Jump to ','mainwp' ) . '
+                            <select id="mainwp-quick-jump-child" name="" class="mainwp-select2">
+                                <option value="" selected="selected">' . __( 'Select Site ','mainwp' ) . '</option>';
+                
+                $prev_siteid = $next_siteid = 0;
+                foreach ( $selectOpts as $i => $val ) {
+                    $html .= '<option value="'.$val['siteid'].'">' . $val['name'] . '</option>';
+                    if ($val['siteid'] == $site_id) {                        
+                        if ($i-1 >= 0) {
+                            $prev_siteid = $selectOpts[$i-1]['siteid'];
+                        }
+                        if ($i+1 <= count($selectOpts)) {
+                            $next_siteid = $selectOpts[$i+1]['siteid'];
+                        }
+                    }
+                }
+                
+                $pre_next = '';
+                if ($prev_siteid)
+                    $pre_next .= '<a href="admin.php?page=managesites&dashboard=' . $prev_siteid. '" class="button button-secondary">< Previous</a>';
+                else
+                    $pre_next .= '<a href="#" disabled class="button button-secondary">< Previous</a>';
+                if ($next_siteid) 
+                    $pre_next .= '&nbsp;&nbsp;<a href="admin.php?page=managesites&dashboard=' . $next_siteid. '" class="button button-secondary">Next ></a>';
+                else
+                    $pre_next .= '&nbsp;&nbsp;<a href="#" disabled class="button button-secondary">Next ></a>';
+                
+                $html .= '
+                        </select>
+                        <select id="mainwp-quick-jump-page" name="" class="mainwp-select2">
+                            <option value="" selected="selected">' . __( 'Select page ','mainwp' ) . '</option>
+                            <option value="dashboard">' . __( 'Overview ','mainwp' ) . '</option>
+                            <option value="id">' . __( 'Edit ','mainwp' ) . '</option>
+                                                    <option value="updateid">' . __( 'Updates','mainwp' ) . '</option>';
 
-                
-		
-                
-			$html .= '
-					</select>
-					<select id="mainwp-quick-jump-page" name="" class="mainwp-select2">
-						<option value="" selected="selected">' . __( 'Select page ','mainwp' ) . '</option>
-						<option value="dashboard">' . __( 'Overview ','mainwp' ) . '</option>
-						<option value="id">' . __( 'Edit ','mainwp' ) . '</option>
-                                                <option value="updateid">' . __( 'Updates','mainwp' ) . '</option>';
-                        
-                        $enableLegacyBackupFeature = get_option( 'mainwp_enableLegacyBackupFeature' );
-                        if ($enableLegacyBackupFeature) {
-                            $html .= '<option value="backupid">' . __( 'Backup ','mainwp' ) . '</option>';
-                        } else {
-                            $primaryBackup = get_option( 'mainwp_primaryBackup' );
-                            if (!empty($primaryBackup)) {
-                                $customPage = apply_filters( 'mainwp-getcustompage-backups', false );
-                                if ( is_array( $customPage ) && isset( $customPage['slug'] )) {
-                                    $html .= '<option value="' . 'ManageBackups' . $customPage['slug'] . '">' . $customPage['title'] . '</option>';
+                            $enableLegacyBackupFeature = get_option( 'mainwp_enableLegacyBackupFeature' );
+                            if ($enableLegacyBackupFeature) {
+                                $html .= '<option value="backupid">' . __( 'Backup ','mainwp' ) . '</option>';
+                            } else {
+                                $primaryBackup = get_option( 'mainwp_primaryBackup' );
+                                if (!empty($primaryBackup)) {
+                                    $customPage = apply_filters( 'mainwp-getcustompage-backups', false );
+                                    if ( is_array( $customPage ) && isset( $customPage['slug'] )) {
+                                        $html .= '<option value="' . 'ManageBackups' . $customPage['slug'] . '">' . $customPage['title'] . '</option>';
+                                    }
+
                                 }
-
-                            }
-                        }   
-                        $html .= '<option value="scanid">' . __( 'Security Scan ','mainwp' ) . '</option>
-					</select>
-				</span>
-				<div style="clear: both;"></div>
-				</div>
-			</div>';
-		}
+                            }   
+                            $html .= '<option value="scanid">' . __( 'Security Scan ','mainwp' ) . '</option>
+                        </select><br/><br/>' . $pre_next . 
+                    '</span>
+                    <div style="clear: both;"></div>
+                    </div>
+                </div>';
+            }
+        }
 
 		return $html;
 	}

@@ -394,7 +394,19 @@ class MainWP_Page {
 			</div>
 			<div sytle="clear:both;"></div>
 		</div>
+        <?php
+        $searchon = 'all'; 
+        if ( $cachedSearch != null ) { $searchon = $cachedSearch['search_on']; } 
+        ?>
 		<br/><br/>
+        <div>			
+            <label for="mainwp_page_search_on"><?php _e( 'Search on:', 'mainwp' ); ?></label><br/>
+            <select class="mainwp-select2-mini" name="page_search_on" id="mainwp_page_search_on">
+                <option value="all" <?php echo $searchon == 'all' ? 'selected' : ''; ?>><?php _e( 'All', 'mainwp' ); ?></option>
+                <option value="title" <?php echo $searchon == 'title' ? 'selected' : ''; ?>><?php _e( 'Title', 'mainwp' ); ?></option>
+                <option value="content" <?php echo $searchon == 'content' ? 'selected' : ''; ?>><?php _e( 'Content', 'mainwp' ); ?></option>                
+            </select>
+		</div>	
 		<div class="mainwp-padding-bottom-20 mainwp-padding-top-20">
 			<label for="mainwp_maximumPages"><?php _e( 'Maximum number of pages to return', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( __( '0 for unlimited, CAUTION: depending on your server settings a large return amount may decrease the speed of results or temporarily break communication between Dashboard and Child.', 'mainwp' ) ); ?></label><br/>	
             <input type="number" 
@@ -406,7 +418,7 @@ class MainWP_Page {
 		<?php
 	}
 	
-        public static function renderTable( $cached, $keyword = '', $dtsstart = '', $dtsstop = '', $status = '', $groups = '', $sites = '' ) {
+        public static function renderTable( $cached, $keyword = '', $dtsstart = '', $dtsstop = '', $status = '', $groups = '', $sites = '', $search_on = 'all' ) {
             // to fix for ajax call
             $load_page = 'mainwp_page_PageBulkManage';
             $hidden = get_user_option( 'manage' . strtolower($load_page) . 'columnshidden' );
@@ -514,7 +526,7 @@ class MainWP_Page {
                                 <?php if ($cached) {
                                             MainWP_Cache::echoBody( 'Page' ); 
                                       } else {
-                                            MainWP_Page::renderTableBody($keyword, $dtsstart, $dtsstop, $status, $groups, $sites);
+                                            MainWP_Page::renderTableBody($keyword, $dtsstart, $dtsstop, $status, $groups, $sites, $search_on);
                                       }
                                 ?>
                         </tbody>
@@ -540,7 +552,7 @@ class MainWP_Page {
             <?php
         }
         
-	public static function renderTableBody( $keyword, $dtsstart, $dtsstop, $status, $groups, $sites ) {
+	public static function renderTableBody( $keyword, $dtsstart, $dtsstop, $status, $groups, $sites, $search_on = 'all' ) {
 
 		MainWP_Cache::initCache( 'Page' );
 
@@ -579,6 +591,7 @@ class MainWP_Page {
 				'dtsstop' => $dtsstop,
 				'status' => $status,
 				'maxRecords' => ((get_option( 'mainwp_maximumPages' ) === false) ? 50 : get_option( 'mainwp_maximumPages' )),
+                'search_on' => $search_on
 			);
             
             if ( MainWP_Utility::enabled_wp_seo() ) {
@@ -591,7 +604,8 @@ class MainWP_Page {
 
 		MainWP_Cache::addContext( 'Page', array( 'count' => $output->pages, 'keyword' => $keyword, 'dtsstart' => $dtsstart, 'dtsstop' => $dtsstop, 'status' => $status,
                         'sites'    => ($sites != '') ? $sites : '',
-                        'groups'   => ($groups != '') ? $groups : ''
+                        'groups'   => ($groups != '') ? $groups : '',
+                        'search_on' => $search_on
                 ));
                 
 		//Sort if required

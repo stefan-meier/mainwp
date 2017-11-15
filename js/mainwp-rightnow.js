@@ -62,15 +62,15 @@ rightnow_wordpress_global_upgrade_all = function (groupId)
 {
     if (bulkTaskRunning) return false;
 
-    if (!continueUpdating) {
-        if (!confirm(__('Are you sure?')))
-            return false;
-    }
-
-    if (typeof groupId !== 'undefined')
-        rightnow_show_if_required('wp_upgrades_group', false, groupId);
-    else
-        rightnow_show_if_required('upgrades', false);
+//    if (!continueUpdating) {
+//        if (!confirm(__('Are you sure?')))
+//            return false;
+//    }
+//
+//    if (typeof groupId !== 'undefined')
+//        rightnow_show_if_required('wp_upgrades_group', false, groupId);
+//    else
+//        rightnow_show_if_required('upgrades', false);
 
     //Step 1: build form
     var sitesToUpdate = [];
@@ -104,6 +104,24 @@ rightnow_wordpress_global_upgrade_all = function (groupId)
             siteNames[siteId] = siteName;
         }
     }
+    
+    // new confirm message
+    if (!continueUpdating) {      
+        if (jQuery(siteNames).length > 0) {            
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', __('WordPress Core files'), Object.values(siteNames).join(', ') );
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+        } else {            
+            return false;
+        }
+    }
+
+    if (typeof groupId !== 'undefined')
+        rightnow_show_if_required('wp_upgrades_group', false, groupId);
+    else
+        rightnow_show_if_required('upgrades', false);
+    
 
     for (var j = 0; j < sitesToUpdate.length; j++)
     {
@@ -240,15 +258,15 @@ rightnow_translations_global_upgrade_all = function(groupId)
 {
     if (bulkTaskRunning) return false;
 
-    if (!continueUpdating) {
-        if (!confirm(__('Are you sure?')))
-            return false;
-    }
-
-    if (typeof groupId !== 'undefined')
-        rightnow_show_if_required('translation_upgrades_group', false, groupId);
-    else
-        rightnow_show_if_required('translation_upgrades', false);
+//    if (!continueUpdating) {
+//        if (!confirm(__('Are you sure?')))
+//            return false;
+//    }
+//
+//    if (typeof groupId !== 'undefined')
+//        rightnow_show_if_required('translation_upgrades_group', false, groupId);
+//    else
+//        rightnow_show_if_required('translation_upgrades', false);
 
     //Step 1: build form
     var sitesToUpdate = [];
@@ -312,6 +330,24 @@ rightnow_translations_global_upgrade_all = function(groupId)
         }
     }
 
+    // new confirm message
+    if (!continueUpdating) {      
+        if (jQuery(siteNames).length > 0) {            
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'translations', Object.values(siteNames).join(', ') );
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+        } else {            
+            return false;
+        }
+    }
+    
+    if (typeof groupId !== 'undefined')
+        rightnow_show_if_required('translation_upgrades_group', false, groupId);
+    else
+        rightnow_show_if_required('translation_upgrades', false);
+
+    
     for (var i = 0; i < sitesToUpdate.length; i++)
     {
         var updateCount = sitesTranslationSlugs[sitesToUpdate[i]].match(/\,/g);
@@ -357,11 +393,11 @@ rightnow_translations_upgrade_all = function (slug, translationName)
 {
     if (bulkTaskRunning) return false;
 
-    if (!continueUpdating) {
-        if (!confirm(__('Are you sure?')))
-            return false;
-    }
-    rightnow_translations_detail_show(slug);
+//    if (!continueUpdating) {
+//        if (!confirm(__('Are you sure?')))
+//            return false;
+//    }
+//    rightnow_translations_detail_show(slug);
 
     //Step 1: build form
     var sitesToUpdate = [];
@@ -384,14 +420,34 @@ rightnow_translations_upgrade_all = function (slug, translationName)
         var siteName = jQuery(child).attr('site_name');
         siteNames[siteId] = siteName;
         sitesToUpdate.push(siteId);
-        upgradeList.append('<tr><td>' + decodeURIComponent(siteName) + '</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + siteId + '">'+ '<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
+        //upgradeList.append('<tr><td>' + decodeURIComponent(siteName) + '</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + siteId + '">'+ '<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
     }
+    
+    translationName = decodeURIComponent(translationName);
+    translationName = translationName.replace(/\+/g, ' ');
+    
+     // new confirm message
+    if (!continueUpdating) {      
+        if (jQuery(siteNames).length > 0) {            
+            var confirmMsg = __( 'CONFIRM: You are about to update the %1 translation on the following site(s):\n%2?', translationName, Object.values(siteNames).join(', ') );
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+        } else {            
+            return false;
+        }
+    }
+    rightnow_translations_detail_show(slug);
+        
+    for (var i = 0; i < sitesToUpdate.length; i++)
+    {
+        upgradeList.append('<tr><td>' + decodeURIComponent(siteNames[sitesToUpdate[i]]) + '</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + sitesToUpdate[i] + '">'+ '<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
+    }
+        
     var sitesCount = sitesToUpdate.length;
 
     rightnowContinueAfterBackup = function(pSitesCount, pSlug, pSitesToUpdate) { return function()
-    {
-        translationName = decodeURIComponent(translationName);
-        translationName = translationName.replace(/\+/g, ' ');
+    {        
         //Step 2: show form
         jQuery('#rightnow-upgrade-status-box').attr('title', __('Updating %1', decodeURIComponent(translationName)));
         jQuery('#rightnow-upgrade-status-total').html(pSitesCount);
@@ -643,15 +699,15 @@ rightnow_plugins_global_upgrade_all = function(groupId)
 {
     if (bulkTaskRunning) return false;
 
-    if (!continueUpdating) {
-        if (!confirm(__('Are you sure?')))
-            return false;
-    }
+//    if (!continueUpdating) {
+//        if (!confirm(__('Are you sure?')))
+//            return false;
+//    }
 
-    if (typeof groupId !== 'undefined')
-        rightnow_show_if_required('plugin_upgrades_group', false, groupId);
-    else
-        rightnow_show_if_required('plugin_upgrades', false);
+//    if (typeof groupId !== 'undefined')
+//        rightnow_show_if_required('plugin_upgrades_group', false, groupId);
+//    else
+//        rightnow_show_if_required('plugin_upgrades', false);
 
     //Step 1: build form
     var sitesToUpdate = [];
@@ -713,7 +769,24 @@ rightnow_plugins_global_upgrade_all = function(groupId)
             sitesPluginSlugs[siteId] += ',' + pluginSlug;
         }
     }
-
+    
+    // new confirm message
+    if (!continueUpdating) {      
+        if (jQuery(siteNames).length > 0) {            
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'plugins', Object.values(siteNames).join(', ') );
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+        } else {            
+            return false;
+        }
+    }
+    
+    if (typeof groupId !== 'undefined')
+        rightnow_show_if_required('plugin_upgrades_group', false, groupId);
+    else
+        rightnow_show_if_required('plugin_upgrades', false);
+    
     for (var i = 0; i < sitesToUpdate.length; i++)
     {
         var updateCount = sitesPluginSlugs[sitesToUpdate[i]].match(/\,/g);
@@ -759,12 +832,12 @@ rightnow_plugins_upgrade_all = function (slug, pluginName)
 {
     if (bulkTaskRunning) return false;
 
-    if (!continueUpdating) {
-        if (!confirm(__('Are you sure?')))
-            return false;
-    }
-
-    rightnow_plugins_detail_show(slug);
+//    if (!continueUpdating) {
+//        if (!confirm(__('Are you sure?')))
+//            return false;
+//    }
+//
+//    rightnow_plugins_detail_show(slug);
 
     //Step 1: build form
     var sitesToUpdate = [];
@@ -787,14 +860,34 @@ rightnow_plugins_upgrade_all = function (slug, pluginName)
         var siteName = jQuery(child).attr('site_name');
         siteNames[siteId] = siteName;
         sitesToUpdate.push(siteId);
-        upgradeList.append('<tr><td>' + decodeURIComponent(siteName) + '</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + siteId + '">'+'<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
+//        upgradeList.append('<tr><td>' + decodeURIComponent(siteName) + '</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + siteId + '">'+'<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
     }
+    
+    pluginName = decodeURIComponent(pluginName);
+    pluginName = pluginName.replace(/\+/g, ' ');
+        
+    // new confirm message
+    if (!continueUpdating) {      
+        if (jQuery(siteNames).length > 0) {                   
+            var confirmMsg = __( 'CONFIRM: You are about to update the %1 plugin on the following site(s):\n%2?', pluginName, Object.values(siteNames).join(', ') );
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+        } else {            
+            return false;
+        }
+    }
+    rightnow_plugins_detail_show(slug);
+    
+    for (var i = 0; i < sitesToUpdate.length; i++)
+    {
+        upgradeList.append('<tr><td>' + decodeURIComponent(siteNames[sitesToUpdate[i]]) + '</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + sitesToUpdate[i] + '">'+'<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
+    }
+    
     var sitesCount = sitesToUpdate.length;
 
     rightnowContinueAfterBackup = function(pSitesCount, pSlug, pSitesToUpdate) { return function()
-    {
-        pluginName = decodeURIComponent(pluginName);
-        pluginName = pluginName.replace(/\+/g, ' ');
+    {        
         //Step 2: show form
         jQuery('#rightnow-upgrade-status-box').attr('title', __('Updating %1', decodeURIComponent(pluginName)));
         jQuery('#rightnow-upgrade-status-total').html(pSitesCount);
@@ -1092,15 +1185,15 @@ rightnow_themes_global_upgrade_all = function (groupId)
 {
     if (bulkTaskRunning) return false;
 
-    if (!continueUpdating) {
-        if (!confirm(__('Are you sure?')))
-            return false;
-    }
-
-    if (typeof groupId !== 'undefined')
-        rightnow_show_if_required('theme_upgrades_group', false, groupId);
-    else
-        rightnow_show_if_required('theme_upgrades', false);
+//    if (!continueUpdating) {
+//        if (!confirm(__('Are you sure?')))
+//            return false;
+//    }
+//
+//    if (typeof groupId !== 'undefined')
+//        rightnow_show_if_required('theme_upgrades_group', false, groupId);
+//    else
+//        rightnow_show_if_required('theme_upgrades', false);
 
 
     //Step 1: build form
@@ -1163,6 +1256,24 @@ rightnow_themes_global_upgrade_all = function (groupId)
         }
     }
 
+      
+    // new confirm message
+    if (!continueUpdating) {      
+        if (jQuery(siteNames).length > 0) {                   
+            var confirmMsg = __( 'CONFIRM: You are about to update %1 on the following site(s):\n%2?', 'themes', Object.values(siteNames).join(', ') );
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+        } else {            
+            return false;
+        }
+    }
+    
+    if (typeof groupId !== 'undefined')
+        rightnow_show_if_required('theme_upgrades_group', false, groupId);
+    else
+        rightnow_show_if_required('theme_upgrades', false);
+    
     for (var i = 0; i < sitesToUpdate.length; i++)
     {
         var updateCount = sitesPluginSlugs[sitesToUpdate[i]].match(/\,/g);
@@ -1207,12 +1318,12 @@ rightnow_themes_upgrade_all = function (slug, themeName)
 {
     if (bulkTaskRunning) return false;
 
-    if (!continueUpdating) {
-        if (!confirm(__('Are you sure?')))
-            return false;
-    }
-
-    rightnow_themes_detail_show(slug);
+//    if (!continueUpdating) {
+//        if (!confirm(__('Are you sure?')))
+//            return false;
+//    }
+//
+//    rightnow_themes_detail_show(slug);
 
     //Step 1: build form
     var sitesToUpdate = [];
@@ -1236,11 +1347,26 @@ rightnow_themes_upgrade_all = function (slug, themeName)
         sitesToUpdate.push(siteId);
         upgradeList.append('<tr><td>' + decodeURIComponent(siteName) + '</td><td style="width: 80px"><span class="rightnow-upgrade-status-wp" siteid="' + siteId + '">'+'<i class="fa fa-clock-o" aria-hidden="true"></i> ' +  __('PENDING')+'</span></td></tr>');
     }
+    
+    themeName = decodeURIComponent(themeName);
+    themeName = themeName.replace(/\+/g, ' ');
+     
+     // new confirm message
+    if (!continueUpdating) {
+        if (jQuery(siteNames).length > 0) {                   
+            var confirmMsg = __( 'CONFIRM: You are about to update the %1 theme on the following site(s):\n%2?', themeName, Object.values(siteNames).join(', ') );
+            if (!confirm(confirmMsg)) {
+                return false;
+            }
+        } else {            
+            return false;
+        }
+    }
+    rightnow_themes_detail_show(slug);
+    
     var sitesCount = sitesToUpdate.length;
     rightnowContinueAfterBackup = function(pSitesCount, pSlug, pSitesToUpdate) { return function()
     {
-        themeName = decodeURIComponent(themeName);
-        themeName = themeName.replace(/\+/g, ' ');
         //Step 2: show form
         jQuery('#rightnow-upgrade-status-box').attr('title', __('Updating %1', decodeURIComponent(themeName)));
         jQuery('#rightnow-upgrade-status-total').html(pSitesCount);
@@ -1469,10 +1595,10 @@ rightnow_global_upgrade_all = function ()
 {
     if (bulkTaskRunning) return false;
 
-    if (!confirm(__('Are you sure?')))
-        return false;
-
-    rightnow_show_if_required('wp_upgrades', false);
+//    if (!confirm(__('Are you sure?')))
+//        return false;
+//
+//    rightnow_show_if_required('wp_upgrades', false);
 
     //Step 1: build form
     var sitesToUpdate = [];
@@ -1646,7 +1772,19 @@ rightnow_global_upgrade_all = function ()
             }
         }
     }
-
+    
+     // new confirm message    
+    if (jQuery(siteNames).length > 0) {                           
+        var confirmMsg = __( 'CONFIRM: You are about to update WordPress core files, plugins, themes and translations on the following site(s):\n%1?', Object.values(siteNames).join(', ') );
+        if (!confirm(confirmMsg)) {
+            return false;
+        }
+    } else {            
+        return false;
+    }
+    
+    rightnow_show_if_required('wp_upgrades', false);
+    
     //Build form
     for (var j = 0; j < sitesToUpdate.length; j++)
     {

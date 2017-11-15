@@ -287,7 +287,7 @@ class MainWP_System {
 		 */
 		add_filter( 'mainwp-getgroups', array( MainWP_Extensions::getClassName(), 'hookGetGroups' ), 10, 4 );
 		add_action( 'mainwp_fetchurlsauthed', array( &$this, 'filter_fetchUrlsAuthed' ), 10, 7 );
-		add_filter( 'mainwp_fetchurlauthed', array( &$this, 'filter_fetchUrlAuthed' ), 10, 5 );
+		add_filter( 'mainwp_fetchurlauthed', array( &$this, 'filter_fetchUrlAuthed' ), 10, 6 );
 		add_filter( 'mainwp_getdashboardsites', array(
 			MainWP_Extensions::getClassName(),
 			'hookGetDashboardSites',
@@ -432,8 +432,8 @@ class MainWP_System {
 		return MainWP_Extensions::hookFetchUrlsAuthed( $pluginFile, $key, $dbwebsites, $what, $params, $handle, $output );
 	}
 
-	function filter_fetchUrlAuthed( $pluginFile, $key, $websiteId, $what, $params ) {
-		return MainWP_Extensions::hookFetchUrlAuthed( $pluginFile, $key, $websiteId, $what, $params );
+	function filter_fetchUrlAuthed( $pluginFile, $key, $websiteId, $what, $params, $raw_response = null ) {
+		return MainWP_Extensions::hookFetchUrlAuthed( $pluginFile, $key, $websiteId, $what, $params, $raw_response );
 	}
 
 	function hookBulkPostMetaboxHandle( $post_id ) {
@@ -1905,12 +1905,17 @@ class MainWP_System {
 	}
 
 	public static function get_openssl_conf() {
+        
+        if (defined('MAINWP_CRYPT_RSA_OPENSSL_CONFIG')) {
+            return MAINWP_CRYPT_RSA_OPENSSL_CONFIG;
+        } 
+        
 		$setup_conf_loc = '';
 		if ( MainWP_Settings::isLocalWindowConfig() ) {
 			$setup_conf_loc = get_option( 'mwp_setup_opensslLibLocation' );
 		} else if (get_option('mainwp_opensslLibLocation') != '') {
             $setup_conf_loc = get_option('mainwp_opensslLibLocation');
-        }
+        }        
 		return $setup_conf_loc;
 	}
 
@@ -2950,7 +2955,28 @@ class MainWP_System {
 			$website  = MainWP_DB::Instance()->getWebsiteById( $current_wpid );
 			$websites = array( $website );
 		} else {
-			$websites = MainWP_DB::Instance()->query( MainWP_DB::Instance()->getSQLWebsitesForCurrentUser( false, null, 'wp_sync.dtsSync DESC, wp.url ASC' ) );
+            $is_staging = 'no'; 
+            if (isset( $_GET['page'] )) { 
+                // for manage sites page
+                if (('managesites' == $_GET['page']) && !isset( $_GET['id'] ) && !isset( $_GET['do']) && !isset( $_GET['dashboard'])) {		            
+                    $filter_group = get_option( 'mainwp_managesites_filter_group' );
+                    if ($filter_group) {                
+                        $staging_group = get_option('mainwp_stagingsites_group_id');                
+                        if ($staging_group == $filter_group) {
+                            $is_staging = 'yes';
+                        }
+                    }                          
+                } else if ('UpdatesManage' == $_GET['page'] || 'mainwp_tab'== $_GET['page'] ) { // for Updates and Overview page
+                    $staging_enabled = apply_filters('mainwp-extension-available-check', 'mainwp-staging-extension');
+                    if($staging_enabled) {
+                        $staging_view = get_user_option('mainwp_staging_options_updates_view') == 'staging' ? true : false;
+                        if ( $staging_view ) {
+                            $is_staging = 'yes';
+                        }
+                    }
+                }            
+            }
+			$websites = MainWP_DB::Instance()->query( MainWP_DB::Instance()->getSQLWebsitesForCurrentUser( false, null, 'wp_sync.dtsSync DESC, wp.url ASC', false, false, null, false, array(), $is_staging ) ); 
 		}
 		ob_start();
 

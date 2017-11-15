@@ -43,7 +43,7 @@ class MainWP_Manage_Backups {
         if ( is_array( $customPage ) && isset( $customPage['slug'] ) && !empty($mainwp_primaryBackup)) {
 			self::$hideSubmenuBackups = true;
 			$_page = add_submenu_page( 'mainwp_tab', $customPage['title'], '<span id="mainwp-Backups">' . $customPage['title'] . '</span>', 'read', 'ManageBackups' . $customPage['slug'], $customPage['callback'] );
-            MainWP_System::add_sub_left_menu($customPage['title'], 'mainwp_tab', 'ManageBackups' . $customPage, 'admin.php?page=ManageBackups' .  $customPage['slug'], '<i class="fa fa-hdd-o"></i>', '' );
+            MainWP_System::add_sub_left_menu($customPage['title'], 'mainwp_tab', 'ManageBackups' . $customPage['slug'], 'admin.php?page=ManageBackups' .  $customPage['slug'], '<i class="fa fa-hdd-o"></i>', '' );
             if ($enable_legacy_backup) {
                 add_action( 'load-' . $_page, array( MainWP_Manage_Backups::getClassName(), 'on_load_page' ) );
             }

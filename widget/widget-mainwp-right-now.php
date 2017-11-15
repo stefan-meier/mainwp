@@ -534,23 +534,53 @@ class MainWP_Right_Now {
 
 	public static function renderSites( $isUpdatesPage = false ) {
 		$globalView = true;
-
+        global $current_user;
 		$current_wpid = MainWP_Utility::get_current_wpid();
 
 		if ( $current_wpid ) {
 			$sql        = MainWP_DB::Instance()->getSQLWebsiteById( $current_wpid, false, array( 'premium_upgrades', 'plugins_outdate_dismissed', 'themes_outdate_dismissed', 'plugins_outdate_info', 'themes_outdate_info', 'favi_icon' ) );
 			$globalView = false;
 		} else {
-			$sql = MainWP_DB::Instance()->getSQLWebsitesForCurrentUser(false, null, 'wp.url', false, false, null, false, array( 'premium_upgrades', 'plugins_outdate_dismissed', 'themes_outdate_dismissed', 'plugins_outdate_info', 'themes_outdate_info', 'favi_icon' ) );
+            
+            // To support staging extension
+            $is_staging = 'no';             
+            if (apply_filters('mainwp-extension-available-check', 'mainwp-staging-extension')) {                
+                $staging_updates_view = get_user_option( 'mainwp_staging_options_updates_view', $current_user->ID );
+                if ($staging_updates_view == 'staging') {
+                    $is_staging = 'yes';                    
+                }
+            }            
+            // end support
+            
+			$sql = MainWP_DB::Instance()->getSQLWebsitesForCurrentUser(false, null, 'wp.url', false, false, null, false, array( 'premium_upgrades', 'plugins_outdate_dismissed', 'themes_outdate_dismissed', 'plugins_outdate_info', 'themes_outdate_info', 'favi_icon' ), $is_staging );
 		}
-
+        
+        $userExtension = MainWP_DB::Instance()->getUserExtension();
+        
+        if ( $globalView ) {
+			?>
+			<div class="mainwp-postbox-actions-top mainwp-padding-5">
+                <?php echo apply_filters('mainwp_widgetupdates_actions_top', ''); ?>
+				<div class="mainwp-cols-s mainwp-right mainwp-t-align-right">
+					<form method="post" action="">
+						<label for="mainwp_select_options_siteview"><?php _e( 'View updates per: ', 'mainwp' ); ?></label>
+						<select class="mainwp-select2-mini" id="mainwp_select_options_siteview" name="select_mainwp_options_siteview">
+							<option value="1" <?php echo $userExtension->site_view == 1 ? 'selected' : ''; ?>><?php esc_html_e( 'Site', 'mainwp' ); ?></option>
+							<option value="0" <?php echo $userExtension->site_view == 0 ? 'selected' : ''; ?>><?php esc_html_e( 'Plugin/Theme', 'mainwp' ); ?></option>
+							<option value="2" <?php echo $userExtension->site_view == 2 ? 'selected' : ''; ?>><?php esc_html_e( 'Group', 'mainwp' ); ?></option>
+						</select>
+					</form>
+				</div>
+				<div class="mainwp-clear"></div>
+			</div>
+			<?php
+		}
+        
 		$websites = MainWP_DB::Instance()->query( $sql );
 
-		if ( ! $websites ) {
+		if ( ! $websites ) {            
 			return;
 		}
-
-		$userExtension = MainWP_DB::Instance()->getUserExtension();
 
 		// NEW 4.0: group view
 		if ( $globalView && $userExtension->site_view == 2 ) {
@@ -897,24 +927,7 @@ class MainWP_Right_Now {
 		$total_themesIgnoredAbandoned += count( $themesIgnoredAbandoned_perSites );
 
 		//WP Upgrades part:
-		$total_upgrades = $total_wp_upgrades + $total_plugin_upgrades + $total_theme_upgrades + $total_translation_upgrades;
-		if ( $globalView ) {
-			?>
-			<div class="mainwp-postbox-actions-top mainwp-padding-5">
-				<div class="mainwp-cols-s mainwp-right mainwp-t-align-right">
-					<form method="post" action="">
-						<label for="mainwp_select_options_siteview"><?php _e( 'View updates per: ', 'mainwp' ); ?></label>
-						<select class="mainwp-select2-mini" id="mainwp_select_options_siteview" name="select_mainwp_options_siteview">
-							<option value="1" <?php echo $userExtension->site_view == 1 ? 'selected' : ''; ?>><?php esc_html_e( 'Site', 'mainwp' ); ?></option>
-							<option value="0" <?php echo $userExtension->site_view == 0 ? 'selected' : ''; ?>><?php esc_html_e( 'Plugin/Theme', 'mainwp' ); ?></option>
-							<option value="2" <?php echo $userExtension->site_view == 2 ? 'selected' : ''; ?>><?php esc_html_e( 'Group', 'mainwp' ); ?></option>
-						</select>
-					</form>
-				</div>
-				<div class="mainwp-clear"></div>
-			</div>
-			<?php
-		}
+		$total_upgrades = $total_wp_upgrades + $total_plugin_upgrades + $total_theme_upgrades + $total_translation_upgrades;		
 		?>
 		<?php
 		if ( $total_upgrades == 0 ) {
