@@ -7339,15 +7339,15 @@ mainwp_managesites_doaction = function(action) {
             
             var confirmMsg = '';
             if (action == 'delete')
-                confirmMsg = __("CONFIRM: You are about to remove the selected sites from your MainWP Dashboard?");
+                confirmMsg = __("You are about to remove the selected sites from your MainWP Dashboard?");
             else if (action == 'update_plugins')
-                confirmMsg = __("CONFIRM: You are about to update plugins on the selected sites?");
+                confirmMsg = __("You are about to update plugins on the selected sites?");
             else if (action == 'update_themes')
-                confirmMsg = __("CONFIRM: You are about to update themes on the selected sites?");
+                confirmMsg = __("You are about to update themes on the selected sites?");
             else if (action == 'update_wpcore')
-                confirmMsg = __("CONFIRM: You are about to update WordPress core files on the selected sites?");
+                confirmMsg = __("You are about to update WordPress core files on the selected sites?");
             else if (action == 'update_translations')
-                confirmMsg = __("CONFIRM: You are about to update translations on the selected sites?");
+                confirmMsg = __("You are about to update translations on the selected sites?");
             
             if (confirmMsg == '' || !confirm( confirmMsg ))
                 return false;
@@ -7597,7 +7597,7 @@ mainwp_managesites_bulk_reconnect_specific = function(pCheckedBox) {
 
 
 mainwp_force_destroy_sessions = function() {
-    var confirmMsg = __('CONFIRM: Forces your dashboard to reconnect with your child sites?');     
+    var confirmMsg = __('Forces your dashboard to reconnect with your child sites?');     
     if (confirm(confirmMsg)) {
         jQuery('#refresh-status-box').dialog({
             resizable: false,

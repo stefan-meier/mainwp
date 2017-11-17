@@ -383,7 +383,7 @@ public static function renderHeader( $shownPage, $post_id = null ) {
 				<input type="text"
 				       id="mainwp_post_search_by_keyword"
 				       class=""
-				       size="25"
+				       size="50"
 				       value="<?php if ( $cachedSearch != null ) { echo $cachedSearch['keyword']; } ?>"/> <?php _e('in', 'mainwp'); ?> 
                        <select class="mainwp-select2-mini" name="post_search_on" id="mainwp_post_search_on">
                             <option value="title" <?php echo $searchon == 'title' ? 'selected' : ''; ?>><?php _e( 'Title', 'mainwp' ); ?></option>

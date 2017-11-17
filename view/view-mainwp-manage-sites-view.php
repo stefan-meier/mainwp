@@ -248,15 +248,11 @@ class MainWP_Manage_Sites_View {
 			}
             @MainWP_DB::free_result( $websites );
             
-            if ($selectOpts) {                
-                $html = '<div class="postbox"><div class="inside"><span class="mainwp-left mainwp-cols-2 mainwp-padding-top-15"><i class="fa fa-map-signs" aria-hidden="true"></i> ' . __( 'You are here: ','mainwp' ) . '&nbsp;&nbsp;' .  $str_breadcrumb . '
-                        </span><span class="mainwp-right mainwp-padding-top-10 mainwp-cols-2 mainwp-t-align-right">' .  __( 'Jump to ','mainwp' ) . '
-                            <select id="mainwp-quick-jump-child" name="" class="mainwp-select2">
-                                <option value="" selected="selected">' . __( 'Select Site ','mainwp' ) . '</option>';
-                
+            if ($selectOpts) {    
+                $select_ops_html = '';
                 $prev_siteid = $next_siteid = 0;
                 foreach ( $selectOpts as $i => $val ) {
-                    $html .= '<option value="'.$val['siteid'].'">' . $val['name'] . '</option>';
+                    $select_ops_html .= '<option value="'.$val['siteid'].'">' . $val['name'] . '</option>';
                     if ($val['siteid'] == $site_id) {                        
                         if ($i-1 >= 0) {
                             $prev_siteid = $selectOpts[$i-1]['siteid'];
@@ -267,16 +263,25 @@ class MainWP_Manage_Sites_View {
                     }
                 }
                 
-                $pre_next = '';
+                $pre_next_html = '<div class="sites-navi-buttons">';
                 if ($prev_siteid)
-                    $pre_next .= '<a href="admin.php?page=managesites&dashboard=' . $prev_siteid. '" title="' . __('Previous', 'mainwp') . '" class="button button-secondary"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>';
+                    $pre_next_html .= '<button class="left dashicons" onclick="location.href=\'admin.php?page=managesites&dashboard=' . $prev_siteid. '\';" title="' . __('Previous', 'mainwp') . '" ><span class="screen-reader-text">Previous</span></button>';
                 else
-                    $pre_next .= '<a href="#" disabled class="button button-secondary"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>';
+                    $pre_next_html .= '<button class="left dashicons disabled"><span class="screen-reader-text">Edit previous media item</span></button>';
+                
                 if ($next_siteid) 
-                    $pre_next .= '<a href="admin.php?page=managesites&dashboard=' . $next_siteid. '" title="' . __('Next', 'mainwp') . '" class="button button-secondary"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
+                    $pre_next_html .= '<button class="right dashicons" onclick="location.href=\'admin.php?page=managesites&dashboard=' . $next_siteid. '\';" title="' . __('Next', 'mainwp') . '"><span class="screen-reader-text">Next</span></button>';
                 else
-                    $pre_next .= '<a href="#" disabled class="button button-secondary"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>';
-                                        
+                    $pre_next_html .= '<button class="right dashicons disabled"><span class="screen-reader-text">Edit next media item</span></button>';
+                
+                $pre_next_html .= '</div>';                        
+                                
+                $html = '<div class="postbox mainwp-breadcrumb"><div class="inside"><div class="breadcrumb-wrap">' . 
+                        '<span class="mainwp-left mainwp-cols-2 mainwp-padding-top-15"><i class="fa fa-map-signs" aria-hidden="true"></i> ' . __( 'You are here: ','mainwp' ) . '&nbsp;&nbsp;' .  $str_breadcrumb . '</span> ' .  
+                        '<span class="mainwp-right mainwp-padding-top-10 mainwp-cols-2 mainwp-t-align-right">' . __( 'Jump to ','mainwp' ) . '
+                            <select id="mainwp-quick-jump-child" name="" class="mainwp-select2">
+                                <option value="" selected="selected">' . __( 'Select Site ','mainwp' ) . '</option>';                
+                $html .= $select_ops_html;                
                 $html .= '
                         </select>
                         <select id="mainwp-quick-jump-page" name="" class="mainwp-select2">
@@ -299,11 +304,12 @@ class MainWP_Manage_Sites_View {
                                 }
                             }   
                             $html .= '<option value="scanid">' . __( 'Security Scan ','mainwp' ) . '</option>
-                        </select>&nbsp;&nbsp;' . $pre_next . '
-                    </span>
-                    <div style="clear: both;"></div>
-                    </div>
-                </div>';
+                        </select>' .
+                    '</span>' .                     
+                     '</div>' .  // breadcrumb-wrap
+                    $pre_next_html .                    
+                    '</div>' . 
+                '</div>';
             }
         }
 
