@@ -320,11 +320,30 @@ public static function renderHeader( $shownPage ) {
 						?>
 					</form>
 				</div>
+                
+                <?php if (false) { ?>
 				<div id="managebackups-task-status-box" title="Running task" style="display: none; text-align: center">
 					<div style="height: 190px; overflow: auto; margin-top: 20px; margin-bottom: 10px; text-align: left" id="managebackups-task-status-text">
 					</div>
 					<input id="managebackups-task-status-close" type="button" name="Close" value="<?php _e( 'Cancel', 'mainwp' ); ?>" class="button"/>
 				</div>
+                <?php } ?>
+                
+                 <div class="mainwp-popup-overlay-hidden" id="managebackups-task-status-box" tabindex="0" role="dialog" style="text-align: center">        
+                        <div class="mainwp-popup-backdrop"></div>
+                        <div class="mainwp-popup-wrap wp-clearfix" role="document">
+                            <div class="mainwp-popup-header">
+                                <h2 class="title" >Running task</h2>
+                                <button type="button" class="close dashicons dashicons-no"><span class="screen-reader-text"><?php _e( 'Close dialog' ); ?></span></button>
+                            </div>                
+                            <div class="mainwp-popup-content" style="text-align: left" id="refresh-status-content">
+                            </div>    
+                            <div class="mainwp-popup-actions">
+                                <input id="managebackups-task-status-close" type="button" name="Close" value="<?php _e( 'Cancel', 'mainwp' ); ?>" class="button"/>
+                            </div>
+                        </div>        
+                    </div>      
+
 			</div>
 			<?php
 			self::renderFooter( '' );

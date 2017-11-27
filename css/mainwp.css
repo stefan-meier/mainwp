@@ -367,8 +367,8 @@ a.mainwp-post-trash {color: #a00;}
 #managesite-backup-status-box .ui-progressbar,
 #managebackups-task-status-box .ui-progressbar {
     background-color: #fafafa;
-    margin-top: 1em;
-    height: 1em;
+    margin-top: 0;
+    height: 8px;
     border-radius: 0 !important;
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
@@ -2536,4 +2536,6 @@ li.mainwp-menu-sub-item-filer{
 #mainwp-synced-status-sites-wrap .mainwp_wp_sync:hover .mainwp-row-actions {
     display: block;    
 }
-
+#mainwp-synced-status-sites-wrap .mainwp-row-actions {
+    float: none;
+}

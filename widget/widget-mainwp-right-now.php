@@ -3126,7 +3126,7 @@ class MainWP_Right_Now {
 		do_action( 'mainwp_rightnow_widget_bottom', $site_ids, $globalView );
 
 		?>
-
+ <?php if (false) { ?>
 		<div id="rightnow-upgrade-status-box" title="Upgrade" style="display: none; text-align: center">
 			<div id="rightnow-upgrade-status-progress"></div>
 			<span id="rightnow-upgrade-status-current">0</span> /
@@ -3137,7 +3137,7 @@ class MainWP_Right_Now {
 			</div>
 			<input id="rightnow-upgrade-status-close" type="button" name="Close" value="<?php _e( 'Close', 'mainwp' ); ?>" class="button"/>
 		</div>
-
+   
 		<div id="rightnow-backup-box" title="Full backup required" style="display: none; text-align: center">
 			<div style="height: 190px; overflow: auto; margin-top: 20px; margin: 10px; text-align: left" id="rightnow-backup-content">
 			</div>
@@ -3151,6 +3151,24 @@ class MainWP_Right_Now {
 			</div>
 			<input id="rightnow-backupnow-close" type="button" name="Ignore" value="<?php _e( 'Cancel', 'mainwp' ); ?>" class="button"/>
 		</div>
+        
+    <?php } ?>                                        
+        <div class="mainwp-popup-overlay-hidden" id="rightnow-backup-box" tabindex="0" role="dialog" style="text-align: center">        
+            <div class="mainwp-popup-backdrop"></div>
+            <div class="mainwp-popup-wrap wp-clearfix" role="document">
+                <div class="mainwp-popup-header">
+                    <h2 class="title" >Full backup required</h2>
+                    <button type="button" class="close dashicons dashicons-no"><span class="screen-reader-text"><?php _e( 'Close dialog' ); ?></span></button>
+                </div>                
+                <div class="mainwp-popup-content" style="text-align: left" id="refresh-status-content">
+                </div>    
+                <div class="mainwp-popup-actions">
+                    <input id="rightnow-backup-all" type="button" name="Backup All" value="<?php _e( 'Backup All', 'mainwp' ); ?>" class="button-primary"/>
+                    <a id="rightnow-backup-now" href="#" target="_blank" style="display: none"  class="button-primary button"><?php _e( 'Backup Now', 'mainwp' ); ?></a>&nbsp;
+                    <input id="rightnow-backup-ignore" type="button" name="Ignore" value="<?php _e( 'Ignore', 'mainwp' ); ?>" class="button"/>
+                </div>
+            </div>        
+        </div>                
 
 		<?php
 		@MainWP_DB::free_result( $websites );
