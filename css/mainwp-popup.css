@@ -125,7 +125,7 @@ body.folded.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-wrap {
 }
 
 .mainwp-popup-top{
-    margin-top: 45px;
+    margin-top: 42px;
 }
 .mainwp-popup-overlay .mainwp-popup-content {
 	position: absolute;
@@ -153,4 +153,10 @@ body.folded.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-wrap {
 .mainwp-popup-overlay .mainwp-popup-actions a {
 	margin-right: 5px;
 	margin-bottom: 5px;
+}
+.mainwp-popup-top .ui-widget-header{
+    border: 0 !important;
+}
+.mainwp-popup-top .ui-widget-content {
+    background: none !important;
 }
