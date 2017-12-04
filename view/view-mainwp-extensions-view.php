@@ -747,11 +747,11 @@ class MainWP_Extensions_View {
 				array(
 					'slug' => 'mainwp-staging-extension',
 					'title' => 'MainWP Staging Extension',
-					'desc' => 'MainWP Staging Extension.',
+					'desc' => 'MainWP Staging Extension along with the WP Staging plugin, allows you to create and manage staging sites for your child sites.',
 					'link' => 'https://mainwp.com/extension/staging/',
 					'img' => plugins_url( 'images/extensions/staging.png', dirname( __FILE__ ) ),
 					'product_id' => 'MainWP Staging Extension',
-					'catalog_id' => '12458',
+					'catalog_id' => '1034878',
 					'group' => array('admin')
 				),
 			'mainwp-custom-post-types' =>
