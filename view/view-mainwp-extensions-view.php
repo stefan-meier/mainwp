@@ -743,6 +743,17 @@ class MainWP_Extensions_View {
 					'catalog_id' => '12458',
 					'group' => array('admin')
 				),
+            'mainwp-staging-extension' =>
+				array(
+					'slug' => 'mainwp-staging-extension',
+					'title' => 'MainWP Staging Extension',
+					'desc' => 'MainWP Staging Extension.',
+					'link' => 'https://mainwp.com/extension/staging/',
+					'img' => plugins_url( 'images/extensions/staging.png', dirname( __FILE__ ) ),
+					'product_id' => 'MainWP Staging Extension',
+					'catalog_id' => '12458',
+					'group' => array('admin')
+				),
 			'mainwp-custom-post-types' =>
 				array(
 					'slug' => 'mainwp-custom-post-types',
