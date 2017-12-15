@@ -393,6 +393,12 @@ class MainWP_Main {
 
 			<div class="clear"></div>
 		</div><!-- dashboard-widgets-wrap -->
+         <script type="text/javascript">
+            jQuery(window).load(function() {               
+               var $popup_widgets = jQuery('.mainwp-popup-overlay-ready').closest('div.postbox');
+               mainwpAddPopupButtons($popup_widgets);
+            });
+        </script>
 		<?php
 	}
 

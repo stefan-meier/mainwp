@@ -17,6 +17,7 @@ class MainWP_Shortcuts {
 		}
 
 		$website = MainWP_DB::Instance()->getWebsiteById( $current_wpid, true );
+        MainWP_UI::renderBeginReadyPopup();
 		?>
 		<div class="mainwp-row-top">
 			<div style="display: inline-block; width: 100px;"><?php _e( 'Groups:', 'mainwp' ); ?></div>
@@ -69,5 +70,6 @@ class MainWP_Shortcuts {
 			</form>
 		</div>
 		<?php
+        MainWP_UI::renderEndReadyPopup();
 	}
 }

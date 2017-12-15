@@ -59,6 +59,8 @@ class MainWP_Recent_Posts {
 		$recent_posts_trash     = MainWP_Utility::sortmulti( $recent_posts_trash, 'dts', 'desc' );
 		$recent_posts_future     = MainWP_Utility::getSubArrayHaving( $allPosts, 'status', 'future' );
 		$recent_posts_future     = MainWP_Utility::sortmulti( $recent_posts_future, 'dts', 'desc' );
+        
+        MainWP_UI::renderBeginReadyPopup();
 		?>
 		<div class="mainwp-clear">
 			<div class="mainwp-postbox-actions-top">
@@ -283,6 +285,7 @@ class MainWP_Recent_Posts {
 		</div>
 		<div class="mainwp-clear"></div>
 		<?php
+        MainWP_UI::renderEndReadyPopup();
 		if ( $pExit == true ) {
 			exit();
 		}

@@ -17,6 +17,8 @@ class MainWP_Notes {
 		}
 
 		$website = MainWP_DB::Instance()->getWebsiteById( $current_wpid, true );
+        
+        MainWP_UI::renderBeginReadyPopup();
 		?>
 		<div id="mainwp-notes-area">
 			<div style="padding-bottom: 1em;">
@@ -33,5 +35,6 @@ class MainWP_Notes {
 			</div>
 		</div>
 		<?php
+         MainWP_UI::renderEndReadyPopup();
 	}
 }

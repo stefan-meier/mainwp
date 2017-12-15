@@ -14,7 +14,7 @@ class MainWP_Extensions_Widget {
 	}
 
 	public static function render() {
-
+        MainWP_UI::renderBeginReadyPopup();
 		$currentExtensions = ( self::$extensionsLoaded ? self::$extensions : get_option( 'mainwp_extensions' ) );
 		if ( count( $currentExtensions ) == 0 ) {
 			?>
@@ -128,6 +128,7 @@ class MainWP_Extensions_Widget {
 				<a href="https://mainwp.com/mainwp-extensions/?utm_source=dashboard&utm_medium=plugin&utm_campaign=widget" target="_blank" class="button mainwp-upgrade-button button-hero"><?php _e( 'Explore more MainWP Extensions', 'mainwp' ); ?></a>
 			</div>
 			<?php
+            MainWP_UI::renderEndReadyPopup();
 		}
 	}
 }

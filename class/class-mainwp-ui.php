@@ -364,6 +364,30 @@ class MainWP_UI {
 		</div>
 		<?php
 	}
+        
+    public static function renderBeginReadyPopup() {
+		?>
+        <div class="mainwp-popup-overlay-ready" tabindex="0" role="dialog" style="text-align: center">                   
+           <div class="mainwp-popup-backdrop"></div>
+           <div class="mainwp-popup-wrap wp-clearfix" role="document">
+               <div class="mainwp-popup-header">
+                   <h2 class="title" ></h2>
+                   <button type="button" class="close dashicons dashicons-no"><span class="screen-reader-text"><?php _e( 'Close dialog' ); ?></span></button>
+               </div>          
+               <div class="mainwp-popup-content" style="text-align: left"> 
+		<?php
+	}
+    
+    public static function renderEndReadyPopup() {
+		?>		    
+                    </div>    
+                <div class="mainwp-popup-actions">
+                    <button type="button" id="refresh-status-close" class="button"><?php _e( 'Close' ); ?></button>
+                </div>
+            </div>        
+        </div>    
+		<?php
+	}
 
 	public static function renderImage( $img, $alt, $class, $height = null ) {
 		?>

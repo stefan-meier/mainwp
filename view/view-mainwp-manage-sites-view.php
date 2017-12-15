@@ -835,18 +835,17 @@ class MainWP_Manage_Sites_View {
 //                                                        height: 150,
 //                                                        width: 500,
 //                                                        modal: true,
-//                                                        close: function(event, ui) {jQuery('#newsite-pop-box').dialog('destroy');}});  
-                                                    mainwpPopup.setCustomWrapper('#newsite-pop-box');
-                                                    mainwpPopup.init({title: __("Not sure what to add here?"), reloadAfterClose: false}); // do not reload after popup closed
+//                                                        close: function(event, ui) {jQuery('#newsite-pop-box').dialog('destroy');}});                                                      
+                                                    mainwpPopup('#newsite-pop-box').init({title: __("Not sure what to add here?")}); // do not reload after popup closed
                                                 } 
                                             });
-                                            jQuery('#newsite-pop-box-close').live('click', function(event)
+                                            jQuery('#newsite-pop-box-close').on('click', function(event)
                                             {                                                
                                                 //jQuery('#newsite-pop-box').dialog('destroy');                                                
-                                                mainwpPopup.close();        
+                                                mainwpPopup('#newsite-pop-box').close();        
                                             });
                                             
-                                            jQuery('#newsite-pop-box-disable').live('click', function(event)
+                                            jQuery('#newsite-pop-box-disable').on('click', function(event)
                                             {       
                                                 var data = {
                                                     action:'mainwp_saving_status',
@@ -857,7 +856,7 @@ class MainWP_Manage_Sites_View {
                                                 jQuery.post(ajaxurl, data, function (res) {
                                                 });
                                                 //jQuery('#newsite-pop-box').dialog('destroy');                                                
-                                                mainwpPopup.close();        
+                                                mainwpPopup('#newsite-pop-box').close();        
                                             });
                                             
                                     <?php } ?> 

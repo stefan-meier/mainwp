@@ -17,6 +17,7 @@ class MainWP_Helpful_Links_Widget {
 		$facebook_group = 'https://www.facebook.com/groups/MainWPUsers/';
 		$twitter = 'https://twitter.com/mymainwp';
 		$trello = 'https://mainwp.com/mainwp-roadmaps/';
+        MainWP_UI::renderBeginReadyPopup();
 		?>
 		<div>
 			<div class="mainwp-row-top">
@@ -45,5 +46,6 @@ class MainWP_Helpful_Links_Widget {
 			</div>
 		</div>
 		<?php
+        MainWP_UI::renderEndReadyPopup();
 	}
 }

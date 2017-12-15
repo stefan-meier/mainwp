@@ -577,7 +577,9 @@ class MainWP_Right_Now {
 		}
         
 		$websites = MainWP_DB::Instance()->query( $sql );
-
+        
+        MainWP_UI::renderBeginReadyPopup();
+        
 		if ( ! $websites ) {            
 			return;
 		}
@@ -3124,7 +3126,7 @@ class MainWP_Right_Now {
 		}
 
 		do_action( 'mainwp_rightnow_widget_bottom', $site_ids, $globalView );
-
+        MainWP_UI::renderEndReadyPopup();
 		?>
  <?php if (false) { ?>
 		<div id="rightnow-upgrade-status-box" title="Upgrade" style="display: none; text-align: center">

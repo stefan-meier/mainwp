@@ -5,14 +5,21 @@
  * Popup Overlay 
  */
 .mainwp-popup-overlay .mainwp-popup-backdrop {
-	position: absolute;
-	left: -20px;
+	position: fixed;	
+        left: 160px;
 	right: 0;
 	top: 0;
 	bottom: 0;
 	background: #f1f1f1;
 	background: rgba( 238, 238, 238, 0.9 );
 	z-index: 10000; /* Over WP Pointers. */
+        width: 100%;
+}
+.folded .mainwp-popup-overlay .mainwp-popup-backdrop {
+    left: 36px;
+}
+.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-backdrop  {   
+    left: 240px;
 }
 
 
@@ -125,7 +132,7 @@ body.folded.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-wrap {
 }
 
 .mainwp-popup-top{
-    margin-top: 42px;
+    margin-top: 49px;
 }
 .mainwp-popup-overlay .mainwp-popup-content {
 	position: absolute;
@@ -154,9 +161,21 @@ body.folded.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-wrap {
 	margin-right: 5px;
 	margin-bottom: 5px;
 }
-.mainwp-popup-top .ui-widget-header{
+.mainwp-popup-top .ui-widget-header
+{
     border: 0 !important;
 }
 .mainwp-popup-top .ui-widget-content {
     background: none !important;
 }
+.mainwp-popup-overlay-ready .mainwp-popup-header {
+    display: none !important;
+}
+.mainwp-popup-overlay-ready .mainwp-popup-actions {
+    display:none  !important;
+}
+
+.mainwp-popup-wrap .ui-progressbar .ui-progressbar-value {
+    height: auto;
+}
+

@@ -368,7 +368,7 @@ a.mainwp-post-trash {color: #a00;}
 #managebackups-task-status-box .ui-progressbar {
     background-color: #fafafa;
     margin-top: 0;
-    height: 8px;
+    height: 2px;
     border-radius: 0 !important;
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
