@@ -6,7 +6,7 @@
  */
 .mainwp-popup-overlay .mainwp-popup-backdrop {
 	position: fixed;	
-        left: 160px;
+/*        left: 160px;*/
 	right: 0;
 	top: 0;
 	bottom: 0;
@@ -17,9 +17,6 @@
 }
 .folded .mainwp-popup-overlay .mainwp-popup-backdrop {
     left: 36px;
-}
-.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-backdrop  {   
-    left: 240px;
 }
 
 
@@ -41,9 +38,6 @@ body.folded .mainwp-popup-overlay .mainwp-popup-wrap {
 	left: 70px;
 }
 
-body.folded.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-wrap {
-	left: 265px;
-}
 
 @media only screen and (min-width: 1680px) {
 	.mainwp-popup-overlay .mainwp-popup-wrap {
@@ -66,13 +60,31 @@ body.folded.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-wrap {
 		right: 0;
 		bottom: 0;
 		left: 0;
-		padding: 70px 20px 20px;
+/*		padding: 70px 20px 20px;*/
 		border: none;
 		z-index: 100000; /* should overlap #wpadminbar. */
 		position: fixed;
 	}
 }
 
+@media only screen and (min-width: 780px) {
+    .mainwp-popup-overlay .mainwp-popup-wrap {
+	left: 190px;
+    }
+    body.folded.mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-wrap {
+        left: 265px;
+    }    
+    .mainwp-ui-leftmenu .mainwp-popup-overlay .mainwp-popup-backdrop  {   
+        left: 240px;
+    }
+}
+
+@media only screen and (max-width: 782px) {
+    .mainwp-ui #wpfooter {
+        display: block !important;
+        left: 99999px;
+    }     
+}
 
 .mainwp-popup-overlay .mainwp-popup-header {
 	position: absolute;
