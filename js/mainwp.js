@@ -6291,21 +6291,20 @@ jQuery(document).ready(function () {
     jQuery('#mainwp_btn_update_user').live('click', function () {
         var errors= [];
         var tmp = jQuery("input[name='user[]']:checked");
-        userCountSent = tmp.length;
-
-        if (jQuery('#pass1').val() !== '' || jQuery('#pass2').val() !== '') {
-            if (jQuery('#pass1').val() != jQuery('#pass2').val()) {
-                jQuery('#pass1').parent().addClass('form-invalid');
-                jQuery('#pass2').parent().addClass('form-invalid');
-                errors.push('Passwords do not match.');
-            }
-            else {
-                if (jQuery('#pass1').val() != '' )
-                    jQuery('#pass1').parent().removeClass('form-invalid');
-                if (jQuery('#pass2').val() != '' )
-                    jQuery('#pass2').parent().removeClass('form-invalid');
-            }
-        }
+        userCountSent = tmp.length;        
+//        if (jQuery('#pass1').val() !== '' || jQuery('#pass2').val() !== '') {
+//            if (jQuery('#pass1').val() != jQuery('#pass2').val()) {
+//                jQuery('#pass1').parent().addClass('form-invalid');
+//                jQuery('#pass2').parent().addClass('form-invalid');
+//                errors.push('Passwords do not match.');
+//            }
+//            else {
+//                if (jQuery('#pass1').val() != '' )
+//                    jQuery('#pass1').parent().removeClass('form-invalid');
+//                if (jQuery('#pass2').val() != '' )
+//                    jQuery('#pass2').parent().removeClass('form-invalid');
+//            }
+//        }
 
         if (userCountSent == 0) {
             errors.push(__('Please search and select users.'));
