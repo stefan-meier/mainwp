@@ -808,7 +808,7 @@ class MainWP_System {
 			if ( in_array( $arg->slug, $am_slugs ) ) {
 				$info = MainWP_API_Settings::getPluginInformation( $arg->slug );
 				if ( is_object( $info ) && property_exists( $info, 'sections' ) ) {
-					if ( !is_array( $info->sections ) || isset( $info->sections['changelog'] ) || empty( $info->sections['changelog'] ) ) {
+					if ( !is_array( $info->sections ) || !isset( $info->sections['changelog'] ) || empty( $info->sections['changelog'] ) ) {
 						$exts_data = MainWP_Extensions_View::getAvailableExtensions();
 						if (isset($exts_data[$arg->slug])) {
 							$ext_info = $exts_data[$arg->slug];
