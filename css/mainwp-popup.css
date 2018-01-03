@@ -41,7 +41,7 @@ body.folded .mainwp-popup-overlay .mainwp-popup-wrap {
 
 @media only screen and (min-width: 1680px) {
 	.mainwp-popup-overlay .mainwp-popup-wrap {
-		width: 1450px;
+		width: 1000px;
 		margin: 0 auto;
 	}
 }

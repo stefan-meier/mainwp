@@ -514,11 +514,11 @@ class MainWP_Manage_Sites_View {
 
 			<tr class="form-field form-required">
 				 <th scope="row"><?php _e( 'HTTP username: ','mainwp' ); ?></th>
-				 <td><input type="text" id="mainwp_managesites_test_http_user" name="mainwp_managesites_test_http_user" value="" class=""/><br/><em><?php _e( 'If your Child Site is protected with HTTP basic authentication, please set the username for authentication here.','mainwp' ); ?></em></td>
+				 <td><input type="text" id="mainwp_managesites_test_http_user" autocomplete="new-http-user" name="mainwp_managesites_test_http_user" value="" class=""/><br/><em><?php _e( 'If your Child Site is protected with HTTP basic authentication, please set the username for authentication here.','mainwp' ); ?></em></td>
 			</tr>
 			<tr class="form-field form-required">
 				 <th scope="row"><?php _e( 'HTTP password: ','mainwp' ); ?></th>
-				 <td><input type="password" id="mainwp_managesites_test_http_pass" name="mainwp_managesites_test_http_pass" value="" class=""/><br/><em><?php _e( 'If your Child Site is protected with HTTP basic authentication, please set the password for authentication here.','mainwp' ); ?></em></td>
+				 <td><input type="password" id="mainwp_managesites_test_http_pass" autocomplete="new-password" name="mainwp_managesites_test_http_pass" value="" class=""/><br/><em><?php _e( 'If your Child Site is protected with HTTP basic authentication, please set the password for authentication here.','mainwp' ); ?></em></td>
 			</tr>
 		</table>
 	<?php
