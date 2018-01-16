@@ -1,4 +1,4 @@
-﻿=== MainWP Dashboard ===
+=== MainWP Dashboard ===
 Contributors: mainwp
 Donate link: 
 Tags: MainWP, Manage WordPress, Managed WordPress, WordPress Management, Manage Multiple Sites, WordPress manager , WordPress management, Control multiple sites, WordPress site management, WordPress management dashboard 
@@ -33,7 +33,7 @@ Extensions enhance your MainWP Dashboard with additional features. The catalog o
 
 **This is the MainWP Dashboard plugin that you install on your own separate WordPress install and the [MainWP child plugin](https://wordpress.org/plugins/mainwp-child/) that you install on the sites you want to control (child sites) .**
 
-Please check the [Quick Start - Setting up your MainWP](http://docs.mainwp.com/setting-up-your-mainwp/) support doc for more information.
+Please check the [Quick Start - Setting up your MainWP](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/) support doc for more information.
 
 = Everything below and more is included in the MainWP Plugins at absolutely no charge, no tricks, no hidden fees, no nickel and diming you for every little feature and absolutely no gotchas! = 
 
@@ -92,15 +92,15 @@ We know some developers like to keep tight control of what is happening with the
 Both the MainWP Dashboard and Child plugin are fully open source and GPL compliant with no obfuscated code so you always know what is running on your server. Both plugins are also maintained on GitHub for easy code access. 
 
 = More Information =
-[MainWP Documentation](http://docs.mainwp.com/)
+[MainWP Documentation](https://mainwp.com/help/)
 
 [MainWP Support](https://mainwp.com/support/)
 
 [MainWP Videos](http://www.youtube.com/user/MyMainWP)
 
-[MainWP Extensions](https://mainwp.com/extensions/)
+[MainWP Extensions](https://mainwp.com/mainwp-extensions/)
 
-[MainWP Codex](http://codex.mainwp.com)
+[MainWP Codex](https://codex.mainwp.com)
 
 [MainWP on Github](https://mainwp.com/github/)
 
@@ -111,7 +111,6 @@ Both the MainWP Dashboard and Child plugin are fully open source and GPL complia
 1. We HIGHLY recommend a NEW WordPress install for your MainWP Dashboard.
 
 Using a new WordPress install will help to cut down on Plugin Conflicts and other issues that can be caused by trying to run your MainWP Main Dashboard from an active site. Most hosting companies provide free subdomains ("demo.yourdomain.com") and we recommend creating one if you do not have a specific dedicated domain to run your MainWP Dashboard.
-If you are not sure how to set up a subdomain here is a quick step by step with [cPanel](http://docs.mainwp.com/creating-a-subdomain-in-cpanel/), [Plesk](http://docs.mainwp.com/creating-a-subdomain-in-plesk/) or [Direct Admin](http://docs.mainwp.com/creating-a-subdomain-in-directadmin-control-panel/). If you are not sure what you have, contact your hosting companies support.
 
 You can even install your MainWP Dashboard on a WordPress site located on your local computer using [DesktopServer](https://mainwp.com/how-to-use-desktopserver-to-run-your-mainwp-dashboard-locally/), WAMP or any other setup that allows you to run [WordPress locally](https://make.wordpress.org/core/handbook/tutorials/installing-a-local-server/).   
 
@@ -119,19 +118,19 @@ You can even install your MainWP Dashboard on a WordPress site located on your l
 
 3. Once installed then Activate the Plugin through the Plugins Menu in WordPress
 
-4. Add your first child site to the MainWP Dashboard - [Documentation](http://docs.mainwp.com/setting-up-your-mainwp/)
+4. Add your first child site to the MainWP Dashboard - [Documentation](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/add-site-to-your-dashboard/)
 
-5. Set your MainWP Settings - [Documentation](http://docs.mainwp.com/mainwp-settings-overview/)
+5. Set your MainWP Settings - [Documentation](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/mainwp-dashboard-settings/)
 
 == Frequently Asked Questions ==
 = Do I need any other plugins for MainWP? =
 Yes you need to install the [MainWP Child Plugin](https://wordpress.org/plugins/mainwp-child/) on the sites you want to control with the Dashboard plugin.
 
 = Do you have any documentation? =
-Yes, please review the [documentation site](http://docs.mainwp.com/).
+Yes, please review the [documentation site](https://mainwp.com/help/).
 
 = I just want to start using MainWP do you have a Quick Start Guide? =
-Yes, please read the [Quick Start – Setting up your MainWP](http://docs.mainwp.com/setting-up-your-mainwp/) guide on the doc site.
+Yes, please read the [Quick Start – Setting up your MainWP](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/) guide on the doc site.
 
 = Where do I go for support or to ask for help? =
 Please open a [Support Ticket](https://mainwp.com/support/)
