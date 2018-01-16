@@ -91,7 +91,7 @@ class MainWP_Extensions_View {
 			</p>
 		</div>
 		<div class="mainwp-postbox-actions-mid">
-			<strong><?php _e( 'Step 2', 'mainwp' ); ?>: </strong><?php echo sprintf( __( 'The show purchased extensions button will show you all your MainWP Extensions. After the list appears, you can select wanted extensions and install them automatically. You can also install them manually using the directions %shere%s.', 'mainwp' ), '<a href="http://docs.mainwp.com/how-to-install-mainwp-extensions/" >', '</a>' ); ?>
+			<strong><?php _e( 'Step 2', 'mainwp' ); ?>: </strong><?php echo sprintf( __( 'The show purchased extensions button will show you all your MainWP Extensions. After the list appears, you can select wanted extensions and install them automatically. You can also install them manually using the directions %shere%s.', 'mainwp' ), '<a href="https://mainwp.com/help/docs/what-are-mainwp-extensions/install-extensions/" >', '</a>' ); ?>
 		</div>
 		<div class="inside">
 			<div id="mainwp-install-purchased-extensions" class="mainwp-padding-top-10 mainwp-padding-bottom-10">
@@ -102,7 +102,7 @@ class MainWP_Extensions_View {
 			</div>
 		</div>
 		<div class="mainwp-postbox-actions-mid">
-			<strong><?php _e( 'Step 3', 'mainwp' ); ?>: </strong><?php echo sprintf( __( 'The grab API Keys will automatically add your API Keys for extension automatic updates. You can also manually enter your API for each Extension following the steps %shere%s.', 'mainwp' ), '<a href="http://docs.mainwp.com/enter-extensions-api-keys/" >', '</a>' ); ?>
+			<strong><?php _e( 'Step 3', 'mainwp' ); ?>: </strong><?php echo sprintf( __( 'The grab API Keys will automatically add your API Keys for extension automatic updates. You can also manually enter your API for each Extension following the steps %shere%s.', 'mainwp' ), '<a href="https://mainwp.com/help/docs/what-are-mainwp-extensions/activate-extensions-api/" >', '</a>' ); ?>
 		</div>
 		<div class="inside">
 			<div class="mainwp-padding-top-10 mainwp-padding-bottom-10">
