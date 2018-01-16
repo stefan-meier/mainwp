@@ -2429,7 +2429,7 @@ class MainWP_Right_Now {
 						<strong class="fa-stack-1x mainwp-white"><?php echo $total_plugins_outdate; ?> </strong>
 					</span>
 							<?php echo _n( 'Plugin', 'Plugins', $total_plugins_outdate, 'mainwp'); ?> <?php _e('possibly abandoned', 'mainwp'); ?>
-						</a>&nbsp;<?php MainWP_Utility::renderToolTip(__('This feature checks the last updated status of plugins and alerts you if not updated in a specific amount of time. This gives you insight on if a plugin may have been abandoned by the author.','mainwp'), 'http://docs.mainwp.com/what-does-possibly-abandoned-mean/', 'images/info.png', 'float: none !important;'); ?>
+						</a>&nbsp;<?php MainWP_Utility::renderToolTip(__('This feature checks the last updated status of plugins and alerts you if not updated in a specific amount of time. This gives you insight on if a plugin may have been abandoned by the author.','mainwp'), 'https://mainwp.com/help/docs/what-does-possibly-abandoned-mean/', 'images/info.png', 'float: none !important;'); ?>
 					</div>
 					<div class="mainwp-right mainwp-cols-4 mainwp-padding-top-5 mainwp-t-align-right">
 						<a href="<?php echo admin_url( 'admin.php?page=PluginsIgnoredAbandoned' ); ?>"><?php _e( 'Ignored', 'mainwp' ); ?> (<?php echo $total_pluginsIgnoredAbandoned; ?>)</a>
