@@ -723,7 +723,7 @@ public static function renderHeader( $shownPage ) {
 				$maximumFileDescriptors         = isset( $task ) ? $task->maximumFileDescriptors : 150;
 				?>
 				<tr class="archive_method archive_zip" <?php if ( $archiveFormat != 'zip' ) : ?>style="display: none;"<?php endif; ?>>
-					<th scope="row"><?php _e( 'Maximum file descriptors on child', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The maximum number of open file descriptors on the child hosting.', 'http://docs.mainwp.com/maximum-number-of-file-descriptors/' ); ?></th>
+					<th scope="row"><?php _e( 'Maximum file descriptors on child', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The maximum number of open file descriptors on the child hosting.' ); ?></th>
 					<td>
 						<div class="mainwp-radio" style="float: left;">
 							<input type="radio" value="" name="mainwp_options_maximumFileDescriptorsOverride" id="mainwp_options_maximumFileDescriptorsOverride_global" <?php echo( ! $maximumFileDescriptorsOverride ? 'checked="true"' : '' ); ?>"/>
@@ -750,7 +750,7 @@ public static function renderHeader( $shownPage ) {
 					</td>
 				</tr>
 				<tr class="archive_method archive_zip" <?php if ( $archiveFormat != 'zip' ) : ?>style="display: none;"<?php endif; ?>>
-					<th scope="row"><?php _e( 'Load files in memory before zipping', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'This causes the files to be opened and closed immediately, using less simultaneous I/O operations on the disk. For huge sites with a lot of files we advise to disable this, memory usage will drop but we will use more file handlers when backing up.', 'http://docs.mainwp.com/load-files-memory/' ); ?></th>
+					<th scope="row"><?php _e( 'Load files in memory before zipping', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'This causes the files to be opened and closed immediately, using less simultaneous I/O operations on the disk. For huge sites with a lot of files we advise to disable this, memory usage will drop but we will use more file handlers when backing up.' ); ?></th>
 					<td>
 						<input type="radio" name="mainwp_options_loadFilesBeforeZip" id="mainwp_options_loadFilesBeforeZip_global" value="1" <?php if ( ! isset( $task ) || $task->loadFilesBeforeZip == false || $task->loadFilesBeforeZip == 1 ) : ?>checked="true"<?php endif; ?>/> Global setting (<a href="<?php echo admin_url( 'admin.php?page=Settings' ); ?>">Change Here</a>)<br/>
 						<input type="radio" name="mainwp_options_loadFilesBeforeZip" id="mainwp_options_loadFilesBeforeZip_yes" value="2" <?php if ( isset( $task ) && $task->loadFilesBeforeZip == 2 ) : ?>checked="true"<?php endif; ?>/> Yes<br/>
