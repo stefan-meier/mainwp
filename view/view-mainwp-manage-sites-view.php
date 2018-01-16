@@ -1168,14 +1168,14 @@ class MainWP_Manage_Sites_View {
         </tr>
         <?php } ?>
         <tr <?php echo $hiddenCls; ?> >
-            <th scope="row"><?php _e( 'Backups on server', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The number of backups to keep on your server. This does not affect external sources. 0 is not allowed, the backups always require one local backup to upload to external sources.', 'http://docs.mainwp.com/recurring-backups-with-mainwp/' ); ?></th>
+            <th scope="row"><?php _e( 'Backups on server', 'mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The number of backups to keep on your server. This does not affect external sources. 0 is not allowed, the backups always require one local backup to upload to external sources.' ); ?></th>
             <td>
                 <input type="text" name="mainwp_options_backupOnServer"  class=""
                        value="<?php echo ($backupsOnServer === false ? 1 : $backupsOnServer); ?>"/>
             </td>
         </tr>
         <tr <?php echo $hiddenCls; ?>>
-            <th scope="row"><?php _e( 'Backups on remote storage','mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The number of backups to keep on your external sources. This does not affect backups on the server. 0 sets unlimited.', 'http://docs.mainwp.com/recurring-backups-with-mainwp/' ); ?></th>
+            <th scope="row"><?php _e( 'Backups on remote storage','mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The number of backups to keep on your external sources. This does not affect backups on the server. 0 sets unlimited.' ); ?></th>
             <td>
                 <input type="text" name="mainwp_options_backupOnExternalSources"  class=""
                        value="<?php echo ($backupOnExternalSources === false ? 1 : $backupOnExternalSources); ?>"/><span class="mainwp-form_hint"><?php _e( 'The number of backups to keep on your external sources.  This does not affect backups on the server.  0 sets unlimited.','mainwp' ); ?></span>
@@ -1531,7 +1531,7 @@ class MainWP_Manage_Sites_View {
 				$maximumFileDescriptors = $website->maximumFileDescriptors;
 				?>
                 <tr class="archive_method archive_zip" <?php if ( $archiveFormat != 'zip' ) :  ?>style="display: none;"<?php endif; ?>>
-                    <th scope="row"><?php _e( 'Maximum File Descriptors on Child','mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The maximum number of open file descriptors on the child hosting.', 'http://docs.mainwp.com/maximum-number-of-file-descriptors/' ); ?></th>
+                    <th scope="row"><?php _e( 'Maximum File Descriptors on Child','mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'The maximum number of open file descriptors on the child hosting.' ); ?></th>
                     <td>
 						<input type="radio" value="" name="mainwp_options_maximumFileDescriptorsOverride" id="mainwp_options_maximumFileDescriptorsOverride_global" <?php echo ( ! $maximumFileDescriptorsOverride ? 'checked="true"' : ''); ?>/>
 						<label for="mainwp_options_maximumFileDescriptorsOverride_global"><?php _e( 'Global Setting', 'mainwp' ); ?> (<a href="<?php echo admin_url( 'admin.php?page=Settings' ); ?>"><?php _e( 'Change Here', 'mainwp' ); ?></a>)</label>
@@ -1552,7 +1552,7 @@ class MainWP_Manage_Sites_View {
                     </td>
                 </tr>
                 <tr class="archive_method archive_zip" <?php if ( $archiveFormat != 'zip' ) :  ?>style="display: none;"<?php endif; ?>>
-                    <th scope="row"><?php _e( 'Load files in memory before zipping','mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'This causes the files to be opened and closed immediately, using less simultaneous I/O operations on the disk. For huge sites with a lot of files we advise to disable this, memory usage will drop but we will use more file handlers when backing up.', 'http://docs.mainwp.com/load-files-memory/' ); ?></th>
+                    <th scope="row"><?php _e( 'Load files in memory before zipping','mainwp' ); ?>&nbsp;<?php MainWP_Utility::renderToolTip( 'This causes the files to be opened and closed immediately, using less simultaneous I/O operations on the disk. For huge sites with a lot of files we advise to disable this, memory usage will drop but we will use more file handlers when backing up.' ); ?></th>
                     <td>
                         <input type="radio" name="mainwp_options_loadFilesBeforeZip" id="mainwp_options_loadFilesBeforeZip_global" value="1" <?php if ( $website->loadFilesBeforeZip == false || $website->loadFilesBeforeZip == 1 ) :  ?>checked="true"<?php endif; ?>/> Global setting (<a href="<?php echo admin_url( 'admin.php?page=Settings' ); ?>">Change Here</a>)<br />
                         <input type="radio" name="mainwp_options_loadFilesBeforeZip" id="mainwp_options_loadFilesBeforeZip_yes" value="2" <?php if ( $website->loadFilesBeforeZip == 2 ) :  ?>checked="true"<?php endif; ?>/> Yes<br />
