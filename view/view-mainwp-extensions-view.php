@@ -3,11 +3,15 @@
 class MainWP_Extensions_View {
 	public static function initMenu() {
         $page =  add_submenu_page( 'mainwp_tab', __( 'Extensions', 'mainwp' ), ' <span id="mainwp-Extensions">' . __( 'Extensions', 'mainwp' ) . '</span>', 'read', 'Extensions', array(
-			MainWP_Extensions::getClassName(),
-			'render'
-		) );
-        MainWP_System::add_sub_left_menu(__('Add Extensions', 'mainwp'), 'Extensions', 'Extensions', 'admin.php?page=Extensions&leftmenu=1', '<i class="fa fa-plug"></i>', '' );
-        MainWP_System::add_sub_left_menu(__('Extensions', 'mainwp'), 'mainwp_tab', 'Extensions', 'admin.php?page=Extensions', '<i class="fa fa-plug"></i>', '' );
+            MainWP_Extensions::getClassName(),
+            'render'
+        ) );       
+        
+        if( ! MainWP_System::is_disable_menu_item(2, 'Extensions') ) { // Extensions menu item in MainWP Dashboard menu
+            MainWP_System::add_sub_left_menu(__('Add Extensions', 'mainwp'), 'Extensions', 'Extensions', 'admin.php?page=Extensions&leftmenu=1', '<i class="fa fa-plug"></i>', '' );
+            MainWP_System::add_sub_left_menu(__('Extensions', 'mainwp'), 'mainwp_tab', 'Extensions', 'admin.php?page=Extensions', '<i class="fa fa-plug"></i>', '' );
+        }
+        
         return $page;
 	}
 
