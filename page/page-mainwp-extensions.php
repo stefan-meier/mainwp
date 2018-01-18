@@ -942,7 +942,7 @@ class MainWP_Extensions {
         'ignored_plugins'  => 'ignored_plugins'
 	);
 
-	public static function hookGetDBSites( $pluginFile, $key, $sites, $groups, $options = false ) {
+	public static function hookGetDBSites( $pluginFile, $key, $sites, $groups = '', $options = false ) {
 		if ( ! self::hookVerify( $pluginFile, $key ) ) {
 			return false;
 		}
