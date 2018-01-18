@@ -1391,6 +1391,8 @@ public static function renderHeader( $shownPage ) {
 		if ( ! $website ) {
 			return;
 		}
+        
+        MainWP_UI::renderBeginReadyPopup();
 
 		$website = MainWP_DB::Instance()->getWebsiteById( $website );
 
@@ -1403,6 +1405,7 @@ public static function renderHeader( $shownPage ) {
 			</div>
 		<?php } ?>
 		<?php
+        MainWP_UI::renderEndReadyPopup();
 	}
 
 }

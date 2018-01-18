@@ -378,11 +378,12 @@ class MainWP_UI {
 		<?php
 	}
     
-    public static function renderEndReadyPopup() {
+    public static function renderEndReadyPopup($actions = '', $extra_class = '') {
 		?>		    
                     </div>    
-                <div class="mainwp-popup-actions">
-                    <button type="button" id="refresh-status-close" class="button"><?php _e( 'Close' ); ?></button>
+                <div class="mainwp-popup-actions <?php echo $extra_class; ?>">
+                    <?php echo $actions; ?>
+                    <button type="button" class="mainwp-popup-close button"><?php _e( 'Close' ); ?></button>
                 </div>
             </div>        
         </div>    

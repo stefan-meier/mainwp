@@ -162,7 +162,7 @@ body.folded .mainwp-popup-overlay .mainwp-popup-wrap {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	padding: 10px 25px 5px;
+	padding: 10px 20px 5px;
 	background: #f3f3f3;
 	z-index: 30;
 	box-sizing: border-box;
@@ -190,4 +190,15 @@ body.folded .mainwp-popup-overlay .mainwp-popup-wrap {
 .mainwp-popup-wrap .ui-progressbar .ui-progressbar-value {
     height: auto;
 }
-
+.mainwp-popup-overlay .mainwp-popup-actions.mainwp-postbox-actions-bottom {
+    text-align: left;
+}
+.postbox .mainwp-popup-wrap .mainwp-popup-actions .mainwp-popup-close{
+    float: right;
+}
+.mainwp-popup-actions.mainwp-postbox-actions-bottom {
+    display: block !important;
+}
+.mainwp-popup-overlay-ready .mainwp-popup-actions.mainwp-postbox-actions-bottom .mainwp-popup-close{
+    display:none !important;
+}

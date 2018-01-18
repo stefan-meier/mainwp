@@ -130,7 +130,7 @@ if (!window.mainwpPopup) {
                             self.destroy(); 
                         });
                     }
-                    var closebuttonEl = this.$overlayElementId.find('#refresh-status-close');
+                    var closebuttonEl = this.$overlayElementId.find('.mainwp-popup-close');
                     if (closebuttonEl.length > 0) {
                         $(closebuttonEl).click(function(e) {
                             self.destroy(); 
@@ -206,7 +206,7 @@ if (!window.mainwpPopup) {
         };
         
          mainwpAddPopupButtons = function($el) {              
-            $el.find('h2.hndle').append("<span style=\"float:right;\" class=\"mainwp-popup-handle\"><i aria-hidden=\"true\" style=\"z-index:99999999;cursor:pointer\" class=\"fa fa-arrows\"></i></span>"); // adding expand icon
+            $el.find('h2.hndle').append("<span style=\"float:right;\" class=\"mainwp-popup-handle\"><i class=\"fa fa-window-maximize\" style=\"z-index:99999999;cursor:pointer\"  aria-hidden=\"true\"></i></span>"); // adding expand icon
             $('.mainwp-popup-handle i').each(function(){                   
                 $(this).on('click', function(e){
                         var title = $(this).closest('h2').find('span:first-child').html();

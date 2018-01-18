@@ -46,30 +46,8 @@ class MainWP_Shortcuts {
 			</a>
 		</div>
 
-		<?php do_action( 'mainwp_shortcuts_widget', $website ); ?>
-		<div id="mainwp_notes_overlay" class="mainwp_overlay"></div>
-		<div id="mainwp_notes" class="mainwp_popup">
-			<a id="mainwp_notes_closeX" class="mainwp_closeX" style="display: inline; "></a>
-
-			<div id="mainwp_notes_title" class="mainwp_popup_title">
-				<a href="<?php echo admin_url( 'admin.php?page=managesites&dashboard=' . $website->id ); ?>"><?php echo stripslashes( $website->name ); ?></a>
-			</div>
-			<div id="mainwp_notes_content">
-                            <div id="mainwp_notes_html" style="width: 580px !important; height: 300px;"></div>
-                            <textarea style="width: 580px !important; height: 300px;"
-                                    id="mainwp_notes_note"></textarea>
-			</div>
-			<div><em><?php _e( 'Allowed HTML Tags:','mainwp' ); ?> &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;br&gt;, &lt;hr&gt;, &lt;a&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, &lt;h1&gt;, &lt;h2&gt; </em></div><br/>
-			<form>
-				<div style="float: right" id="mainwp_notes_status"></div>
-				<input type="button" class="button cont button-primary" id="mainwp_notes_save" value="<?php esc_attr_e( 'Save note', 'mainwp' ); ?>"/>
-                                <input type="button" class="button cont" id="mainwp_notes_edit" value="<?php esc_attr_e( 'Edit','mainwp' ); ?>"/>                
-                                <input type="button" class="button cont" id="mainwp_notes_view" value="<?php esc_attr_e( 'View','mainwp' ); ?>"/>                
-				<input type="button" class="button cont" id="mainwp_notes_cancel" value="<?php esc_attr_e( 'Close', 'mainwp' ); ?>"/>
-				<input type="hidden" id="mainwp_notes_websiteid" value=""/>
-			</form>
-		</div>
+		<?php do_action( 'mainwp_shortcuts_widget', $website ); ?>		
 		<?php
-        MainWP_UI::renderEndReadyPopup();
+        MainWP_UI::renderEndReadyPopup();        
 	}
 }

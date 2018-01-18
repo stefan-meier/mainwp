@@ -29,12 +29,10 @@ class MainWP_Notes {
 					echo html_entity_decode($website->note);
 				}
 				?>
-			</div>
-			<div style="text-align: center; border-top: 1px Solid #f4f4f4; padding-top: 1em;">
-				<a href="#" class="mainwp_notes_show_all button button-primary" id="mainwp_notes_<?php echo $website->id; ?>"><?php _e( 'Edit notes', 'mainwp' ); ?></a>
-			</div>
+			</div>			
 		</div>
 		<?php
-         MainWP_UI::renderEndReadyPopup();
+         $actions = '<a href="#" class="mainwp_notes_show_all button button-primary" id="mainwp_notes_' .  $website->id . '">' . __( 'Edit notes', 'mainwp' ). '</a>';
+         MainWP_UI::renderEndReadyPopup($actions, 'mainwp-postbox-actions-bottom');
 	}
 }

@@ -3109,7 +3109,7 @@ class MainWP_System {
 					?>
 				</table>
 			</div>
-			<input id="refresh-status-close" type="button" name="Close" value="Close" class="button"/>
+			<input class="mainwp-popup-close button" type="button" name="Close" value="<?php _e( 'Close' ); ?>"/>
 		</div>
     
 <?php } ?>
@@ -3152,7 +3152,7 @@ class MainWP_System {
                     </table>                                                   
                 </div>    
                 <div class="mainwp-popup-actions">
-                    <button type="button" id="refresh-status-close" class="button"><?php _e( 'Close' ); ?></button>
+                    <button type="button" class="mainwp-popup-close button"><?php _e( 'Close' ); ?></button>
                 </div>
             </div>        
         </div>    

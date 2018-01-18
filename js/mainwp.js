@@ -637,14 +637,6 @@ jQuery(document).ready(function () {
     jQuery('#dashboard_refresh').live('click', function (event) {                        
         mainwp_refresh_dashboard();
     });    
-//    jQuery('#refresh-status-close').live('click', function(event)
-//    {
-//        bulkTaskRunning = false;
-//        jQuery('#refresh-status-box').dialog('destroy');
-//
-//        location.href = location.href;
-//    });
-
 
 //    jQuery(document).on('click', '#rightnow-upgrade-status-close', function(event)
 //    {
@@ -5110,7 +5102,7 @@ jQuery(document).ready(function () {
         mainwp_notes_save();
         return false;
     });
-    jQuery('.mainwp_notes_show_all').live('click', function () {
+    jQuery(document).on('click', '.mainwp_notes_show_all', function () {       
         mainwp_notes_show_all(jQuery(this).attr('id').substr(13));
         return false;
     });

@@ -279,13 +279,13 @@ class MainWP_Recent_Posts {
 					</div>
 				<?php } ?>
 			</div>
-			<div class="mainwp-postbox-actions-bottom">
-				<a href="<?php echo admin_url( 'admin.php?page=PostBulkAdd&select=' . ( $current_wpid ? $current_wpid : 'all' ) ); ?>" class="button-primary"><?php _e( 'Create new post', 'mainwp' ); ?></a>
-			</div>
+            <?php
+            $actions = '<a href="' . admin_url( 'admin.php?page=PostBulkAdd&select=' . ( $current_wpid ? $current_wpid : 'all' ) ) .'" class="button-primary">' . __( 'Create new post', 'mainwp' ) . '</a>';
+            ?>
 		</div>
 		<div class="mainwp-clear"></div>
 		<?php
-        MainWP_UI::renderEndReadyPopup();
+        MainWP_UI::renderEndReadyPopup($actions, 'mainwp-postbox-actions-bottom');
 		if ( $pExit == true ) {
 			exit();
 		}

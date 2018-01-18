@@ -22,7 +22,7 @@ class MainWP_Hooks {
 		add_action( 'mainwp_deletePlugin', array( &$this, 'deletePlugin' ), 10, 0 );
 		add_action( 'mainwp_deleteTheme', array( &$this, 'deleteTheme' ), 10, 0 );
         add_action( 'mainwp_renderBeginPopup', array( 'MainWP_UI', 'renderBeginReadyPopup' ), 10, 0 );
-        add_action( 'mainwp_renderEndPopup', array( 'MainWP_UI', 'renderEndReadyPopup' ), 10, 0 );
+        add_action( 'mainwp_renderEndPopup', array( 'MainWP_UI', 'renderEndReadyPopup' ), 10, 2 );
 
 		//Internal hook - deprecated
 		add_filter( 'mainwp_getUserExtension', array( &$this, 'getUserExtension' ) );
