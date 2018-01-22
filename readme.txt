@@ -1,4 +1,4 @@
-=== MainWP Dashboard ===
+﻿=== MainWP Dashboard ===
 Contributors: mainwp
 Donate link: 
 Tags: MainWP, Manage WordPress, Managed WordPress, WordPress Management, Manage Multiple Sites, WordPress manager , WordPress management, Control multiple sites, WordPress site management, WordPress management dashboard 
@@ -6,8 +6,8 @@ Author: mainwp
 Author URI: https://mainwp.com
 Plugin URI: https://mainwp.com
 Requires at least: 3.6
-Tested up to: 4.8.1
-Stable tag: 3.4.3
+Tested up to: 4.9.2
+Stable tag: 3.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Extensions enhance your MainWP Dashboard with additional features. The catalog o
 
 **This is the MainWP Dashboard plugin that you install on your own separate WordPress install and the [MainWP child plugin](https://wordpress.org/plugins/mainwp-child/) that you install on the sites you want to control (child sites) .**
 
-Please check the [Quick Start - Setting up your MainWP](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/) support doc for more information.
+Please check the [Quick Start - Setting up your MainWP](http://docs.mainwp.com/setting-up-your-mainwp/) support doc for more information.
 
 = Everything below and more is included in the MainWP Plugins at absolutely no charge, no tricks, no hidden fees, no nickel and diming you for every little feature and absolutely no gotchas! = 
 
@@ -92,15 +92,15 @@ We know some developers like to keep tight control of what is happening with the
 Both the MainWP Dashboard and Child plugin are fully open source and GPL compliant with no obfuscated code so you always know what is running on your server. Both plugins are also maintained on GitHub for easy code access. 
 
 = More Information =
-[MainWP Documentation](https://mainwp.com/help/)
+[MainWP Documentation](http://docs.mainwp.com/)
 
 [MainWP Support](https://mainwp.com/support/)
 
 [MainWP Videos](http://www.youtube.com/user/MyMainWP)
 
-[MainWP Extensions](https://mainwp.com/mainwp-extensions/)
+[MainWP Extensions](https://mainwp.com/extensions/)
 
-[MainWP Codex](https://codex.mainwp.com)
+[MainWP Codex](http://codex.mainwp.com)
 
 [MainWP on Github](https://mainwp.com/github/)
 
@@ -111,6 +111,7 @@ Both the MainWP Dashboard and Child plugin are fully open source and GPL complia
 1. We HIGHLY recommend a NEW WordPress install for your MainWP Dashboard.
 
 Using a new WordPress install will help to cut down on Plugin Conflicts and other issues that can be caused by trying to run your MainWP Main Dashboard from an active site. Most hosting companies provide free subdomains ("demo.yourdomain.com") and we recommend creating one if you do not have a specific dedicated domain to run your MainWP Dashboard.
+If you are not sure how to set up a subdomain here is a quick step by step with [cPanel](http://docs.mainwp.com/creating-a-subdomain-in-cpanel/), [Plesk](http://docs.mainwp.com/creating-a-subdomain-in-plesk/) or [Direct Admin](http://docs.mainwp.com/creating-a-subdomain-in-directadmin-control-panel/). If you are not sure what you have, contact your hosting companies support.
 
 You can even install your MainWP Dashboard on a WordPress site located on your local computer using [DesktopServer](https://mainwp.com/how-to-use-desktopserver-to-run-your-mainwp-dashboard-locally/), WAMP or any other setup that allows you to run [WordPress locally](https://make.wordpress.org/core/handbook/tutorials/installing-a-local-server/).   
 
@@ -118,19 +119,19 @@ You can even install your MainWP Dashboard on a WordPress site located on your l
 
 3. Once installed then Activate the Plugin through the Plugins Menu in WordPress
 
-4. Add your first child site to the MainWP Dashboard - [Documentation](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/add-site-to-your-dashboard/)
+4. Add your first child site to the MainWP Dashboard - [Documentation](http://docs.mainwp.com/setting-up-your-mainwp/)
 
-5. Set your MainWP Settings - [Documentation](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/mainwp-dashboard-settings/)
+5. Set your MainWP Settings - [Documentation](http://docs.mainwp.com/mainwp-settings-overview/)
 
 == Frequently Asked Questions ==
 = Do I need any other plugins for MainWP? =
 Yes you need to install the [MainWP Child Plugin](https://wordpress.org/plugins/mainwp-child/) on the sites you want to control with the Dashboard plugin.
 
 = Do you have any documentation? =
-Yes, please review the [documentation site](https://mainwp.com/help/).
+Yes, please review the [documentation site](http://docs.mainwp.com/).
 
 = I just want to start using MainWP do you have a Quick Start Guide? =
-Yes, please read the [Quick Start – Setting up your MainWP](https://mainwp.com/help/docs/set-up-the-mainwp-plugin/) guide on the doc site.
+Yes, please read the [Quick Start – Setting up your MainWP](http://docs.mainwp.com/setting-up-your-mainwp/) guide on the doc site.
 
 = Where do I go for support or to ask for help? =
 Please open a [Support Ticket](https://mainwp.com/support/)
@@ -159,6 +160,37 @@ Sure we have a quick FAQ with a lot more questions and answers [here](https://ma
 9. Global Dashboard Screen
 
 == Changelog ==
+
+= 3.4.5 - 1-22-18 =
+* Fixed: an issue with missing hook parameter
+* Fixed: an issue with database encoding which caused incorrect display of some special characters
+* Fixed: an issue with passing metadata for featured images
+* Fixed: an issue with caching the Username and Password field values on the Test Connection page
+* Fixed: an issue with resetting User passwords on child sites
+* Fixed: the sync popup layout issue
+* Fixed: an issue with displaying extensions changelogs 
+* Fixed: multiple typos
+* Fixed: multiple incorrect URLs
+* Fixed: multiple cosmetic issues
+* Added: a new feature to open any Overview widget as a popup
+* Added: a new 'mainwp_disablemenuitems' hook
+
+= 3.4.4 - 12-4-17 =
+* Fixed: an issue with the Unfix function for the removed readme.html security issue
+* Fixed: an issue with permissions for cookie files
+* Fixed: an issue with displaying site notes
+* Fixed: conflict with the SecuPress plugin
+* Fixed: an issue with auto installation of the extensions on specific server setups
+* Added: support for the upcoming extension
+* Added: the ability to search posts and pages by keyword in title and/or body
+* Added: the mainwp_getallposts hook for fetching posts and pages
+* Added: the mainwp_updatescheck_disable_sendmail hook for disabling email notifications for available updates
+* Added: support for the WordPress proxy setting for curl requests
+* Added: WP Admin and Open action links to the Connection Status widget
+* Updated: individual site mode navigation layout
+* Updated: sort method on the Manage Plugins and Themes page
+* Updated: confirmation messages for performing update process
+* Updated: various layout updates
 
 = 3.4.3 - 8-24-17 =
 * Fixed: an issue with saving Posts and Pages status
