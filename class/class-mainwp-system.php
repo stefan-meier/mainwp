@@ -180,6 +180,7 @@ class MainWP_System {
 		//Remove the pages from the menu which I use in AJAX
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ) );
 		add_action( 'admin_menu', array( &$this, 'remove_wp_menus' ) );
+        add_action( 'admin_bar_menu', array( $this, 'remove_wp_admin_bar_items' ), 100 );
 
 		//Add custom error messages
 		add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
@@ -2940,6 +2941,17 @@ class MainWP_System {
 			}
 		}
 	}
+    
+    public function remove_wp_admin_bar_items($wp_admin_bar) {
+		$hide_menus = get_option( 'mwp_setup_hide_wp_menus', array() );
+                
+        if (is_array( $hide_menus ) && in_array('comments', $hide_menus)) {
+            if ($wp_admin_bar) {
+                $wp_admin_bar->remove_node('comments');
+            }
+        }
+	}
+    
 
 	function sites_fly_menu() {
 		global $wpdb;
