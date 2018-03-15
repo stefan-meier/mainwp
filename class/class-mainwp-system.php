@@ -17,7 +17,7 @@ class MainWP_System {
 	//Singleton
 	private static $instance = null;
 
-	private $upgradeVersionInfo;
+	private $upgradeVersionInfo = null;
 
 	/** @var $posthandler MainWP_DB */
 	public $posthandler;
@@ -786,6 +786,9 @@ class MainWP_System {
 
 	private function checkUpgrade() {
 		$result                            = MainWP_API_Settings::checkUpgrade();
+        if ($this->upgradeVersionInfo === null) {
+            $this->upgradeVersionInfo = new stdClass();
+        }
 		$this->upgradeVersionInfo->updated = time();
 		if ( ! empty( $result ) ) {
 			$this->upgradeVersionInfo->result = $result;
